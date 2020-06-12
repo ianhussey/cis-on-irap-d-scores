@@ -1,0 +1,374 @@
+---
+title: "Bootstrapped estimation of D scores for individual participants"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+# Overview 
+
+IRAP trial type D scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's D scores and noting how wide their confidence intervals are.
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,
+                      warning=FALSE,
+                      cache.lazy=FALSE)
+```
+
+```{r}
+
+# dependencies
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(rsample)
+library(broom)
+library(purrr)
+library(furrr)
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
+# run furrr:::future_map in parallel
+plan(multiprocess)
+
+# options
+options(knitr.table.format = "html") # necessary configuration of tables
+
+# disable scientific notation
+options(scipen = 999) 
+
+# get data from evaluative IRAPs
+data_for_analysis <- read_csv("../data/data_for_analysis.csv") 
+
+```
+
+# Descriptives
+
+```{r}
+
+data_descriptives <- data_for_analysis %>%
+  distinct(unique_id, .keep_all = TRUE)
+
+data_descriptives %>%
+  count(domain) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_descriptives %>%
+  count(domain) %>%
+  summarize(total_n = sum(n),
+            min_n_per_domain = min(n),
+            max_n_per_domain = max(n),
+            mean_n_per_domain = round(mean(n, na.rm = TRUE), 2),
+            sd_n_per_domain = round(sd(n, na.rm = TRUE), 2)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_descriptives %>%
+  summarize(min_age = round(min(age, na.rm = TRUE), 2),
+            max_age = round(max(age, na.rm = TRUE), 2),
+            mean_age = round(mean(age, na.rm = TRUE), 2),
+            sd_age = round(sd(age, na.rm = TRUE), 2)) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_descriptives %>%
+  count(gender) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+# Bootstrap 95% CIs on D scores
+
+## Bootstrapping CIs
+
+Pool all trial-type D scores
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/data_estimates_with_CIs.Rdata")) {
+  
+  load("models/data_estimates_with_CIs.Rdata")
+  
+} else {
+  
+  # n boots for all metrics
+  nboots <- 2000
+  
+  # trim RTs>10000 ms
+  data_trimmed <- data_for_analysis %>%
+    filter(rt <= 10000)
+  
+  # create D scores
+  data_D_scores <- data_trimmed %>%
+    group_by(unique_id, trial_type) %>%
+    dplyr::summarise(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+                     mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+                     sd = sd(rt, na.rm = TRUE)) %>%
+    mutate(D = (mean_incon - mean_con) / sd) %>%
+    ungroup() %>%
+    select(unique_id, trial_type, D) %>%
+    round_df(3)
+  
+  # function to apply to each resample
+  # could add other metrics here too, eg cohen's d, ruscio's A, sriram's g.
+  calc_D <- function(split) {
+    analysis(split) %>%
+      group_by(unique_id, trial_type) %>%
+      dplyr::summarise(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+                       mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+                       sd = sd(rt, na.rm = TRUE)) %>%
+      mutate(D = (mean_incon - mean_con) / sd)
+  }
+  
+  domains <- data_trimmed %>%
+    distinct(domain) %>%
+    pull(domain)
+  
+  # apply to each bootstrap
+  data_D_bootstrapped_CIs <- 
+    dplyr::bind_rows(
+      lapply(seq_along(domains), function(i) {
+        data_trimmed %>%
+          filter(domain == domains[i]) %>%
+          group_by(unique_id, trial_type) %>%
+          bootstraps(times = nboots) %>%
+          mutate(D_metrics = furrr::future_map(splits, calc_D)) %>%
+          select(-splits) %>%
+          unnest(D_metrics) %>%
+          group_by(unique_id, trial_type) %>%
+          dplyr::summarize(D_ci_lower = quantile(D, 0.025, na.rm = TRUE),
+                           D_ci_upper = quantile(D, 0.975, na.rm = TRUE)) 
+      })
+    ) %>%
+    ungroup() %>%
+    mutate(D_sig = ifelse((D_ci_lower < 0 & D_ci_upper < 0) | (D_ci_lower > 0 & D_ci_upper > 0), TRUE, FALSE),
+           D_ci_width = D_ci_upper - D_ci_lower) %>%
+    round_df(3)
+
+  data_estimates_with_CIs <- data_D_scores %>%
+    full_join(data_D_bootstrapped_CIs, by = c("unique_id", "trial_type")) %>%
+    left_join(distinct(select(data_trimmed, unique_id, domain, trial_type), .keep_all = TRUE), by = c("unique_id", "trial_type")) %>%
+    select(unique_id, domain, trial_type, D, D_ci_lower, D_ci_upper, D_sig, D_ci_width)
+  
+  # save to disk
+  save(data_estimates_with_CIs, file = "models/data_estimates_with_CIs.RData")
+  
+}
+
+```
+
+## Proportion significant
+
+```{r}
+
+p1 <- 
+  data_estimates_with_CIs %>%
+  arrange(D) %>%
+  mutate(ordered_id = row_number()) %>%
+  ggplot() +
+  geom_linerange(aes(x = ordered_id, ymin = D_ci_lower, ymax = D_ci_upper, color = D_sig),
+                 alpha = 1) +
+  geom_point(aes(ordered_id, D), size = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  theme_classic() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        legend.position = c(0.20, 0.85)) +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Participant (ranked by D score)") +
+  ylab("IRAP D score") +
+  labs(color = "95% CI excludes zero")
+
+write_rds(p1, "models/p1.rda")
+
+```
+
+```{r fig.height=12, fig.width=8}
+
+# separated by domain
+p2 <- 
+  data_estimates_with_CIs %>%
+  group_by(domain) %>%
+  arrange(D) %>%
+  mutate(ordered_id = row_number()) %>% 
+  ungroup() %>%
+  left_join(data_estimates_with_CIs %>% count(domain), by = "domain") %>%
+  mutate(std_ordered_id = ordered_id/n) %>%
+  ggplot() +
+  geom_linerange(aes(x = std_ordered_id, ymin = D_ci_lower, ymax = D_ci_upper, color = D_sig),
+                 alpha = 1) +
+  geom_point(aes(std_ordered_id, D), size = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  theme_classic() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        legend.position = c(0.82, 0.05)) +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Participant (ranked by D score)") +
+  ylab("IRAP D score") +
+  facet_wrap(~domain, ncol = 3) +
+  labs(color = "95% CI excludes zero")
+
+write_rds(p2, "models/p2.rda")
+
+```
+
+```{r}
+
+data_estimates_with_CIs %>%
+  summarize(prop_sig = mean(D_sig)) %>% 
+  round_df(3) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_estimates_with_CIs %>%
+  group_by(domain) %>%
+  summarize(prop_sig = mean(D_sig)) %>% 
+  arrange(prop_sig) %>%
+  round_df(3) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_estimates_with_CIs %>%
+  group_by(domain) %>%
+  summarize(prop_sig = mean(D_sig)) %>% 
+  ungroup() %>%
+  summarize(min_prop_sig = min(prop_sig),
+            max_prop_sig = max(prop_sig),
+            mean_prop_sig = mean(prop_sig),
+            sd_prop_sig = sd(prop_sig)) %>%
+  round_df(3) %>%
+  gather() %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+`r (1 - round(mean(data_estimates_with_CIs$D_sig), 3))*100`% of D scores are not significantly different from zero. So, while they might appear to be relatively large (e.g., D = 0.5), their CI does not exclude zero. Put another way, if we treat the zero point as meaningful, we have insufficient evidence to say whether a given D score represents an IRAP effect in `r (1 - round(mean(data_estimates_with_CIs$D_sig), 3))*100`% of cases in this large sample (`r nrow(data_estimates_with_CIs)/4` participants, `r nrow(data_estimates_with_CIs)` total D scores, `r count(distinct(data_estimates_with_CIs, domain))` domains)).
+
+## Half CI width
+
+```{r}
+
+ggplot(data_estimates_with_CIs, aes(D_ci_width)) +
+  geom_density() 
+
+ggplot(data_estimates_with_CIs, aes(D_ci_width, color = domain)) +
+  geom_density(adjust = 1.5) +
+  theme(legend.position = "none")
+
+```
+
+```{r}
+
+library(bayestestR)
+point_estimate(data_estimates_with_CIs$D_ci_width, centrality = "MAP") %>%
+  round_df(3) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_estimates_with_CIs %>%
+  group_by(domain) %>%
+  do(point_estimate(.$D_ci_width)) %>%
+  ungroup() %>%
+  round_df(3) %>%
+  summarize(min_map_ci_width = min(MAP),
+            max_map_ci_width = max(MAP),
+            mean_map_ci_width = mean(MAP),
+            sd_map_ci_width = sd(MAP)) %>%
+  round_df(3) %>%
+  gather() %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+## Estimation precision
+
+```{r}
+
+trimmed_emprirical_range <- data_estimates_with_CIs %>%
+  dplyr::summarize(percentile_025 = quantile(D, 0.025, na.rm = TRUE),
+                   percentile_975 = quantile(D, 0.975, na.rm = TRUE)) %>%
+  mutate(range_empirical_95_percent = percentile_975 - percentile_025) 
+
+```
+
+Of course, while treating the zero point as meaningful is common, it has been argued to problematic (i.e., by giving rise to false conclusions about the interpretations of the effect, see REF). While the previous analysis represents a useful illustration, it may be more meaningful to consider the precision of estimation of D scores, agnostic to an arbitrary cut-off point. 
+
+The width of a D score Confidence intervals was found to be wide: MAP = `r round(point_estimate(data_estimates_with_CIs$D_ci_width, centrality = "MAP"), 3)`. Results in the tables above suggest that it doesn't vary much by trial type or domain. As such, when an individual demonstrates a D score of X, we can more accurately say their D score lies in the range of X ± a median of `r round(mad(data_estimates_with_CIs$D_ci_width/2), 3)`. 
+
+While the minimum observed D scores was `r round(min(data_estimates_with_CIs$D_median), 3)` and max was `r round(max(data_estimates_with_CIs$D_median), 3)`, the outlier scores are clearly visible (see figure XXX). It is therefore likely to be more meaningful to note that 95% of D scores lie within the narrower range of `r round(as.numeric(trimmed_emprirical_range$percentile_025), 3)` to `r round(as.numeric(trimmed_emprirical_range$percentile_975), 3)`. It is useful to contextualise the precision of the estimation of a given IRAP D score within this total observed ranged of D scores between participants. Specifically, the median CI width noted above represents `r round(point_estimate(data_estimates_with_CIs$D_ci_width, centrality = "MAP")/as.numeric(trimmed_emprirical_range$range_empirical_95_percent)*100, 1)`% of the (95% trimmed) observed range of D scores. That is to say, the uncertainty around a given D score represents the majority of the total range of D scores: even knowing an individual's observed D score (e.g., moderately pro-white/anti-black), their 'true' D score may lie almost anywhere else on the range of possible values (e.g., from very pro-white/anti-black to very anti-white/pro-black). An individual IRAP effect is therefore quite a poor measure for individual use.
+
+This can also be examined another way by posing the question 'what proportion of D scores can you tell apart from one another?' That is, is the probability that a given D score lies outside the CI of all the other D scores' CIs. For simplicity of implementation, this analysis compares all D scores against all confidence intervals. It is therefore slightly biased by comparing a D score against its own CI as well as all others. However, given the large number of comparisons (i.e., sample size: i.e., `r nrow(data_estimates_with_CIs)` total D scores) this bias is very slight. 95% CIs of this probability value are bootstrapped via case removal and the percentile method using 2000 resamples. The median bootstrapped probability is reported as the estimate for the sake of robustness.
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/data_pairwise_comparisons.Rdata")) {
+  
+  load("models/data_pairwise_comparisons.Rdata")
+  
+} else {
+  
+  boots <- bootstraps(data_estimates_with_CIs, times = 2000)
+  
+  # helper function to apply workflow to each resample
+  helper_function <- function(split) {
+    
+    estimate <- analysis(split)$D
+    ci_lower <- analysis(split)$D_ci_lower
+    ci_upper <- analysis(split)$D_ci_upper
+    
+    n_estimate <- length(estimate)
+    n_ci_lower <- length(ci_lower)
+    n_ci_upper <- length(ci_upper)
+    
+    r_estimate <- sum(rank(c(estimate, ci_lower))[1:n_estimate])
+    r_ci_upper <- sum(rank(c(ci_upper, estimate))[1:n_ci_upper])
+    
+    prob_estimate_inferior_to_ci_lower <- 1 - (r_estimate / n_estimate - (n_estimate + 1) / 2) / n_ci_lower
+    prob_estimate_superior_to_ci_upper <- 1 - (r_ci_upper / n_ci_upper - (n_ci_upper + 1) / 2) / n_estimate
+    
+    percent_estimates_inside_cis <- 1 - (prob_estimate_inferior_to_ci_lower + prob_estimate_superior_to_ci_upper)
+    
+    return(percent_estimates_inside_cis)
+    
+  }
+  
+  # apply to each bootstrap
+  boot_probabilities <- boots %>% 
+    mutate(percent_estimates_inside_cis = furrr::future_map(splits, helper_function)) %>% 
+    unnest(percent_estimates_inside_cis) %>%
+    select(-splits)
+  
+  # find CIs using percentile method
+  data_pairwise_comparisons <- boot_probabilities %>% 
+    summarize(median   = quantile(percent_estimates_inside_cis, 0.500),
+              ci_lower = quantile(percent_estimates_inside_cis, 0.025),
+              ci_upper = quantile(percent_estimates_inside_cis, 0.975)) %>%
+    round_df(3)
+  
+  
+  # save to disk
+  save(data_pairwise_comparisons, file = "models/data_pairwise_comparisons.RData")
+  
+}
+
+```
+
+It is not possible to differentiate between two randomly selected D scores in `r round(data_pairwise_comparisons$median*100, 1)`% (95% CI [`r round(data_pairwise_comparisons$ci_lower*100, 1)`, `r round(data_pairwise_comparisons$ci_upper*100, 1)`]) of cases. This provides additional evidence that IRAP's individual level precision and therefore clinical utility is low.
+
+

@@ -1,0 +1,101 @@
+---
+title: "Data processing"
+author: "Ian Hussey^[Ghent University. Email: ian.hussey@ugent.be]"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,
+                      warning=FALSE,
+                      cache.lazy=FALSE)
+```
+
+```{r}
+
+# dependencies
+library(tidyverse)
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
+# get data from evaluative IRAPs
+data_input_evaluative <- 
+  read.csv("../../reliability meta analyses/data/evaluative IRAPs/processed/combined_latency_data.csv") %>%
+  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
+  # tidy domain
+  rename(domain = experiment) %>%
+  mutate(domain = dplyr::recode(domain,
+                                `chad bodyimage` = "Body shape evaluations",
+                                `chad friendenemy` = "Friend-Enemy evaluations",
+                                `chad gender` = "Gender stereotypes",
+                                `chad lincolnhitler` = "Lincoln-Hitler evaluations",
+                                `chad race`	 = "Racial evaluations 2",
+                                `chad religion` = "Christianity-Islam",
+                                `ian death emma` = "Life/Death evaluations 1",
+                                `ian death june` = "Life/Death evaluations 2",
+                                `ian death tarah` = "Life/Death evaluations 3",
+                                `ian race dearbhail` = "Racial evaluations 1",
+                                `ian race katie` = "Racial evaluations 1")) %>%
+  arrange(as.character(domain))
+
+# do exclusions for unique ids with wrong number of trials
+data_participants_with_correct_n_trials <- data_input_evaluative %>%
+  count(unique_id) %>%
+  filter(n %in% c(144, 192)) # methodologically plausible number of trials
+
+data_cleaned_evaluative <- semi_join(data_input_evaluative, data_participants_with_correct_n_trials, by = "unique_id")
+
+
+
+# get data from nonevaluative IRAPs
+# nb exclusions for unique ids with wrong number of trials already done in processing
+data_cleaned_nonevaluative <- 
+  read.csv("../../reliability meta analyses/data/nonevaluative IRAPs/processed/combined_latency_data.csv") %>%
+  mutate(trial_odd_even = ifelse(row_number() %% 2 == 1, "D_odd", "D_even")) %>%
+  # tidy domain
+  rename(domain = experiment) %>%
+  mutate(domain = dplyr::recode(domain,
+                                `countries acknowledge 1` = "Countries - acknowledge suffering 1",
+                                `countries care 1` = "Countries - care about suffering 1",
+                                `countries 2 acknowledge` = "Countries - acknowledge suffering 2",
+                                `countries 2 care` = "Countries - care about suffering 2",
+                                `disgust` = "Digust sensitivity",
+                                `positive_negative` = "Valenced categories evaluations",
+                                `sexuality` = "Sexuality and arousal",
+                                `food hunger` = "Food and hunger",
+                                `shapes and colors YN rule` = "Shapes and colors 1",
+                                `shapes and colors YN correct` = "Shapes and colors 2",
+                                `shapes and colors TF correct` = "Shapes and colors 3",
+                                `shapes and colors TF rule` = "Shapes and colors 4",
+                                `shapes and colors exp 2 full rule` = "Shapes and colors 5",
+                                `shapes and colors exp 2 minimal rule` = "Shapes and colors 6",
+                                `shapes and colors exp 3` = "Shapes and colors 7")) %>%
+  arrange(as.character(domain)) 
+
+# combined
+data_for_analysis <- 
+  bind_rows(data_cleaned_evaluative, 
+            data_cleaned_nonevaluative) %>%
+  mutate(domain = as.factor(as.character(domain))) %>%
+  select(unique_id, 
+         age, 
+         gender,
+         domain, 
+         block_type, 
+         trial_type, 
+         rt)
+
+# write to disk
+write_csv(data_for_analysis, "data_for_analysis.csv")
+
+```
+
