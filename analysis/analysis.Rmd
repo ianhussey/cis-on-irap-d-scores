@@ -23,6 +23,9 @@ knitr::opts_chunk$set(message=FALSE,
 
 ```{r}
 
+# set seed for reproducibility
+set.seed(42)
+
 # dependencies
 library(tidyverse)
 library(knitr)
@@ -47,7 +50,7 @@ options(knitr.table.format = "html") # necessary configuration of tables
 options(scipen = 999) 
 
 # get data from evaluative IRAPs
-data_for_analysis <- read_csv("../data/data_for_analysis.csv") 
+data_for_analysis <- read_csv("../data/data_internalconsistency_cleaned_trial_level.csv") 
 
 ```
 
