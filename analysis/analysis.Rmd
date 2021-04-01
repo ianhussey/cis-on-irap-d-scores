@@ -132,7 +132,7 @@ data_descriptives %>%
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_D_estimates_with_CIs.rds")) {
+if(file.exists("models/data_estimates_D.rds")) {
   
   data_estimates_D <- read_rds("models/data_estimates_D.rds")
   
@@ -187,7 +187,7 @@ if(file.exists("models/data_D_estimates_with_CIs.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_D, path = "models/data_estimates_D.rds")
+  write_rds(data_estimates_D, file = "models/data_estimates_D.rds", compress = "gz")
 
 }
 
@@ -198,7 +198,7 @@ if(file.exists("models/data_D_estimates_with_CIs.rds")) {
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_PI_estimates_with_CIs.rds")) {
+if(file.exists("models/data_estimates_PI.rds")) {
   
   data_estimates_PI <- read_rds("models/data_estimates_PI.rds")
   
@@ -255,7 +255,7 @@ if(file.exists("models/data_PI_estimates_with_CIs.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_PI, path = "models/data_estimates_PI.rds")
+  write_rds(data_estimates_PI, file = "models/data_estimates_PI.rds", compress = "gz")
 
 }
 
