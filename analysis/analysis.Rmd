@@ -23,9 +23,6 @@ knitr::opts_chunk$set(message=FALSE,
 
 ```{r}
 
-# set seed for reproducibility
-set.seed(42)
-
 # dependencies
 library(tidyverse)
 library(knitr)
@@ -34,11 +31,15 @@ library(rsample)
 library(broom)
 library(purrr)
 library(furrr)
+library(pim)
+library(boot)
+library(parallel)
 
-# function to round all numeric vars in a data frame
-round_df <- function(df, n_digits = 3) {
-  df %>% mutate_if(is.numeric, round, digits = n_digits)
-}
+# set seed for reproducibility
+set.seed(42)
+
+# number of bootstraps
+n_boots <- 2000 
 
 # run furrr:::future_map in parallel
 plan(multiprocess)
@@ -48,6 +49,13 @@ options(knitr.table.format = "html") # necessary configuration of tables
 
 # disable scientific notation
 options(scipen = 999) 
+
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
 
 # get data from evaluative IRAPs
 data_trial_level <- read_csv("../data/data_trial_level.csv") %>%
@@ -119,83 +127,136 @@ data_descriptives %>%
 
 ## Bootstrapping CIs
 
-D scores calculated by trial-type
+### D scores calculated by trial-type
 
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_estimates_with_CIs.Rdata")) {
+if(file.exists("models/data_D_estimates_with_CIs.rds")) {
   
-  load("models/data_estimates_with_CIs.Rdata")
+  data_estimates_D <- read_rds("models/data_estimates_D.rds")
   
 } else {
+
+  D_score <- function(data, i) {
+    data_with_indexes <- data[i,] # boot function requires data and index
+    mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
+    mean_incon <- mean(data_with_indexes$rt[data_with_indexes$block_type == "incon"], na.rm = TRUE)
+    sd <- sd(data_with_indexes$rt, na.rm = TRUE)
+    D <- (mean_incon - mean_con) / sd
+    return(D)
+  }
   
-  # n boots for all metrics
-  nboots <- 10000
+  bootstrap_D_score <- function(data){
+    
+    require(dplyr)
+    require(boot)
+    
+    fit <- 
+      boot::boot(data      = data, 
+                 statistic = D_score, 
+                 R         = n_boots, 
+                 sim       = "ordinary", 
+                 stype     = "i",
+                 parallel  = "multicore", 
+                 ncpus     = parallel::detectCores())
+    
+    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+    
+    output <- 
+      tibble(method   = c("normal", "basic", "percent", "bca"),
+             estimate = rep(fit$t0, 4),
+             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    
+    return(output)
+  }
   
   # trim RTs>10000 ms
   data_trimmed <- data_outliers_removed %>%
+    select(unique_id, domain, trial_type, rt, block_type) %>%
     filter(rt <= 10000)
   
-  # create D scores
-  data_D_scores <- data_trimmed %>%
-    group_by(unique_id, trial_type) %>%
-    dplyr::summarise(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-                     mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-                     sd = sd(rt, na.rm = TRUE)) %>%
-    mutate(D = (mean_incon - mean_con) / sd) %>%
+  # bootstrap D scores 
+  data_estimates_D <- data_trimmed %>%
+    group_by(unique_id, domain, trial_type) %>%
+    do(bootstrap_D_score(data = .)) %>%
     ungroup() %>%
-    select(unique_id, trial_type, D) %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
     round_df(3)
-  
-  # function to apply to each resample
-  # could add other metrics here too, eg cohen's d, ruscio's A, sriram's g.
-  calc_D <- function(split) {
-    analysis(split) %>%
-      group_by(unique_id, trial_type) %>%
-      dplyr::summarise(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-                       mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-                       sd = sd(rt, na.rm = TRUE)) %>%
-      mutate(D = (mean_incon - mean_con) / sd)
-  }
-  
-  domains <- data_trimmed %>%
-    distinct(domain) %>%
-    pull(domain)
-  
-  # apply to each bootstrap
-  data_D_bootstrapped_CIs <- 
-    dplyr::bind_rows(
-      lapply(seq_along(domains), function(i) {
-        data_trimmed %>%
-          filter(domain == domains[i]) %>%
-          group_by(unique_id, trial_type) %>%
-          bootstraps(times = nboots) %>%
-          mutate(D_metrics = furrr::future_map(splits, calc_D)) %>%
-          select(-splits) %>%
-          unnest(D_metrics) %>%
-          group_by(unique_id, trial_type) %>%
-          dplyr::summarize(D_ci_lower_percentile = quantile(D, 0.025, na.rm = TRUE),
-                           D_ci_upper_percentile = quantile(D, 0.975, na.rm = TRUE),
-                           D_mean = mean(D, na.rm = TRUE),
-                           D_se = sd(D, na.rm = TRUE)) 
-      })
-    ) %>%
-    ungroup() %>%
-    mutate(D_ci_lower_se = D_mean - D_se*1.96,
-           D_ci_upper_se = D_mean + D_se*1.96,
-           D_sig = ifelse((D_ci_lower_percentile < 0 & D_ci_upper_percentile < 0) | (D_ci_lower_percentile > 0 & D_ci_upper_percentile > 0), TRUE, FALSE),
-           D_ci_width = D_ci_upper_percentile - D_ci_lower_percentile) %>%
-    round_df(3)
-
-  data_estimates_with_CIs <- data_D_scores %>%
-    full_join(data_D_bootstrapped_CIs, by = c("unique_id", "trial_type")) %>%
-    left_join(distinct(select(data_trimmed, unique_id, domain, trial_type), .keep_all = TRUE), by = c("unique_id", "trial_type")) %>%
-    select(unique_id, domain, trial_type, D, D_ci_lower_percentile, D_ci_upper_percentile, D_sig, D_ci_width)
   
   # save to disk
-  save(data_estimates_with_CIs, file = "models/data_estimates_with_CIs.RData")
+  write_rds(data_estimates_D, path = "models/data_estimates_D.rds")
+
+}
+
+```
+
+### PI scores calculated by trial-type
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/data_PI_estimates_with_CIs.rds")) {
   
+  data_estimates_PI <- read_rds("models/data_estimates_PI.rds")
+  
+} else {
+
+  # Fast calculation of the A statistic - code from Ruscio (2008) supplementary materials
+  PI_score <- function(data, i) {
+    data_with_indexes <- data[i,] # boot function requires data and index
+    x  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "con"])
+    y  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "incon"])
+    nx <- length(x)
+    ny <- length(y)
+    rx <- sum(rank(c(x, y))[1:nx])
+    PI <- (rx / nx - (nx + 1) / 2) / ny
+    return(PI)
+  }
+  
+  bootstrap_PI_score <- function(data){
+    
+    require(dplyr)
+    require(boot)
+    
+    fit <- 
+      boot::boot(data      = data_trimmed, 
+                 statistic = PI_score, 
+                 R         = n_boots, 
+                 sim       = "ordinary", 
+                 stype     = "i",
+                 parallel  = "multicore", 
+                 ncpus     = parallel::detectCores())
+    
+    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+    
+    output <- 
+      tibble(method   = c("normal", "basic", "percent", "bca"),
+             estimate = rep(fit$t0, 4),
+             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    
+    return(output)
+  }
+  
+  # trim RTs>10000 ms
+  data_trimmed <- data_outliers_removed %>%
+    select(unique_id, domain, trial_type, rt, block_type) 
+  
+  # bootstrap PI scores 
+  data_estimates_PI <- data_trimmed %>%
+    group_by(unique_id, domain, trial_type) %>%
+    do(bootstrap_PI_score(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
+    round_df(3)
+  
+  # save to disk
+  write_rds(data_estimates_PI, path = "models/data_estimates_PI.rds")
+
 }
 
 ```
