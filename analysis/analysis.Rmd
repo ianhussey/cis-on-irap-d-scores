@@ -119,7 +119,7 @@ data_descriptives %>%
 
 ## Bootstrapping CIs
 
-Pool all trial-type D scores
+D scores calculated by trial-type
 
 ```{r}
 
@@ -131,7 +131,7 @@ if(file.exists("models/data_estimates_with_CIs.Rdata")) {
 } else {
   
   # n boots for all metrics
-  nboots <- 2000
+  nboots <- 10000
   
   # trim RTs>10000 ms
   data_trimmed <- data_outliers_removed %>%
@@ -175,19 +175,23 @@ if(file.exists("models/data_estimates_with_CIs.Rdata")) {
           select(-splits) %>%
           unnest(D_metrics) %>%
           group_by(unique_id, trial_type) %>%
-          dplyr::summarize(D_ci_lower = quantile(D, 0.025, na.rm = TRUE),
-                           D_ci_upper = quantile(D, 0.975, na.rm = TRUE)) 
+          dplyr::summarize(D_ci_lower_percentile = quantile(D, 0.025, na.rm = TRUE),
+                           D_ci_upper_percentile = quantile(D, 0.975, na.rm = TRUE),
+                           D_mean = mean(D, na.rm = TRUE),
+                           D_se = sd(D, na.rm = TRUE)) 
       })
     ) %>%
     ungroup() %>%
-    mutate(D_sig = ifelse((D_ci_lower < 0 & D_ci_upper < 0) | (D_ci_lower > 0 & D_ci_upper > 0), TRUE, FALSE),
-           D_ci_width = D_ci_upper - D_ci_lower) %>%
+    mutate(D_ci_lower_se = D_mean - D_se*1.96,
+           D_ci_upper_se = D_mean + D_se*1.96,
+           D_sig = ifelse((D_ci_lower_percentile < 0 & D_ci_upper_percentile < 0) | (D_ci_lower_percentile > 0 & D_ci_upper_percentile > 0), TRUE, FALSE),
+           D_ci_width = D_ci_upper_percentile - D_ci_lower_percentile) %>%
     round_df(3)
 
   data_estimates_with_CIs <- data_D_scores %>%
     full_join(data_D_bootstrapped_CIs, by = c("unique_id", "trial_type")) %>%
     left_join(distinct(select(data_trimmed, unique_id, domain, trial_type), .keep_all = TRUE), by = c("unique_id", "trial_type")) %>%
-    select(unique_id, domain, trial_type, D, D_ci_lower, D_ci_upper, D_sig, D_ci_width)
+    select(unique_id, domain, trial_type, D, D_ci_lower_percentile, D_ci_upper_percentile, D_sig, D_ci_width)
   
   # save to disk
   save(data_estimates_with_CIs, file = "models/data_estimates_with_CIs.RData")
@@ -205,7 +209,7 @@ p1 <-
   arrange(D) %>%
   mutate(ordered_id = row_number()) %>%
   ggplot() +
-  geom_linerange(aes(x = ordered_id, ymin = D_ci_lower, ymax = D_ci_upper, color = D_sig),
+  geom_linerange(aes(x = ordered_id, ymin = D_ci_lower_percentile, ymax = D_ci_upper_percentile, color = D_sig),
                  alpha = 1) +
   geom_point(aes(ordered_id, D), size = 0.5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
@@ -236,7 +240,7 @@ p2 <-
   left_join(data_estimates_with_CIs %>% count(domain), by = "domain") %>%
   mutate(std_ordered_id = ordered_id/n) %>%
   ggplot() +
-  geom_linerange(aes(x = std_ordered_id, ymin = D_ci_lower, ymax = D_ci_upper, color = D_sig),
+  geom_linerange(aes(x = std_ordered_id, ymin = D_ci_lower_percentile, ymax = D_ci_upper_percentile, color = D_sig),
                  alpha = 1) +
   geom_point(aes(std_ordered_id, D), size = 0.5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
@@ -360,8 +364,8 @@ if(file.exists("models/data_pairwise_comparisons.Rdata")) {
   helper_function <- function(split) {
     
     estimate <- analysis(split)$D
-    ci_lower <- analysis(split)$D_ci_lower
-    ci_upper <- analysis(split)$D_ci_upper
+    ci_lower <- analysis(split)$D_ci_lower_percentile
+    ci_upper <- analysis(split)$D_ci_upper_percentile
     
     n_estimate <- length(estimate)
     n_ci_lower <- length(ci_lower)
