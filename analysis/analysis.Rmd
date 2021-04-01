@@ -242,7 +242,7 @@ if(file.exists("models/data_estimates_PI.rds")) {
     require(boot)
     
     fit <- 
-      boot::boot(data      = data_trimmed, 
+      boot::boot(data      = data, 
                  statistic = PI_score, 
                  R         = n_boots, 
                  sim       = "ordinary", 
