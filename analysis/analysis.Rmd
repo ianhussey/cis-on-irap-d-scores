@@ -34,6 +34,7 @@ library(furrr)
 library(pim)
 library(boot)
 library(parallel)
+library(bayestestR)
 
 # set seed for reproducibility
 set.seed(42)
@@ -78,6 +79,11 @@ data_outliers <- data_trial_level %>%
 data_outliers_removed <- data_outliers %>%
   filter(rt_outlier == FALSE)
 
+# trim RTs>10000 ms, as part of D scoring
+data_trimmed <- data_outliers_removed %>%
+  select(unique_id, domain, trial_type, rt, block_type) %>%
+  filter(rt <= 10000)
+
 ```
 
 # Descriptives
@@ -118,6 +124,24 @@ data_descriptives %>%
 
 data_descriptives %>%
   count(gender) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+# Distribution of RTs
+
+```{r}
+
+ggplot(data_trimmed, aes(rt, fill = block_type)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(~ trial_type)
+
+data_trimmed %>%
+  group_by(trial_type, block_type) %>%
+  summarize(mean = mean(rt, na.rm = TRUE),
+            sd = sd(rt, na.rm = TRUE)) %>%
+  round_df(0) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -172,13 +196,9 @@ if(file.exists("models/data_estimates_D.rds")) {
     return(output)
   }
   
-  # trim RTs>10000 ms
-  data_trimmed <- data_outliers_removed %>%
-    select(unique_id, domain, trial_type, rt, block_type) %>%
-    filter(rt <= 10000)
-  
   # bootstrap D scores 
-  data_estimates_D <- data_trimmed %>%
+  data_estimates_D <- data_outliers_removed %>%
+    select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
     ungroup() %>%
@@ -266,13 +286,15 @@ if(file.exists("models/data_estimates_PI.rds")) {
 ```{r}
 
 p1 <- 
-  data_estimates_with_CIs %>%
-  arrange(D) %>%
+  data_estimates_D %>%
+  arrange(method, estimate) %>%
+  group_by(method) %>%
   mutate(ordered_id = row_number()) %>%
+  ungroup() %>%
   ggplot() +
-  geom_linerange(aes(x = ordered_id, ymin = D_ci_lower_percentile, ymax = D_ci_upper_percentile, color = D_sig),
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
                  alpha = 1) +
-  geom_point(aes(ordered_id, D), size = 0.5) +
+  geom_point(aes(ordered_id, estimate), size = 0.5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
   theme_classic() +
   theme(axis.text.x=element_blank(),
@@ -281,7 +303,8 @@ p1 <-
   scale_color_viridis_d(end = 0.6, direction = -1) +
   xlab("Participant (ranked by D score)") +
   ylab("IRAP D score") +
-  labs(color = "95% CI excludes zero")
+  labs(color = "95% CI excludes zero") + 
+  facet_wrap(~method)
 
 p1
 
@@ -289,31 +312,28 @@ write_rds(p1, "models/p1.rds")
 
 ```
 
-```{r fig.height=12, fig.width=8}
+```{r}
 
-# separated by domain
 p2 <- 
-  data_estimates_with_CIs %>%
-  group_by(domain) %>%
-  arrange(D) %>%
-  mutate(ordered_id = row_number()) %>% 
+  data_estimates_D %>%
+  arrange(method, trial_type, estimate) %>%
+  group_by(method, trial_type) %>%
+  mutate(ordered_id = row_number()) %>%
   ungroup() %>%
-  left_join(data_estimates_with_CIs %>% count(domain), by = "domain") %>%
-  mutate(std_ordered_id = ordered_id/n) %>%
   ggplot() +
-  geom_linerange(aes(x = std_ordered_id, ymin = D_ci_lower_percentile, ymax = D_ci_upper_percentile, color = D_sig),
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
                  alpha = 1) +
-  geom_point(aes(std_ordered_id, D), size = 0.5) +
+  geom_point(aes(ordered_id, estimate), size = 0.5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
   theme_classic() +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank(),
-        legend.position = c(0.88, 0.05)) +
+        legend.position = c(0.20, 0.85)) +
   scale_color_viridis_d(end = 0.6, direction = -1) +
   xlab("Participant (ranked by D score)") +
   ylab("IRAP D score") +
-  facet_wrap(~domain, ncol = 4) +
-  labs(color = "95% CI excludes zero")
+  labs(color = "95% CI excludes zero") + 
+  facet_wrap(~method + trial_type)
 
 p2
 
@@ -321,15 +341,41 @@ write_rds(p2, "models/p2.rds")
 
 ```
 
+```{r fig.height=25, fig.width=7}
+
+# separated by domain
+data_estimates_D %>%
+  filter(method == "bca") %>%
+  arrange(trial_type, domain, estimate) %>%
+  group_by(trial_type, domain) %>%
+  mutate(ordered_id = row_number()/n()) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
+                 alpha = 1) +
+  geom_point(aes(ordered_id, estimate), size = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  theme_classic() +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        legend.position = c(0.20, 0.85)) +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Participant (ranked by D score)") +
+  ylab("IRAP D score") +
+  labs(color = "95% CI excludes zero") + 
+  facet_wrap(~domain + trial_type, ncol = 8)
+
+```
+
 ```{r}
 
-data_estimates_with_CIs %>%
+data_estimates_D %>%
   summarize(prop_sig = mean(D_sig)) %>% 
   round_df(3) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
-data_estimates_with_CIs %>%
+data_estimates_D %>%
   group_by(domain) %>%
   summarize(prop_sig = mean(D_sig)) %>% 
   arrange(prop_sig) %>%
@@ -337,7 +383,7 @@ data_estimates_with_CIs %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
-data_estimates_with_CIs %>%
+data_estimates_D %>%
   group_by(domain) %>%
   summarize(prop_sig = mean(D_sig)) %>% 
   ungroup() %>%
@@ -352,42 +398,47 @@ data_estimates_with_CIs %>%
 
 ```
 
-`r (1 - round(mean(data_estimates_with_CIs$D_sig), 3))*100`% of D scores are not significantly different from zero. So, while they might appear to be relatively large (e.g., D = 0.5), their CI does not exclude zero. Put another way, if we treat the zero point as meaningful, we have insufficient evidence to say whether a given D score represents an IRAP effect in `r (1 - round(mean(data_estimates_with_CIs$D_sig), 3))*100`% of cases in this large sample (`r nrow(data_estimates_with_CIs)/4` participants, `r nrow(data_estimates_with_CIs)` total D scores, `r count(distinct(data_estimates_with_CIs, domain))` domains)).
+`r (1 - round(mean(data_estimates_D$D_sig), 3))*100`% of D scores are not significantly different from zero. So, while they might appear to be relatively large (e.g., D = 0.5), their CI does not exclude zero. Put another way, if we treat the zero point as meaningful, we have insufficient evidence to say whether a given D score represents an IRAP effect in `r (1 - round(mean(data_estimates_D$D_sig), 3))*100`% of cases in this large sample (`r nrow(data_estimates_D)/4` participants, `r nrow(data_estimates_D)` total D scores, `r count(distinct(data_estimates_D, domain))` domains)).
 
 ## Half CI width
 
+### By participant 
+
 ```{r}
 
-ggplot(data_estimates_with_CIs, aes(D_ci_width)) +
-  geom_density() 
-
-ggplot(data_estimates_with_CIs, aes(D_ci_width, color = domain)) +
-  geom_density(adjust = 1.5) +
-  theme(legend.position = "none")
+data_estimates_D %>%
+  group_by(method) %>%
+  do(point_estimate(.$ci_width, centrality = "MAP")) %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
+### By participant, between domains and trial types
+
 ```{r}
 
-library(bayestestR)
-point_estimate(data_estimates_with_CIs$D_ci_width, centrality = "MAP") %>%
-  round_df(3) %>%
+results_map_ciwidth_domain_method_tt <- data_estimates_D %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  group_by(method, domain, trial_type) %>%
+  do(point_estimate(.$ci_width, centrality = "MAP")) %>%
+  ungroup() %>%
+  select(domain, method, trial_type, MAP) 
+
+results_map_ciwidth_domain_method_tt %>%
+  arrange(domain, trial_type, method) %>%
+  pivot_wider(names_from = c(trial_type, method),
+              values_from = MAP) %>%
+  round_df(2) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
-data_estimates_with_CIs %>%
-  group_by(domain) %>%
-  do(point_estimate(.$D_ci_width)) %>%
-  ungroup() %>%
-  round_df(3) %>%
-  summarize(min_map_ci_width = min(MAP),
-            max_map_ci_width = max(MAP),
-            mean_map_ci_width = mean(MAP),
-            sd_map_ci_width = sd(MAP)) %>%
-  round_df(3) %>%
-  gather() %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+sjPlot::tab_model(lm(MAP ~ method + trial_type,
+                     data = results_map_ciwidth_domain_method_tt),
+                  emph.p = FALSE,
+                  digits = 3)
 
 ```
 
@@ -395,20 +446,20 @@ data_estimates_with_CIs %>%
 
 ```{r}
 
-trimmed_emprirical_range <- data_estimates_with_CIs %>%
-  dplyr::summarize(percentile_025 = quantile(D, 0.025, na.rm = TRUE),
-                   percentile_975 = quantile(D, 0.975, na.rm = TRUE)) %>%
+trimmed_emprirical_range <- data_estimates_D %>%
+  dplyr::summarize(percentile_025 = quantile(estimate, 0.025, na.rm = TRUE),
+                   percentile_975 = quantile(estimate, 0.975, na.rm = TRUE)) %>%
   mutate(range_empirical_95_percent = percentile_975 - percentile_025) 
 
 ```
 
 Of course, while treating the zero point as meaningful is common, it has been argued to problematic (i.e., by giving rise to false conclusions about the interpretations of the effect, see REF). While the previous analysis represents a useful illustration, it may be more meaningful to consider the precision of estimation of D scores, agnostic to an arbitrary cut-off point. 
 
-The width of a D score Confidence intervals was found to be wide: MAP = `r round(point_estimate(data_estimates_with_CIs$D_ci_width, centrality = "MAP"), 3)`. Results in the tables above suggest that it doesn't vary much by trial type or domain. As such, when an individual demonstrates a D score of X, we can more accurately say their D score lies in the range of X ± a median of `r round(mad(data_estimates_with_CIs$D_ci_width/2), 3)`. 
+The width of a D score Confidence intervals was found to be wide: MAP = `r round(point_estimate(data_estimates_D$D_ci_width, centrality = "MAP"), 3)`. Results in the tables above suggest that it doesn't vary much by trial type or domain. As such, when an individual demonstrates a D score of X, we can more accurately say their D score lies in the range of X ± a median of `r round(mad(data_estimates_D$D_ci_width/2), 3)`. 
 
-While the minimum observed D scores was `r round(min(data_estimates_with_CIs$D_median), 3)` and max was `r round(max(data_estimates_with_CIs$D_median), 3)`, the outlier scores are clearly visible (see figure XXX). It is therefore likely to be more meaningful to note that 95% of D scores lie within the narrower range of `r round(as.numeric(trimmed_emprirical_range$percentile_025), 3)` to `r round(as.numeric(trimmed_emprirical_range$percentile_975), 3)`. It is useful to contextualise the precision of the estimation of a given IRAP D score within this total observed ranged of D scores between participants. Specifically, the median CI width noted above represents `r round(point_estimate(data_estimates_with_CIs$D_ci_width, centrality = "MAP")/as.numeric(trimmed_emprirical_range$range_empirical_95_percent)*100, 1)`% of the (95% trimmed) observed range of D scores. That is to say, the uncertainty around a given D score represents the majority of the total range of D scores: even knowing an individual's observed D score (e.g., moderately pro-white/anti-black), their 'true' D score may lie almost anywhere else on the range of possible values (e.g., from very pro-white/anti-black to very anti-white/pro-black). An individual IRAP effect is therefore quite a poor measure for individual use.
+While the minimum observed D scores was `r round(min(data_estimates_D$D_median), 3)` and max was `r round(max(data_estimates_D$D_median), 3)`, the outlier scores are clearly visible (see figure XXX). It is therefore likely to be more meaningful to note that 95% of D scores lie within the narrower range of `r round(as.numeric(trimmed_emprirical_range$percentile_025), 3)` to `r round(as.numeric(trimmed_emprirical_range$percentile_975), 3)`. It is useful to contextualise the precision of the estimation of a given IRAP D score within this total observed ranged of D scores between participants. Specifically, the median CI width noted above represents `r round(point_estimate(data_estimates_D$D_ci_width, centrality = "MAP")/as.numeric(trimmed_emprirical_range$range_empirical_95_percent)*100, 1)`% of the (95% trimmed) observed range of D scores. That is to say, the uncertainty around a given D score represents the majority of the total range of D scores: even knowing an individual's observed D score (e.g., moderately pro-white/anti-black), their 'true' D score may lie almost anywhere else on the range of possible values (e.g., from very pro-white/anti-black to very anti-white/pro-black). An individual IRAP effect is therefore quite a poor measure for individual use.
 
-This can also be examined another way by posing the question 'what proportion of D scores can you tell apart from one another?' That is, is the probability that a given D score lies outside the CI of all the other D scores' CIs. For simplicity of implementation, this analysis compares all D scores against all confidence intervals. It is therefore slightly biased by comparing a D score against its own CI as well as all others. However, given the large number of comparisons (i.e., sample size: i.e., `r nrow(data_estimates_with_CIs)` total D scores) this bias is very slight. 95% CIs of this probability value are bootstrapped via case removal and the percentile method using 2000 resamples. The median bootstrapped probability is reported as the estimate for the sake of robustness.
+This can also be examined another way by posing the question 'what proportion of D scores can you tell apart from one another?' That is, is the probability that a given D score lies outside the CI of all the other D scores' CIs. For simplicity of implementation, this analysis compares all D scores against all confidence intervals. It is therefore slightly biased by comparing a D score against its own CI as well as all others. However, given the large number of comparisons (i.e., sample size: i.e., `r nrow(data_estimates_D)` total D scores) this bias is very slight. 95% CIs of this probability value are bootstrapped via case removal and the percentile method using 2000 resamples. The median bootstrapped probability is reported as the estimate for the sake of robustness.
 
 ```{r}
 
@@ -419,7 +470,7 @@ if(file.exists("models/data_pairwise_comparisons.Rdata")) {
   
 } else {
   
-  boots <- bootstraps(data_estimates_with_CIs, times = 2000)
+  boots <- bootstraps(data_estimates_D, times = 2000)
   
   # helper function to apply workflow to each resample
   helper_function <- function(split) {
