@@ -11,9 +11,13 @@ output:
     toc_float: yes
 ---
 
+# to do
+
+- consider moving method to sensitivity analyses
+
 # Overview 
 
-IRAP trial type D scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's D scores and noting how wide their confidence intervals are.
+IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,
@@ -90,6 +94,9 @@ data_outliers_removed <- data_outliers %>%
 data_trimmed <- data_outliers_removed %>%
   select(unique_id, domain, trial_type, rt, block_type) %>%
   filter(rt <= 10000)
+
+# for plot
+dodge_width <- 0.25
 
 ```
 
@@ -406,8 +413,24 @@ data_estimates_D %>%
 
 ## Table
 
+32X35 cells
+
 ```{r}
 
+# combine
+data_diff_zero <- 
+  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
+            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
+    mutate(domain = as.factor(domain),
+           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  group_by(domain, trial_type, method, DV_type) %>%
+  summarize(proportion_diff_zero = mean(sig),
+            variance = plotrix::std.error(sig)^2,
+            .groups = "drop") %>%
+  mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset
+
+# table
 data_diff_zero %>%
   mutate(DV_type = case_when(DV_type == "*D* scores" ~ "D",
                              DV_type == "PI scores" ~ "PI")) %>%
@@ -425,26 +448,11 @@ data_diff_zero %>%
 
 ```{r}
 
-# combine
-data_diff_zero <- 
-  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
-            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
-    mutate(domain = as.factor(domain),
-           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  group_by(domain, trial_type, method, DV_type) %>%
-  summarize(proportion_diff_zero = mean(sig),
-            variance = plotrix::std.error(sig)^2,
-            .groups = "drop") %>%
-  mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset
-
 # fit model
 fit_diff_zero <- 
   lmer(proportion_diff_zero ~ 1 + trial_type * method * DV_type + (1 | domain),
        weights = 1/variance, 
        data = data_diff_zero)
-       # control = lmerControl(check.nobs.vs.nlev = "ignore", 
-       #                       check.nobs.vs.nRE = "ignore"))
 
 # results table
 tab_model(fit_diff_zero, 
@@ -614,8 +622,6 @@ fit_disciminability <-
   lmer(proportion_discriminable ~ 1 + trial_type * method * DV_type + (1 | domain), 
        weights = 1/variance, 
        data = data_discriminability_combined)
-       # control = lmerControl(check.nobs.vs.nlev = "ignore", 
-       #                       check.nobs.vs.nRE = "ignore"))
 
 # results table
 tab_model(fit_disciminability, 
@@ -648,16 +654,6 @@ p_disciminability <-
   theme(legend.position = "top")
 
 p_disciminability
-
-```
-
-# CI widths NEEDED
-
-meta analyze estimation widths
-
-```{r}
-
-
 
 ```
 
@@ -719,9 +715,6 @@ tab_model(fit_ci_width_proportions,
           ci.hyphen = ", ",
           #emph.p = FALSE,
           p.adjust = "holm")
-
-# plot
-dodge_width <- 0.25
 
 # extract marginal means
 results_emm_ci_width_proportions <- 
