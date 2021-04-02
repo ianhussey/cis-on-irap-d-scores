@@ -419,7 +419,7 @@ Within domain and trial type
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("models/data_discriminability_D.rds")) {
   
-  # data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
+  data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
   
 } else {
   
@@ -497,7 +497,7 @@ if(file.exists("models/data_discriminability_D.rds")) {
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("models/data_discriminability_PI.rds")) {
   
-  # data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
+  data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
   
 } else {
   
