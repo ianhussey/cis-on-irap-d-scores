@@ -35,6 +35,11 @@ library(pim)
 library(boot)
 library(parallel)
 library(bayestestR)
+library(afex)
+library(lsmeans)
+library(ggsci)
+library(patchwork)
+library(mdthemes)
 
 # set seed for reproducibility
 set.seed(42)
@@ -70,7 +75,7 @@ data_outliers <- data_trial_level %>%
          mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
   # exclude median +- 2MAD
   mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-                            mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
   filter(rt_outlier == FALSE) %>%
   select(unique_id, rt_outlier) %>%
   full_join(data_trial_level, by = "unique_id") %>%
@@ -149,9 +154,7 @@ data_trimmed %>%
 
 # Bootstrap 95% CIs on D scores
 
-## Bootstrapping CIs
-
-### D scores calculated by trial-type
+## *D* scores calculated by trial-type
 
 ```{r}
 
@@ -161,7 +164,7 @@ if(file.exists("models/data_estimates_D.rds")) {
   data_estimates_D <- read_rds("models/data_estimates_D.rds")
   
 } else {
-
+  
   D_score <- function(data, i) {
     data_with_indexes <- data[i,] # boot function requires data and index
     mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
@@ -197,7 +200,7 @@ if(file.exists("models/data_estimates_D.rds")) {
   }
   
   # bootstrap D scores 
-  data_estimates_D <- data_outliers_removed %>%
+  data_estimates_D <- data_trimmed %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -208,12 +211,12 @@ if(file.exists("models/data_estimates_D.rds")) {
   
   # save to disk
   write_rds(data_estimates_D, file = "models/data_estimates_D.rds", compress = "gz")
-
+  
 }
 
 ```
 
-### PI scores calculated by trial-type
+## PI scores calculated by trial-type
 
 ```{r}
 
@@ -223,7 +226,7 @@ if(file.exists("models/data_estimates_PI.rds")) {
   data_estimates_PI <- read_rds("models/data_estimates_PI.rds")
   
 } else {
-
+  
   # Fast calculation of the A statistic - code from Ruscio (2008) supplementary materials
   PI_score <- function(data, i) {
     data_with_indexes <- data[i,] # boot function requires data and index
@@ -261,12 +264,8 @@ if(file.exists("models/data_estimates_PI.rds")) {
     return(output)
   }
   
-  # trim RTs>10000 ms
-  data_trimmed <- data_outliers_removed %>%
-    select(unique_id, domain, trial_type, rt, block_type) 
-  
   # bootstrap PI scores 
-  data_estimates_PI <- data_trimmed %>%
+  data_estimates_PI <- data_outliers_removed %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_PI_score(data = .)) %>%
     ungroup() %>%
@@ -276,12 +275,14 @@ if(file.exists("models/data_estimates_PI.rds")) {
   
   # save to disk
   write_rds(data_estimates_PI, file = "models/data_estimates_PI.rds", compress = "gz")
-
+  
 }
 
 ```
 
-## Proportion significant
+# Proportion different from zero
+
+## *D* scores NEEDS WORK
 
 ```{r}
 
@@ -400,84 +401,36 @@ data_estimates_D %>%
 
 `r (1 - round(mean(data_estimates_D$D_sig), 3))*100`% of D scores are not significantly different from zero. So, while they might appear to be relatively large (e.g., D = 0.5), their CI does not exclude zero. Put another way, if we treat the zero point as meaningful, we have insufficient evidence to say whether a given D score represents an IRAP effect in `r (1 - round(mean(data_estimates_D$D_sig), 3))*100`% of cases in this large sample (`r nrow(data_estimates_D)/4` participants, `r nrow(data_estimates_D)` total D scores, `r count(distinct(data_estimates_D, domain))` domains)).
 
-## Half CI width
-
-### By participant 
+## PI scores NEEDS WORK
 
 ```{r}
 
-data_estimates_D %>%
-  group_by(method) %>%
-  do(point_estimate(.$ci_width, centrality = "MAP")) %>%
-  round_df(2) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
-### By participant, between domains and trial types
+# Proportion different from one another
 
-```{r}
+Within domain and trial type
 
-results_map_ciwidth_domain_method_tt <- data_estimates_D %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  group_by(method, domain, trial_type) %>%
-  do(point_estimate(.$ci_width, centrality = "MAP")) %>%
-  ungroup() %>%
-  select(domain, method, trial_type, MAP) 
-
-results_map_ciwidth_domain_method_tt %>%
-  arrange(domain, trial_type, method) %>%
-  pivot_wider(names_from = c(trial_type, method),
-              values_from = MAP) %>%
-  round_df(2) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-sjPlot::tab_model(lm(MAP ~ method + trial_type,
-                     data = results_map_ciwidth_domain_method_tt),
-                  emph.p = FALSE,
-                  digits = 3)
-
-```
-
-## Estimation precision
-
-```{r}
-
-trimmed_emprirical_range <- data_estimates_D %>%
-  dplyr::summarize(percentile_025 = quantile(estimate, 0.025, na.rm = TRUE),
-                   percentile_975 = quantile(estimate, 0.975, na.rm = TRUE)) %>%
-  mutate(range_empirical_95_percent = percentile_975 - percentile_025) 
-
-```
-
-Of course, while treating the zero point as meaningful is common, it has been argued to problematic (i.e., by giving rise to false conclusions about the interpretations of the effect, see REF). While the previous analysis represents a useful illustration, it may be more meaningful to consider the precision of estimation of D scores, agnostic to an arbitrary cut-off point. 
-
-The width of a D score Confidence intervals was found to be wide: MAP = `r round(point_estimate(data_estimates_D$D_ci_width, centrality = "MAP"), 3)`. Results in the tables above suggest that it doesn't vary much by trial type or domain. As such, when an individual demonstrates a D score of X, we can more accurately say their D score lies in the range of X ± a median of `r round(mad(data_estimates_D$D_ci_width/2), 3)`. 
-
-While the minimum observed D scores was `r round(min(data_estimates_D$D_median), 3)` and max was `r round(max(data_estimates_D$D_median), 3)`, the outlier scores are clearly visible (see figure XXX). It is therefore likely to be more meaningful to note that 95% of D scores lie within the narrower range of `r round(as.numeric(trimmed_emprirical_range$percentile_025), 3)` to `r round(as.numeric(trimmed_emprirical_range$percentile_975), 3)`. It is useful to contextualise the precision of the estimation of a given IRAP D score within this total observed ranged of D scores between participants. Specifically, the median CI width noted above represents `r round(point_estimate(data_estimates_D$D_ci_width, centrality = "MAP")/as.numeric(trimmed_emprirical_range$range_empirical_95_percent)*100, 1)`% of the (95% trimmed) observed range of D scores. That is to say, the uncertainty around a given D score represents the majority of the total range of D scores: even knowing an individual's observed D score (e.g., moderately pro-white/anti-black), their 'true' D score may lie almost anywhere else on the range of possible values (e.g., from very pro-white/anti-black to very anti-white/pro-black). An individual IRAP effect is therefore quite a poor measure for individual use.
-
-This can also be examined another way by posing the question 'what proportion of D scores can you tell apart from one another?' That is, is the probability that a given D score lies outside the CI of all the other D scores' CIs. For simplicity of implementation, this analysis compares all D scores against all confidence intervals. It is therefore slightly biased by comparing a D score against its own CI as well as all others. However, given the large number of comparisons (i.e., sample size: i.e., `r nrow(data_estimates_D)` total D scores) this bias is very slight. 95% CIs of this probability value are bootstrapped via case removal and the percentile method using 2000 resamples. The median bootstrapped probability is reported as the estimate for the sake of robustness.
+## *D* scores
 
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_pairwise_comparisons.Rdata")) {
+if(file.exists("models/data_discriminability_D.rds")) {
   
-  load("models/data_pairwise_comparisons.Rdata")
+  # data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
   
 } else {
   
-  boots <- bootstraps(data_estimates_D, times = 2000)
-  
   # helper function to apply workflow to each resample
-  helper_function <- function(split) {
+  discriminability <- function(data, i) {
     
-    estimate <- analysis(split)$D
-    ci_lower <- analysis(split)$D_ci_lower_percentile
-    ci_upper <- analysis(split)$D_ci_upper_percentile
+    data_with_indexes <- data[i,] # boot function requires data and index
+    
+    estimate <- data_with_indexes$estimate
+    ci_lower <- data_with_indexes$ci_lower
+    ci_upper <- data_with_indexes$ci_upper
     
     n_estimate <- length(estimate)
     n_ci_lower <- length(ci_lower)
@@ -489,33 +442,230 @@ if(file.exists("models/data_pairwise_comparisons.Rdata")) {
     prob_estimate_inferior_to_ci_lower <- 1 - (r_estimate / n_estimate - (n_estimate + 1) / 2) / n_ci_lower
     prob_estimate_superior_to_ci_upper <- 1 - (r_ci_upper / n_ci_upper - (n_ci_upper + 1) / 2) / n_estimate
     
-    percent_estimates_inside_cis <- 1 - (prob_estimate_inferior_to_ci_lower + prob_estimate_superior_to_ci_upper)
+    probability_estimates_outside_cis <- (prob_estimate_inferior_to_ci_lower + prob_estimate_superior_to_ci_upper)
     
-    return(percent_estimates_inside_cis)
+    return(probability_estimates_outside_cis)
     
   }
   
-  # apply to each bootstrap
-  boot_probabilities <- boots %>% 
-    mutate(percent_estimates_inside_cis = furrr::future_map(splits, helper_function)) %>% 
-    unnest(percent_estimates_inside_cis) %>%
-    select(-splits)
-  
-  # find CIs using percentile method
-  data_pairwise_comparisons <- boot_probabilities %>% 
-    summarize(median   = quantile(percent_estimates_inside_cis, 0.500),
-              ci_lower = quantile(percent_estimates_inside_cis, 0.025),
-              ci_upper = quantile(percent_estimates_inside_cis, 0.975)) %>%
+  bootstrap_discriminability <- function(data){
+    
+    require(dplyr)
+    require(boot)
+    
+    fit <- 
+      boot::boot(data      = data, 
+                 statistic = discriminability, 
+                 R         = n_boots,
+                 sim       = "ordinary", 
+                 stype     = "i",
+                 parallel  = "multicore", 
+                 ncpus     = parallel::detectCores())
+    
+    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+    
+    output <- 
+      tibble(method   = c("normal", "basic", "percent", "bca"),
+             estimate = rep(fit$t0, 4),
+             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    
+    return(output)
+  }
+
+  # bootstrap D scores 
+  data_discriminability_D <- data_estimates_D %>%
+    select(unique_id, domain, trial_type, estimate, ci_upper, ci_lower) %>%
+    group_by(domain, trial_type) %>%
+    do(bootstrap_discriminability(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
     round_df(3)
   
-  
   # save to disk
-  save(data_pairwise_comparisons, file = "models/data_pairwise_comparisons.RData")
+  write_rds(data_discriminability_D, file = "models/data_discriminability_D.rds", compress = "gz")
   
 }
 
 ```
 
-It is not possible to differentiate between two randomly selected D scores in `r round(data_pairwise_comparisons$median*100, 1)`% (95% CI [`r round(data_pairwise_comparisons$ci_lower*100, 1)`, `r round(data_pairwise_comparisons$ci_upper*100, 1)`]) of cases. This provides additional evidence that IRAP's individual level precision and therefore clinical utility is low.
+## PI scores
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/data_discriminability_PI.rds")) {
+  
+  # data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
+  
+} else {
+  
+  # bootstrap D scores 
+  data_discriminability_PI <- data_estimates_PI %>%
+    select(unique_id, domain, trial_type, estimate, ci_upper, ci_lower) %>%
+    group_by(domain, trial_type) %>%
+    do(bootstrap_discriminability(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
+    round_df(3)
+  
+  # save to disk
+  write_rds(data_discriminability_PI, file = "models/data_discriminability_PI.rds", compress = "gz")
+  
+}
+
+```
+
+# CI widths as a proportion of observed range
+
+## ANOVA
+
+```{r}
+
+# D scores
+## find observed range of D scores for each bootstrapping domain, method, and trial type 
+observed_range_estimates_D <- data_estimates_D %>%
+  group_by(domain, method, trial_type) %>%
+  dplyr::summarize(min = min(estimate, na.rm = TRUE),
+                   max = max(estimate, na.rm = TRUE),
+                   .groups = "drop") %>%
+  mutate(range = max - min) 
+
+## calculate CI / range 
+data_ci_width_proportions_D <- data_estimates_D %>%
+  # join this data into the original data
+  full_join(observed_range_estimates_D, by = c("domain", "method", "trial_type")) %>%
+  # calculate ci width as a proportion of observed range
+  mutate(ci_width_proportion = ci_width / range) %>%
+  # check that factor levels are ordered as desired
+  mutate(domain = as.factor(domain),
+         Method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  # calculate most probable value (MAP instead of mean due to distributions) of ci width proportion for each domain, method, and trial type  
+  group_by(domain, Method, trial_type) %>%
+  do(point_estimate(.$ci_width_proportion, centrality = "MAP")) %>%
+  rename(map_ci_width_proportion = MAP)
 
 
+# PI scores
+## find observed range of PI scores for each bootstrapping domain, method, and trial type 
+observed_range_estimates_PI <- data_estimates_PI %>%
+  group_by(domain, method, trial_type) %>%
+  dplyr::summarize(min = min(estimate, na.rm = TRUE),
+                   max = max(estimate, na.rm = TRUE),
+                   .groups = "drop") %>%
+  mutate(range = max - min) 
+
+## calculate CI / range 
+data_ci_width_proportions_PI <- data_estimates_PI %>%
+  # join this data into the original data
+  full_join(observed_range_estimates_PI, by = c("domain", "method", "trial_type")) %>%
+  # calculate ci width as a proportion of observed range
+  mutate(ci_width_proportion = ci_width / range) %>%
+  # check that factor levels are ordered as desired
+  mutate(domain = as.factor(domain),
+         Method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  # calculate most probable value (MAP instead of mean due to distributions) of ci width proportion for each domain, method, and trial type  
+  group_by(domain, Method, trial_type) %>%
+  do(point_estimate(.$ci_width_proportion, centrality = "MAP")) %>%
+  rename(map_ci_width_proportion = MAP)
+
+
+# combine
+data_ci_width_proportions_combined <- 
+  bind_rows(mutate(data_ci_width_proportions_D, DV_type = "D"),
+            mutate(data_ci_width_proportions_PI, DV_type = "PI")) 
+
+# fit anova 
+fit_combined <- 
+  afex::aov_car(map_ci_width_proportion ~ DV_type * Method * trial_type + Error(domain/(DV_type*Method*trial_type)),
+                type = 3,
+                data = data_ci_width_proportions_combined)
+
+# results
+fit_combined
+
+# correct p values for familywise error rate
+tibble(effect = rownames(fit_combined$anova_table),
+       p_holm = p.adjust(fit_combined$anova_table$`Pr(>F)`, method = "holm"))
+
+# estimated marginal means
+marginal_means_combined <- lsmeans(fit_combined, c("DV_type"), by = "Method")
+marginal_means_combined
+
+# post hoc contrasts with corrections for familywise error rate
+update(pairs(marginal_means_combined), by = NULL, adjust = "holm")
+
+```
+
+## Plot
+
+```{r}
+
+# fit seperate anovas just to aid plotting
+fit_D <- afex::aov_car(map_ci_width_proportion ~ Method * trial_type + Error(domain/(Method*trial_type)),
+                       type = 3,
+                       data = data_ci_width_proportions_D)
+
+fit_PI <- afex::aov_car(map_ci_width_proportion ~ Method * trial_type + Error(domain/(Method*trial_type)),
+                       type = 3,
+                       data = data_ci_width_proportions_PI)
+
+# plots
+p_D <- 
+  afex_plot(fit_D, 
+            x = "trial_type", 
+            trace = "Method",
+            error = "within",
+            data_plot = FALSE,
+            dodge = 0.25,
+            mapping = c("shape", "color"),
+            data_arg = list(dodge.width = 0.25)) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(title = "*D* scores",
+       x = "Trial type",
+       y = "MAP 95% CI width<br/>/ observed range",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") +
+  coord_cartesian(ylim = c(0.75, 0.95), expand = TRUE) 
+
+p_PI <- 
+  afex_plot(fit_PI, 
+            x = "trial_type", 
+            trace = "Method",
+            error = "within",
+            data_plot = FALSE,
+            dodge = 0.25,
+            mapping = c("shape", "color"),
+            data_arg = list(dodge.width = 0.25)) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+    scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(title = "PI scores",
+       x = "Trial type",
+       y = "MAP 95% CI width<br/>/ observed range",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") +
+  coord_cartesian(ylim = c(0.75, 0.95), expand = TRUE) 
+
+# combine plots
+p_combined <- p_D + p_PI + plot_layout(ncol = 1, nrow = 2, guides = "collect")
+
+p_combined
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
