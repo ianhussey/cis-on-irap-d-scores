@@ -232,8 +232,8 @@ if(file.exists("models/data_estimates_PI.rds")) {
   # Fast calculation of the A statistic - code from Ruscio (2008) supplementary materials
   PI_score <- function(data, i) {
     data_with_indexes <- data[i,] # boot function requires data and index
-    x  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "con"])
-    y  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "incon"])
+    x  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "incon"])
+    y  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "con"])
     nx <- length(x)
     ny <- length(y)
     rx <- sum(rank(c(x, y))[1:nx])
@@ -274,7 +274,7 @@ if(file.exists("models/data_estimates_PI.rds")) {
     mutate(sig = ifelse((ci_lower < 0.50 & ci_upper < 0.50) | (ci_lower > 0.50 & ci_upper > 0.50), TRUE, FALSE),
            ci_width = ci_upper - ci_lower) %>%
     round_df(3)
-  
+
   # save to disk
   write_rds(data_estimates_PI, "models/data_estimates_PI.rds", compress = "gz")
   
@@ -284,45 +284,16 @@ if(file.exists("models/data_estimates_PI.rds")) {
 
 # Proportion different from zero
 
-## By trial type
+## By bootstrapping method
 
-Data is split by domain and method but this is not shown in the plot. All domains are collated, and only the BCA method is plotted (as the arguably most appropriate method and also the most favorable one in terms of the results).
+Data is split by domain and method but this is not shown in the plot. All domains are collated, and only the BCA method is plotted.
 
-```{r}
+```{r fig.height=6, fig.width=7}
 
-data_estimates_D %>%
-  filter(method == "bca") %>%
+p_dist_method <- data_estimates_D %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
   arrange(estimate) %>%
-  group_by(trial_type) %>%
-  mutate(ordered_id = row_number()) %>%
-  ungroup() %>%
-  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  ggplot() +
-  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
-                 alpha = 1) +
-  geom_point(aes(ordered_id, estimate), size = 0.5) +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  theme_linedraw() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        legend.position = c(0.20, 0.85)) +
-  scale_color_viridis_d(end = 0.6, direction = -1) +
-  xlab("Participant (ranked by D score)") +
-  ylab("IRAP D score") +
-  labs(color = "95% CI excludes zero") + 
-  facet_wrap(~ trial_type)
-
-```
-
-## By domain and trial type 
-
-```{r fig.height=25, fig.width=7}
-
-# separated by domain
-data_estimates_D %>%
-  filter(method == "bca") %>%
-  arrange(trial_type, domain, estimate) %>%
-  group_by(trial_type, domain) %>%
+  group_by(method) %>%
   mutate(ordered_id = row_number()/n()) %>%
   ungroup() %>%
   ggplot() +
@@ -330,16 +301,124 @@ data_estimates_D %>%
                  alpha = 1) +
   geom_point(aes(ordered_id, estimate), size = 0.5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
-  theme_classic() +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        legend.position = c(0.20, 0.85)) +
+  mdthemes::md_theme_linedraw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "top") +
   scale_color_viridis_d(end = 0.6, direction = -1) +
-  xlab("Participant (ranked by D score)") +
+  xlab("Participant") +
+  ylab("*D* score") +
+  labs(color = "95% CI excludes zero point") + 
+  facet_wrap(~ method)
+
+p_dist_method
+
+```
+
+## By trial type
+
+Data is split by domain and method but this is not shown in the plot. All domains are collated, and only the BCA method is plotted.
+
+```{r fig.height=10, fig.width=7}
+
+p_dist_D <- data_estimates_D %>%
+  filter(method == "bca") %>%
+  arrange(estimate) %>%
+  group_by(trial_type) %>%
+  mutate(ordered_id = row_number()/n()) %>%
+  ungroup() %>%
+  mutate(trial_type = case_when(trial_type == "tt1" ~ "TT1",
+                                trial_type == "tt2" ~ "TT2",
+                                trial_type == "tt3" ~ "TT3",
+                                trial_type == "tt4" ~ "TT4"),
+         trial_type = fct_relevel(trial_type, "TT1", "TT2", "TT3", "TT4")) %>%
+  ggplot() +
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
+                 alpha = 1) +
+  geom_point(aes(ordered_id, estimate), size = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  mdthemes::md_theme_linedraw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "top") +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Participant") +
+  ylab("*D* score") +
+  labs(color = "95% CI excludes zero point") + 
+  facet_wrap(~ trial_type)
+
+p_dist_PI <- data_estimates_PI %>%
+  filter(method == "bca") %>%
+  arrange(estimate) %>%
+  group_by(trial_type) %>%
+  mutate(ordered_id = row_number()/n()) %>%
+  ungroup() %>%
+  mutate(trial_type = case_when(trial_type == "tt1" ~ "TT1",
+                                trial_type == "tt2" ~ "TT2",
+                                trial_type == "tt3" ~ "TT3",
+                                trial_type == "tt4" ~ "TT4"),
+         trial_type = fct_relevel(trial_type, "TT1", "TT2", "TT3", "TT4")) %>%
+  ggplot() +
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
+                 alpha = 1) +
+  geom_point(aes(ordered_id, estimate), size = 0.5) +
+  geom_hline(yintercept = 0.50, linetype = "dotted") +
+  mdthemes::md_theme_linedraw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "top") +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Participant") +
+  ylab("PI score") +
+  labs(color = "95% CI excludes zero point") + 
+  facet_wrap(~ trial_type)
+
+p_dist_D + p_dist_PI + plot_layout(ncol = 1, nrow = 2)  # , guides = "collect"
+
+```
+
+## By domain
+
+```{r fig.height=15, fig.width=7}
+
+data_estimates_D %>%
+  filter(method == "bca") %>%
+  arrange(estimate) %>%
+  group_by(domain) %>%
+  mutate(ordered_id = row_number()/n()) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
+                 alpha = 1) +
+  geom_point(aes(ordered_id, estimate), size = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  mdthemes::md_theme_linedraw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "top") +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Participant (ranked by *D* score)") +
   ylab("IRAP D score") +
   labs(color = "95% CI excludes zero") + 
-  facet_wrap(~domain + trial_type, ncol = 8)
+  facet_wrap(~ domain, ncol = 4)
 
+```
+
+## Table
+
+```{r}
+
+data_diff_zero %>%
+  mutate(DV_type = case_when(DV_type == "*D* scores" ~ "D",
+                             DV_type == "PI scores" ~ "PI")) %>%
+  select(-variance) %>%
+  pivot_wider(names_from = c(trial_type, DV_type, method),
+              values_from = proportion_diff_zero) %>%
+  round_df(2) %>%
+  janitor::clean_names() %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+ 
 ```
 
 ## Model
@@ -579,6 +658,7 @@ meta analyze estimation widths
 ```{r}
 
 
+
 ```
 
 # CI widths as a proportion of observed range
@@ -628,12 +708,13 @@ data_ci_width_proportions_combined <-
 
 
 # fit model
-fit <- lme4::lmer(ci_width_proportion ~ trial_type * method * DV_type + (1 | domain/unique_id),
-                  data = data_ci_width_proportions_combined)
+fit_ci_width_proportions <- 
+  lmer(ci_width_proportion ~ trial_type * method * DV_type + (1 | domain/unique_id),
+       data = data_ci_width_proportions_combined)
 
 
 # results table
-tab_model(fit, 
+tab_model(fit_ci_width_proportions, 
           string.p = "p (corrected)", 
           ci.hyphen = ", ",
           #emph.p = FALSE,
@@ -644,7 +725,7 @@ dodge_width <- 0.25
 
 # extract marginal means
 results_emm_ci_width_proportions <- 
-  summary(emmeans(fit, ~ DV_type | trial_type + method)) %>%
+  summary(emmeans(fit_ci_width_proportions, ~ DV_type | trial_type + method)) %>%
   select(DV_type, trial_type, method, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
   mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
