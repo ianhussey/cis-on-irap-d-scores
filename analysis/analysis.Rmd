@@ -37,9 +37,11 @@ library(parallel)
 library(bayestestR)
 library(afex)
 library(lsmeans)
-library(ggsci)
 library(patchwork)
 library(mdthemes)
+library(lme4)
+library(sjPlot)
+library(emmeans)
 
 # set seed for reproducibility
 set.seed(42)
@@ -210,7 +212,7 @@ if(file.exists("models/data_estimates_D.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_D, file = "models/data_estimates_D.rds", compress = "gz")
+  write_rds(data_estimates_D, "models/data_estimates_D.rds", compress = "gz")
   
 }
 
@@ -269,12 +271,12 @@ if(file.exists("models/data_estimates_PI.rds")) {
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_PI_score(data = .)) %>%
     ungroup() %>%
-    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+    mutate(sig = ifelse((ci_lower < 0.50 & ci_upper < 0.50) | (ci_lower > 0.50 & ci_upper > 0.50), TRUE, FALSE),
            ci_width = ci_upper - ci_lower) %>%
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_PI, file = "models/data_estimates_PI.rds", compress = "gz")
+  write_rds(data_estimates_PI, "models/data_estimates_PI.rds", compress = "gz")
   
 }
 
@@ -282,65 +284,37 @@ if(file.exists("models/data_estimates_PI.rds")) {
 
 # Proportion different from zero
 
-## *D* scores NEEDS WORK
+## By trial type
+
+Data is split by domain and method but this is not shown in the plot. All domains are collated, and only the BCA method is plotted (as the arguably most appropriate method and also the most favorable one in terms of the results).
 
 ```{r}
 
-p1 <- 
-  data_estimates_D %>%
-  arrange(method, estimate) %>%
-  group_by(method) %>%
+data_estimates_D %>%
+  filter(method == "bca") %>%
+  arrange(estimate) %>%
+  group_by(trial_type) %>%
   mutate(ordered_id = row_number()) %>%
   ungroup() %>%
+  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
   ggplot() +
   geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
                  alpha = 1) +
   geom_point(aes(ordered_id, estimate), size = 0.5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
-  theme_classic() +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
+  theme_linedraw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
         legend.position = c(0.20, 0.85)) +
   scale_color_viridis_d(end = 0.6, direction = -1) +
   xlab("Participant (ranked by D score)") +
   ylab("IRAP D score") +
   labs(color = "95% CI excludes zero") + 
-  facet_wrap(~method)
-
-p1
-
-write_rds(p1, "models/p1.rds")
+  facet_wrap(~ trial_type)
 
 ```
 
-```{r}
-
-p2 <- 
-  data_estimates_D %>%
-  arrange(method, trial_type, estimate) %>%
-  group_by(method, trial_type) %>%
-  mutate(ordered_id = row_number()) %>%
-  ungroup() %>%
-  ggplot() +
-  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
-                 alpha = 1) +
-  geom_point(aes(ordered_id, estimate), size = 0.5) +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  theme_classic() +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        legend.position = c(0.20, 0.85)) +
-  scale_color_viridis_d(end = 0.6, direction = -1) +
-  xlab("Participant (ranked by D score)") +
-  ylab("IRAP D score") +
-  labs(color = "95% CI excludes zero") + 
-  facet_wrap(~method + trial_type)
-
-p2
-
-write_rds(p2, "models/p2.rds")
-
-```
+## By domain and trial type 
 
 ```{r fig.height=25, fig.width=7}
 
@@ -368,43 +342,62 @@ data_estimates_D %>%
 
 ```
 
-```{r}
-
-data_estimates_D %>%
-  summarize(prop_sig = mean(D_sig)) %>% 
-  round_df(3) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_estimates_D %>%
-  group_by(domain) %>%
-  summarize(prop_sig = mean(D_sig)) %>% 
-  arrange(prop_sig) %>%
-  round_df(3) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_estimates_D %>%
-  group_by(domain) %>%
-  summarize(prop_sig = mean(D_sig)) %>% 
-  ungroup() %>%
-  summarize(min_prop_sig = min(prop_sig),
-            max_prop_sig = max(prop_sig),
-            mean_prop_sig = mean(prop_sig),
-            sd_prop_sig = sd(prop_sig)) %>%
-  round_df(3) %>%
-  gather() %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-```
-
-`r (1 - round(mean(data_estimates_D$D_sig), 3))*100`% of D scores are not significantly different from zero. So, while they might appear to be relatively large (e.g., D = 0.5), their CI does not exclude zero. Put another way, if we treat the zero point as meaningful, we have insufficient evidence to say whether a given D score represents an IRAP effect in `r (1 - round(mean(data_estimates_D$D_sig), 3))*100`% of cases in this large sample (`r nrow(data_estimates_D)/4` participants, `r nrow(data_estimates_D)` total D scores, `r count(distinct(data_estimates_D, domain))` domains)).
-
-## PI scores NEEDS WORK
+## Model
 
 ```{r}
 
+# combine
+data_diff_zero <- 
+  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
+            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
+    mutate(domain = as.factor(domain),
+           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  group_by(domain, trial_type, method, DV_type) %>%
+  summarize(proportion_diff_zero = mean(sig),
+            variance = plotrix::std.error(sig)^2,
+            .groups = "drop") %>%
+  mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset
+
+# fit model
+fit_diff_zero <- 
+  lmer(proportion_diff_zero ~ 1 + trial_type * method * DV_type + (1 | domain),
+       weights = 1/variance, 
+       data = data_diff_zero)
+       # control = lmerControl(check.nobs.vs.nlev = "ignore", 
+       #                       check.nobs.vs.nRE = "ignore"))
+
+# results table
+tab_model(fit_diff_zero, 
+          string.p = "p (corrected)", 
+          ci.hyphen = ", ",
+          #emph.p = FALSE,
+          p.adjust = "holm")
+
+# extract marginal means
+results_emm_diff_zero <- 
+  summary(emmeans(fit_diff_zero, ~ DV_type | trial_type + method)) %>%
+  select(DV_type, trial_type, method, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+  
+p_diff_zero <- 
+  ggplot(results_emm_diff_zero, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  facet_wrap(~ DV_type, ncol = 1, nrow = 2) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "Proportion of non-zero scores",
+       color = "Bootstrap method",
+       shape = "Bootstrap method") + 
+  theme(legend.position = "top")
+
+p_diff_zero
 
 ```
 
@@ -412,7 +405,11 @@ data_estimates_D %>%
 
 Within domain and trial type
 
-## *D* scores
+## Calculate discriminability
+
+Many have argued that the zero point is arbitrary and not a useful reference point. Instead of asking "what proportion of *D*/PI scores are different from zero?", we could also ask "what proportion of *D*/PI scores are different from one another?"
+
+### *D* scores
 
 ```{r}
 
@@ -479,25 +476,28 @@ if(file.exists("models/data_discriminability_D.rds")) {
     group_by(domain, trial_type) %>%
     do(bootstrap_discriminability(data = .)) %>%
     ungroup() %>%
-    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
-           ci_width = ci_upper - ci_lower) %>%
-    round_df(3)
+    mutate(proportion_discriminable = estimate,
+           variance = ((ci_upper - ci_lower)/(1.96*2))^2) %>%
+    mutate(domain = as.factor(domain),
+           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
+           DV_type = "*D* scores")
   
   # save to disk
-  write_rds(data_discriminability_D, file = "models/data_discriminability_D.rds", compress = "gz")
+  write_rds(data_discriminability_D, "models/data_discriminability_D.rds", compress = "gz")
   
 }
 
 ```
 
-## PI scores
+### PI scores
 
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("models/data_discriminability_PI.rds")) {
   
-  data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
+  data_discriminability_PI <- read_rds("models/data_discriminability_PI.rds")
   
 } else {
   
@@ -507,25 +507,87 @@ if(file.exists("models/data_discriminability_PI.rds")) {
     group_by(domain, trial_type) %>%
     do(bootstrap_discriminability(data = .)) %>%
     ungroup() %>%
-    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
-           ci_width = ci_upper - ci_lower) %>%
-    round_df(3)
+    mutate(proportion_discriminable = estimate,
+           variance = ((ci_upper - ci_lower)/(1.96*2))^2) %>%
+    mutate(domain = as.factor(domain),
+           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
+           DV_type = "PI scores")
   
   # save to disk
-  write_rds(data_discriminability_PI, file = "models/data_discriminability_PI.rds", compress = "gz")
+  write_rds(data_discriminability_PI, "models/data_discriminability_PI.rds", compress = "gz")
   
 }
 
 ```
 
-# CI widths as a proportion of observed range
-
-## ANOVA
+## Model
 
 ```{r}
 
-# D scores
-## find observed range of D scores for each bootstrapping domain, method, and trial type 
+# combine
+data_discriminability_combined <- 
+  bind_rows(data_discriminability_D,
+            data_discriminability_PI)
+
+# fit meta analytic model
+fit_disciminability <- 
+  lmer(proportion_discriminable ~ 1 + trial_type * method * DV_type + (1 | domain), 
+       weights = 1/variance, 
+       data = data_discriminability_combined)
+       # control = lmerControl(check.nobs.vs.nlev = "ignore", 
+       #                       check.nobs.vs.nRE = "ignore"))
+
+# results table
+tab_model(fit_disciminability, 
+          string.p = "p (corrected)", 
+          ci.hyphen = ", ",
+          #emph.p = FALSE,
+          p.adjust = "holm")
+
+# extract marginal means
+results_emm_disciminability <- 
+  summary(emmeans(fit_disciminability, ~ DV_type | trial_type + method)) %>%
+  select(DV_type, trial_type, method, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+  
+p_disciminability <- 
+  ggplot(results_emm_disciminability, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  facet_wrap(~ DV_type, ncol = 1, nrow = 2) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "Proportion of discriminable scores",
+       color = "Bootstrap method",
+       shape = "Bootstrap method") + 
+  theme(legend.position = "top")
+
+p_disciminability
+
+```
+
+# CI widths NEEDED
+
+meta analyze estimation widths
+
+```{r}
+
+
+```
+
+# CI widths as a proportion of observed range
+
+Wilkinson notation for model: ci_width_proportion ~ trial_type * method * DV_type + (1 | domain/unique_id)
+
+```{r}
+
+## calculate observed ranges 
 observed_range_estimates_D <- data_estimates_D %>%
   group_by(domain, method, trial_type) %>%
   dplyr::summarize(min = min(estimate, na.rm = TRUE),
@@ -533,24 +595,6 @@ observed_range_estimates_D <- data_estimates_D %>%
                    .groups = "drop") %>%
   mutate(range = max - min) 
 
-## calculate CI / range 
-data_ci_width_proportions_D <- data_estimates_D %>%
-  # join this data into the original data
-  full_join(observed_range_estimates_D, by = c("domain", "method", "trial_type")) %>%
-  # calculate ci width as a proportion of observed range
-  mutate(ci_width_proportion = ci_width / range) %>%
-  # check that factor levels are ordered as desired
-  mutate(domain = as.factor(domain),
-         Method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  # calculate most probable value (MAP instead of mean due to distributions) of ci width proportion for each domain, method, and trial type  
-  group_by(domain, Method, trial_type) %>%
-  do(point_estimate(.$ci_width_proportion, centrality = "MAP")) %>%
-  rename(map_ci_width_proportion = MAP)
-
-
-# PI scores
-## find observed range of PI scores for each bootstrapping domain, method, and trial type 
 observed_range_estimates_PI <- data_estimates_PI %>%
   group_by(domain, method, trial_type) %>%
   dplyr::summarize(min = min(estimate, na.rm = TRUE),
@@ -558,107 +602,70 @@ observed_range_estimates_PI <- data_estimates_PI %>%
                    .groups = "drop") %>%
   mutate(range = max - min) 
 
-## calculate CI / range 
+
+# calculate CI / range 
+data_ci_width_proportions_D <- data_estimates_D %>%
+  # join this data into the original data
+  full_join(observed_range_estimates_D, by = c("domain", "method", "trial_type")) %>%
+  # calculate ci width as a proportion of observed range
+  mutate(ci_width_proportion = ci_width / range) %>%
+  mutate(DV_type = "*D* scores") 
+
 data_ci_width_proportions_PI <- data_estimates_PI %>%
   # join this data into the original data
   full_join(observed_range_estimates_PI, by = c("domain", "method", "trial_type")) %>%
   # calculate ci width as a proportion of observed range
   mutate(ci_width_proportion = ci_width / range) %>%
-  # check that factor levels are ordered as desired
-  mutate(domain = as.factor(domain),
-         Method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  # calculate most probable value (MAP instead of mean due to distributions) of ci width proportion for each domain, method, and trial type  
-  group_by(domain, Method, trial_type) %>%
-  do(point_estimate(.$ci_width_proportion, centrality = "MAP")) %>%
-  rename(map_ci_width_proportion = MAP)
-
+  mutate(DV_type = "PI scores")
 
 # combine
 data_ci_width_proportions_combined <- 
-  bind_rows(mutate(data_ci_width_proportions_D, DV_type = "D"),
-            mutate(data_ci_width_proportions_PI, DV_type = "PI")) 
+  bind_rows(data_ci_width_proportions_D,
+            data_ci_width_proportions_PI) %>%
+  mutate(domain = as.factor(domain),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
-# fit anova 
-fit_combined <- 
-  afex::aov_car(map_ci_width_proportion ~ DV_type * Method * trial_type + Error(domain/(DV_type*Method*trial_type)),
-                type = 3,
-                data = data_ci_width_proportions_combined)
 
-# results
-fit_combined
+# fit model
+fit <- lme4::lmer(ci_width_proportion ~ trial_type * method * DV_type + (1 | domain/unique_id),
+                  data = data_ci_width_proportions_combined)
 
-# correct p values for familywise error rate
-tibble(effect = rownames(fit_combined$anova_table),
-       p_holm = p.adjust(fit_combined$anova_table$`Pr(>F)`, method = "holm"))
 
-# estimated marginal means
-marginal_means_combined <- lsmeans(fit_combined, c("DV_type"), by = "Method")
-marginal_means_combined
+# results table
+tab_model(fit, 
+          string.p = "p (corrected)", 
+          ci.hyphen = ", ",
+          #emph.p = FALSE,
+          p.adjust = "holm")
 
-# post hoc contrasts with corrections for familywise error rate
-update(pairs(marginal_means_combined), by = NULL, adjust = "holm")
+# plot
+dodge_width <- 0.25
 
-```
-
-## Plot
-
-```{r}
-
-# fit seperate anovas just to aid plotting
-fit_D <- afex::aov_car(map_ci_width_proportion ~ Method * trial_type + Error(domain/(Method*trial_type)),
-                       type = 3,
-                       data = data_ci_width_proportions_D)
-
-fit_PI <- afex::aov_car(map_ci_width_proportion ~ Method * trial_type + Error(domain/(Method*trial_type)),
-                       type = 3,
-                       data = data_ci_width_proportions_PI)
-
-# plots
-p_D <- 
-  afex_plot(fit_D, 
-            x = "trial_type", 
-            trace = "Method",
-            error = "within",
-            data_plot = FALSE,
-            dodge = 0.25,
-            mapping = c("shape", "color"),
-            data_arg = list(dodge.width = 0.25)) +
+# extract marginal means
+results_emm_ci_width_proportions <- 
+  summary(emmeans(fit, ~ DV_type | trial_type + method)) %>%
+  select(DV_type, trial_type, method, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+  
+p_ci_width_proportions <- 
+  ggplot(results_emm_ci_width_proportions, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  facet_wrap(~ DV_type, ncol = 1, nrow = 2) +
   scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
   scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
-  labs(title = "*D* scores",
-       x = "Trial type",
-       y = "MAP 95% CI width<br/>/ observed range",
-       color = "Bootstrapping method",
-       shape = "Bootstrapping method") +
-  coord_cartesian(ylim = c(0.75, 0.95), expand = TRUE) 
+  labs(x = "Trial type",
+       y = "95% CI width / observed range",
+       color = "Bootstrap method",
+       shape = "Bootstrap method") + 
+  theme(legend.position = "top")
 
-p_PI <- 
-  afex_plot(fit_PI, 
-            x = "trial_type", 
-            trace = "Method",
-            error = "within",
-            data_plot = FALSE,
-            dodge = 0.25,
-            mapping = c("shape", "color"),
-            data_arg = list(dodge.width = 0.25)) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  mdthemes::md_theme_linedraw() +
-    scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
-  labs(title = "PI scores",
-       x = "Trial type",
-       y = "MAP 95% CI width<br/>/ observed range",
-       color = "Bootstrapping method",
-       shape = "Bootstrapping method") +
-  coord_cartesian(ylim = c(0.75, 0.95), expand = TRUE) 
-
-# combine plots
-p_combined <- p_D + p_PI + plot_layout(ncol = 1, nrow = 2, guides = "collect")
-
-p_combined
+p_ci_width_proportions
 
 ```
 
