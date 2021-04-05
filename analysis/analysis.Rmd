@@ -289,51 +289,6 @@ if(file.exists("models/data_estimates_PI.rds")) {
 
 ```
 
-## $r_{pb}$ scores
-
-```{r fig.height=15, fig.width=7}
-
-library(broom)
-
-data_estimates_rpb <- data_trimmed %>%
-  select(unique_id, domain, trial_type, rt, block_type) %>%
-  filter(rt <= 10000) %>%
-  mutate(block_type = case_when(block_type == "con" ~ 0,
-                                block_type == "incon" ~ 1)) %>%
-  group_by(unique_id, domain, trial_type) %>%
-  do(tidy(cor.test(formula = ~ block_type + rt, 
-                   data = ., 
-                   method = "pearson", 
-                   conf.level = 0.95))) %>%
-  ungroup() %>%
-  mutate(sig = ifelse(p.value < .05, TRUE, FALSE)) %>%
-  select(unique_id, domain, trial_type, estimate, ci_lower = conf.low, ci_upper = conf.high, sig) %>%
-  mutate(ci_width = ci_upper - ci_lower) %>%
-  mutate(method = "Arithmethic") %>%
-  round_df(3)
-
-# data_estimates_rpb %>%
-#   arrange(estimate) %>%
-#   group_by(domain) %>%
-#   mutate(ordered_id = row_number()/n()) %>%
-#   ungroup() %>%
-#   ggplot() +
-#   geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
-#                  alpha = 1) +
-#   geom_point(aes(ordered_id, estimate), size = 0.5) +
-#   geom_hline(yintercept = 0, linetype = "dotted") +
-#   mdthemes::md_theme_linedraw() +
-#   theme(axis.text.x = element_blank(),
-#         axis.ticks.x = element_blank(),
-#         legend.position = "top") +
-#   scale_color_viridis_d(end = 0.6, direction = -1) +
-#   xlab("Participant (ranked by rpb)") +
-#   ylab("IRAP rpb") +
-#   labs(color = "95% CI excludes zero") + 
-#   facet_wrap(~ domain, ncol = 4)
-
-```
-
 # CI widths
 
 Widths cant be directly compared between *D* and PI as they have different ranges, so *D* scores only.
@@ -412,7 +367,9 @@ ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) +
 
 # Proportion different from zero
 
-## By bootstrapping method
+## Plots
+
+### By bootstrapping method
 
 Data is split by domain and method but this is not shown in the plot. All domains are collated, and only the BCA method is plotted.
 
@@ -443,7 +400,7 @@ p_dist_method
 
 ```
 
-## By trial type
+### By trial type
 
 Data is split by domain and method but this is not shown in the plot. All domains are collated, and only the BCA method is plotted.
 
@@ -505,7 +462,7 @@ p_dist_D + p_dist_PI + plot_layout(ncol = 1, nrow = 2)  # , guides = "collect"
 
 ```
 
-## By domain
+### By domain
 
 ```{r fig.height=15, fig.width=7}
 
@@ -532,13 +489,10 @@ data_estimates_D %>%
 
 ```
 
-## Table
-
-32X35 cells
+## Calculate scores
 
 ```{r}
 
-# combine
 data_diff_zero <- 
   bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
             mutate(data_estimates_PI, DV_type = "PI scores")) %>%
@@ -550,6 +504,14 @@ data_diff_zero <-
             variance = plotrix::std.error(sig)^2,
             .groups = "drop") %>%
   mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset
+
+```
+
+## Table
+
+32X35 cells
+
+```{r}
 
 # table
 data_diff_zero %>%
@@ -639,7 +601,7 @@ p_diff_zero
 
 ```
 
-### domain
+### Compare scoring methods
 
 ```{r}
 
@@ -671,62 +633,6 @@ results_emm_diff_zero <-
   summary(emmeans(fit_diff_zero, ~ DV_type | trial_type)) %>%
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
-
-p_diff_zero <- 
-  ggplot(results_emm_diff_zero, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
-  geom_line(position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-  mdthemes::md_theme_linedraw() +
-  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
-  labs(x = "Trial type",
-       y = "Proportion of non-zero scores") + 
-  theme(legend.position = "top")
-
-p_diff_zero
-
-# tests
-emmeans(fit_diff_zero, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-emmeans(fit_diff_zero, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
-
-```
-
-### domain glm
-
-```{r}
-
-# fit model
-fit_diff_zero <- 
-  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
-            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
-  filter(method == "bca") %>%
-  mutate(domain = as.factor(domain),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  glmer(sig ~ 1 + trial_type * DV_type + (1 | domain),
-        family = binomial(link = "logit"),
-        data = .)
-
-# results table
-tab_model(fit_diff_zero, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
-
-plot_model(fit_diff_zero, 
-           colors = "bw",
-           type = "re") +
-  mdthemes::md_theme_linedraw() +
-  ggtitle("")
-
-summary(fit_diff_zero)
-
-# extract marginal means
-results_emm_diff_zero <- 
-  summary(emmeans(fit_diff_zero, ~ DV_type | trial_type)) %>%
-  select(DV_type, trial_type, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
-  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  mutate_if(is.numeric, exp)
 
 p_diff_zero <- 
   ggplot(results_emm_diff_zero, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
@@ -872,37 +778,6 @@ if(file.exists("models/data_discriminability_PI.rds")) {
 
 ```
 
-### $r_{pb}$ scores
-
-```{r}
-
-# bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_discriminability_rpb.rds")) {
-  
-  data_discriminability_rpb <- read_rds("models/data_discriminability_rpb.rds")
-  
-} else {
-  
-  # bootstrap D scores 
-  data_discriminability_rpb <- data_estimates_rpb %>%
-    select(unique_id, domain, trial_type, estimate, ci_upper, ci_lower) %>%
-    group_by(domain, trial_type) %>%
-    do(bootstrap_discriminability(data = .)) %>%
-    ungroup() %>%
-    mutate(proportion_discriminable = estimate,
-           variance = ((ci_upper - ci_lower)/(1.96*2))^2) %>%
-    mutate(domain = as.factor(domain),
-           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "PI scores")
-  
-  # save to disk
-  write_rds(data_discriminability_rpb, "models/data_discriminability_rpb.rds", compress = "gz")
-  
-}
-
-```
-
 ## Model
 
 ### Compare scoring methods
@@ -953,6 +828,8 @@ p_disciminability_scoring
 
 # tests
 emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
+emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type), adjust = "bonferroni")
+
 emmeans(fit_disciminability_scoring, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
 
 ```
@@ -962,16 +839,11 @@ emmeans(fit_disciminability_scoring, list(pairwise ~ trial_type | DV_type), adju
 
 ```{r}
 
-# combine
-data_discriminability_combined_method <- 
-  bind_rows(data_discriminability_D,
-            data_discriminability_rpb)
-
 # fit meta analytic model
 fit_disciminability_method <- 
-  lmer(proportion_discriminable ~ 1 + trial_type * DV_type + (1 | domain), 
+  lmer(proportion_discriminable ~ 1 + trial_type * method + (1 | domain), 
        weights = 1/variance, 
-       data = data_discriminability_combined_method)
+       data = data_discriminability_D)
 
 # results table
 tab_model(fit_disciminability_method, 
@@ -982,12 +854,12 @@ tab_model(fit_disciminability_method,
 
 # extract marginal means
 results_emm_disciminability_method <- 
-  summary(emmeans(fit_disciminability_method, ~ DV_type | trial_type)) %>%
-  select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  summary(emmeans(fit_disciminability_method, ~ method | trial_type)) %>%
+  select(method, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
 p_disciminability_method <- 
-  ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -997,15 +869,15 @@ p_disciminability_method <-
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
   labs(x = "Trial type",
        y = "Proportion of discriminable scores",
-       color = "Scoring method",
-       shape = "Scoring method") + 
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
   theme(legend.position = "top")
+  #coord_cartesian(ylim = c(0, .3))
 
 p_disciminability_method
 
 # tests
-emmeans(fit_disciminability_method, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-emmeans(fit_disciminability_method, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
+emmeans(fit_disciminability_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
 
 ```
 
@@ -1030,14 +902,6 @@ observed_range_estimates_PI <- data_estimates_PI %>%
                    .groups = "drop") %>%
   mutate(range = max - min) 
 
-observed_range_estimates_rpb <- data_estimates_rpb %>%
-  group_by(domain, trial_type, method) %>%
-  dplyr::summarize(min = min(estimate, na.rm = TRUE),
-                   max = max(estimate, na.rm = TRUE),
-                   .groups = "drop") %>%
-  mutate(range = max - min) 
-
-
 
 # calculate CI / range 
 data_ci_width_proportions_D <- data_estimates_D %>%
@@ -1054,20 +918,12 @@ data_ci_width_proportions_PI <- data_estimates_PI %>%
   mutate(ci_width_proportion = ci_width / range) %>%
   mutate(DV_type = "PI scores")
 
-data_ci_width_proportions_rpb <- data_estimates_rpb %>%
-  # join this data into the original data
-  full_join(observed_range_estimates_rpb, by = c("domain", "method", "trial_type")) %>%
-  # calculate ci width as a proportion of observed range
-  mutate(ci_width_proportion = ci_width / range) %>%
-  mutate(DV_type = "*r*<sub>pb</sub> scores")
-
 # combine
 data_ci_width_proportions_combined <- 
   bind_rows(data_ci_width_proportions_D,
-            data_ci_width_proportions_PI,
-            data_ci_width_proportions_rpb) %>%
+            data_ci_width_proportions_PI) %>%
   mutate(domain = as.factor(domain),
-         method = fct_relevel(method, "bca", "basic", "normal", "percent", "Arithmethic"),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
 ```
@@ -1131,16 +987,14 @@ emmeans(fit_ci_width_proportions_scoring, list(pairwise ~ trial_type | DV_type),
 ```{r}
 
 data_ci_width_proportions_combined_method <- 
-  bind_rows(data_ci_width_proportions_D,
-            data_ci_width_proportions_rpb) %>%
+  data_ci_width_proportions_D %>%
   mutate(domain = as.factor(domain),
          method = as.factor(method),
-         method = fct_relevel(method, "bca", "basic", "normal", "percent", "Arithmethic"),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
   select(unique_id, domain, trial_type, method, ci_width_proportion) 
 
 # fit model
-
 if(file.exists("models/fit_ci_width_proportions_method.rds")) {
   
   fit_ci_width_proportions_method <- read_rds("models/fit_ci_width_proportions_method.rds")
@@ -1171,7 +1025,7 @@ tab_model(fit_ci_width_proportions_method,
 results_emm_ci_width_proportions_method <- 
   summary(emmeans(fit_ci_width_proportions_method, ~ trial_type | method)) %>%
   select(method, trial_type, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent", "Arithmethic"),
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent", "arithmethic"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
 p_ci_width_proportions_method <- 
