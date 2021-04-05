@@ -281,7 +281,7 @@ if(file.exists("models/data_estimates_PI.rds")) {
     mutate(sig = ifelse((ci_lower < 0.50 & ci_upper < 0.50) | (ci_lower > 0.50 & ci_upper > 0.50), TRUE, FALSE),
            ci_width = ci_upper - ci_lower) %>%
     round_df(3)
-
+  
   # save to disk
   write_rds(data_estimates_PI, "models/data_estimates_PI.rds", compress = "gz")
   
@@ -542,9 +542,9 @@ data_estimates_D %>%
 data_diff_zero <- 
   bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
             mutate(data_estimates_PI, DV_type = "PI scores")) %>%
-    mutate(domain = as.factor(domain),
-           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  mutate(domain = as.factor(domain),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
   group_by(domain, trial_type, method, DV_type) %>%
   summarize(proportion_diff_zero = mean(sig),
             variance = plotrix::std.error(sig)^2,
@@ -618,7 +618,7 @@ results_emm_diff_zero <-
   select(DV_type, trial_type, method, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
-  
+
 p_diff_zero <- 
   ggplot(results_emm_diff_zero, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
@@ -671,7 +671,7 @@ results_emm_diff_zero <-
   summary(emmeans(fit_diff_zero, ~ DV_type | trial_type)) %>%
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
-  
+
 p_diff_zero <- 
   ggplot(results_emm_diff_zero, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
@@ -699,9 +699,9 @@ emmeans(fit_diff_zero, list(pairwise ~ trial_type | DV_type), adjust = "bonferro
 fit_diff_zero <- 
   bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
             mutate(data_estimates_PI, DV_type = "PI scores")) %>%
-    filter(method == "bca") %>%
-    mutate(domain = as.factor(domain),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  filter(method == "bca") %>%
+  mutate(domain = as.factor(domain),
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
   glmer(sig ~ 1 + trial_type * DV_type + (1 | domain),
         family = binomial(link = "logit"),
         data = .)
@@ -727,7 +727,7 @@ results_emm_diff_zero <-
   select(DV_type, trial_type, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
   mutate_if(is.numeric, exp)
-  
+
 p_diff_zero <- 
   ggplot(results_emm_diff_zero, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
@@ -755,6 +755,61 @@ Within domain and trial type
 
 Many have argued that the zero point is arbitrary and not a useful reference point. Instead of asking "what proportion of *D*/PI scores are different from zero?", we could also ask "what proportion of *D*/PI scores are different from one another?"
 
+```{r}
+
+# helper function to apply workflow to each resample
+discriminability <- function(data, i) {
+  
+  data_with_indexes <- data[i,] # boot function requires data and index
+  
+  estimate <- data_with_indexes$estimate
+  ci_lower <- data_with_indexes$ci_lower
+  ci_upper <- data_with_indexes$ci_upper
+  
+  n_estimate <- length(estimate)
+  n_ci_lower <- length(ci_lower)
+  n_ci_upper <- length(ci_upper)
+  
+  r_estimate <- sum(rank(c(estimate, ci_lower))[1:n_estimate])
+  r_ci_upper <- sum(rank(c(ci_upper, estimate))[1:n_ci_upper])
+  
+  prob_estimate_inferior_to_ci_lower <- 1 - (r_estimate / n_estimate - (n_estimate + 1) / 2) / n_ci_lower
+  prob_estimate_superior_to_ci_upper <- 1 - (r_ci_upper / n_ci_upper - (n_ci_upper + 1) / 2) / n_estimate
+  
+  probability_estimates_outside_cis <- (prob_estimate_inferior_to_ci_lower + prob_estimate_superior_to_ci_upper)
+  
+  return(probability_estimates_outside_cis)
+  
+}
+
+bootstrap_discriminability <- function(data){
+  
+  require(dplyr)
+  require(boot)
+  
+  fit <- 
+    boot::boot(data      = data, 
+               statistic = discriminability, 
+               R         = n_boots,
+               sim       = "ordinary", 
+               stype     = "i",
+               parallel  = "multicore", 
+               ncpus     = parallel::detectCores())
+  
+  results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+  
+  output <- 
+    tibble(method   = c("normal", "basic", "percent", "bca"),
+           estimate = rep(fit$t0, 4),
+           ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+           ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+  
+  return(output)
+}
+
+```
+
+
 ### *D* scores
 
 ```{r}
@@ -766,56 +821,6 @@ if(file.exists("models/data_discriminability_D.rds")) {
   
 } else {
   
-  # helper function to apply workflow to each resample
-  discriminability <- function(data, i) {
-    
-    data_with_indexes <- data[i,] # boot function requires data and index
-    
-    estimate <- data_with_indexes$estimate
-    ci_lower <- data_with_indexes$ci_lower
-    ci_upper <- data_with_indexes$ci_upper
-    
-    n_estimate <- length(estimate)
-    n_ci_lower <- length(ci_lower)
-    n_ci_upper <- length(ci_upper)
-    
-    r_estimate <- sum(rank(c(estimate, ci_lower))[1:n_estimate])
-    r_ci_upper <- sum(rank(c(ci_upper, estimate))[1:n_ci_upper])
-    
-    prob_estimate_inferior_to_ci_lower <- 1 - (r_estimate / n_estimate - (n_estimate + 1) / 2) / n_ci_lower
-    prob_estimate_superior_to_ci_upper <- 1 - (r_ci_upper / n_ci_upper - (n_ci_upper + 1) / 2) / n_estimate
-    
-    probability_estimates_outside_cis <- (prob_estimate_inferior_to_ci_lower + prob_estimate_superior_to_ci_upper)
-    
-    return(probability_estimates_outside_cis)
-    
-  }
-  
-  bootstrap_discriminability <- function(data){
-    
-    require(dplyr)
-    require(boot)
-    
-    fit <- 
-      boot::boot(data      = data, 
-                 statistic = discriminability, 
-                 R         = n_boots,
-                 sim       = "ordinary", 
-                 stype     = "i",
-                 parallel  = "multicore", 
-                 ncpus     = parallel::detectCores())
-    
-    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
-    
-    output <- 
-      tibble(method   = c("normal", "basic", "percent", "bca"),
-             estimate = rep(fit$t0, 4),
-             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
-    
-    return(output)
-  }
-
   # bootstrap D scores 
   data_discriminability_D <- data_estimates_D %>%
     select(unique_id, domain, trial_type, estimate, ci_upper, ci_lower) %>%
@@ -928,7 +933,7 @@ results_emm_disciminability_scoring <-
   summary(emmeans(fit_disciminability_scoring, ~ DV_type | trial_type)) %>%
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
-  
+
 p_disciminability_scoring <- 
   ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
@@ -980,7 +985,7 @@ results_emm_disciminability_method <-
   summary(emmeans(fit_disciminability_method, ~ DV_type | trial_type)) %>%
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
-  
+
 p_disciminability_method <- 
   ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
@@ -1139,7 +1144,7 @@ data_ci_width_proportions_combined_method <-
 if(file.exists("models/fit_ci_width_proportions_method.rds")) {
   
   fit_ci_width_proportions_method <- read_rds("models/fit_ci_width_proportions_method.rds")
-
+  
 } else {
   
   fit_ci_width_proportions_method <- 
@@ -1149,8 +1154,8 @@ if(file.exists("models/fit_ci_width_proportions_method.rds")) {
   write_rds(fit_ci_width_proportions_method, "models/fit_ci_width_proportions_method.rds")
   
 }
-  
-  
+
+
 fit_ci_width_proportions_method <- 
   lmer(ci_width_proportion ~ trial_type * method + (1 | domain/unique_id), 
        data = data_ci_width_proportions_combined_method)
@@ -1168,7 +1173,7 @@ results_emm_ci_width_proportions_method <-
   select(method, trial_type, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
   mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent", "Arithmethic"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
-  
+
 p_ci_width_proportions_method <- 
   ggplot(results_emm_ci_width_proportions_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
