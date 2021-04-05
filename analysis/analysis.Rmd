@@ -622,6 +622,7 @@ results_emm_diff_zero_method <-
 
 # save to disk
 write_rds(results_emm_diff_zero_method, "models/results_emm_diff_zero_method.rds")
+results_emm_diff_zero_method <- read_rds("models/results_emm_diff_zero_method.rds")
 
 ggplot(results_emm_diff_zero_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
@@ -629,6 +630,7 @@ ggplot(results_emm_diff_zero_method, aes(trial_type, estimate, color = method, s
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
   labs(shape = "Bootstrapping method",
        color = "Bootstrapping method",
@@ -850,11 +852,12 @@ results_emm_disciminability_method <-
 # save to disk
 write_rds(results_emm_disciminability_method, "models/results_emm_disciminability_method.rds")
 
+# plot
 ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-  scale_shape_discrete() +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
@@ -863,7 +866,6 @@ ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = met
        color = "Bootstrapping method",
        shape = "Bootstrapping method") + 
   theme(legend.position = "top")
-  #coord_cartesian(ylim = c(0, .3))
 
 # tests
 emmeans(fit_disciminability_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
@@ -1038,8 +1040,8 @@ ggplot(results_emm_ci_width_proportions_method, aes(trial_type, estimate, color 
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
   labs(x = "Trial type",
        y = "95% CI width / observed range",
-       color = "Confidence Interval method",
-       shape = "Confidence Interval method") + 
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
   theme(legend.position = "right")
 
 # tests
