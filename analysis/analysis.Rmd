@@ -11,12 +11,6 @@ output:
     toc_float: yes
 ---
 
-to do
-
-- reorder and relabel boot methods for all plots
-- prop diff from zero labs(color = "Bootstrapping method") + , add coloring
-
-
 # Overview 
 
 IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
@@ -580,7 +574,9 @@ ggplot(results_emm_diff_zero_scoring, aes(trial_type, estimate, color = DV_type,
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("Trial type 1" = "1", "Trial type 2" = "2", "Trial type 3" = "3", "Trial type 4" = "4")) +
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
-  labs(x = "Trial type",
+  labs(shape = "Scoring method",
+       color = "Scoring method",
+       x = "Trial type",
        y = "Proportion of non-zero scores") + 
   theme(legend.position = "top")
 
@@ -621,7 +617,8 @@ summary(fit_diff_zero_method)
 results_emm_diff_zero_method <- 
   summary(emmeans(fit_diff_zero_method, ~ method | trial_type)) %>%
   select(method, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
-  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"))
 
 # save to disk
 write_rds(results_emm_diff_zero_method, "models/results_emm_diff_zero_method.rds")
@@ -632,8 +629,10 @@ ggplot(results_emm_diff_zero_method, aes(trial_type, estimate, color = method, s
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
-  scale_color_viridis_d(begin = 0.3, end = 0.7) +
-  labs(x = "Trial type",
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  labs(shape = "Bootstrapping method",
+       color = "Bootstrapping method",
+       x = "Trial type",
        y = "Proportion of non-zero scores") + 
   theme(legend.position = "top")
 
@@ -799,6 +798,9 @@ results_emm_disciminability_scoring <-
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
+# save to disk
+write_rds(results_emm_disciminability_scoring, "models/results_emm_disciminability_scoring.rds")
+
 ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
@@ -812,9 +814,6 @@ ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV
        color = "Scoring method",
        shape = "Scoring method") + 
   theme(legend.position = "top")
-
-# save to disk
-write_rds(results_emm_disciminability_scoring, "models/results_emm_disciminability_scoring.rds")
 
 # tests
 emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
@@ -856,7 +855,7 @@ ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = met
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   scale_shape_discrete() +
-  scale_color_viridis_d(begin = 0.3, end = 0.7) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
   labs(x = "Trial type",
