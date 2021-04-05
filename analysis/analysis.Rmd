@@ -1042,8 +1042,7 @@ data_ci_width_proportions_combined_method <-
          method = as.factor(method),
          method = fct_relevel(method, "bca", "basic", "normal", "percent", "Arithmethic"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  select(unique_id, domain, trial_type, method, ci_width_proportion) %>%
-  sample_frac(0.1)
+  select(unique_id, domain, trial_type, method, ci_width_proportion) 
 
 # fit model
 
@@ -1076,7 +1075,7 @@ tab_model(fit_ci_width_proportions_method,
 # extract marginal means
 results_emm_ci_width_proportions_method <- 
   summary(emmeans(fit_ci_width_proportions_method, ~ trial_type | method)) %>%
-  select(method, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  select(method, trial_type, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
   mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent", "Arithmethic"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
   
