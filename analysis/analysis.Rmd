@@ -918,7 +918,7 @@ p_disciminability
 
 # CI widths as a proportion of observed range
 
-Wilkinson notation for model: ci_width_proportion ~ trial_type * method * DV_type + (1 | domain/unique_id)
+## Calculate scores
 
 ```{r}
 
@@ -1085,21 +1085,28 @@ p_ci_width_proportions_method <-
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-  # scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile", "Arithmethic")) +
-  # scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile", "Arithmethic")) +
+  scale_shape_discrete(labels = c("*D* score (BCA bootstrap)", 
+                                  "*D* score (basic bootstrap)", 
+                                  "*D* score (normal bootstrap)", 
+                                  "*D* score (percentile bootstrap)",
+                                  "*r*<sub>pb</sub> (arithmethic)")) +
+  scale_color_viridis_d(end = 0.8, labels = c("*D* score (BCA bootstrap)", 
+                                              "*D* score (basic bootstrap)", 
+                                              "*D* score (normal bootstrap)", 
+                                              "*D* score (percentile bootstrap)",
+                                              "*r*<sub>pb</sub> (arithmethic)")) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
   labs(x = "Trial type",
        y = "95% CI width / observed range",
        color = "Confidence Interval method",
        shape = "Confidence Interval method") + 
-  theme(legend.position = "top")
+  theme(legend.position = "right")
 
 p_ci_width_proportions_method
 
 # tests
-emmeans(p_ci_width_proportions_method, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-emmeans(p_ci_width_proportions_method, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
+emmeans(fit_ci_width_proportions_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
 
 ```
 
