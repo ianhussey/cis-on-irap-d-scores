@@ -289,7 +289,7 @@ if(file.exists("models/data_estimates_PI.rds")) {
 
 ```
 
-## Point biserial correlations
+## $r_{pb}$ scores
 
 ```{r fig.height=15, fig.width=7}
 
@@ -867,52 +867,140 @@ if(file.exists("models/data_discriminability_PI.rds")) {
 
 ```
 
+### $r_{pb}$ scores
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/data_discriminability_rpb.rds")) {
+  
+  data_discriminability_rpb <- read_rds("models/data_discriminability_rpb.rds")
+  
+} else {
+  
+  # bootstrap D scores 
+  data_discriminability_rpb <- data_estimates_rpb %>%
+    select(unique_id, domain, trial_type, estimate, ci_upper, ci_lower) %>%
+    group_by(domain, trial_type) %>%
+    do(bootstrap_discriminability(data = .)) %>%
+    ungroup() %>%
+    mutate(proportion_discriminable = estimate,
+           variance = ((ci_upper - ci_lower)/(1.96*2))^2) %>%
+    mutate(domain = as.factor(domain),
+           method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
+           DV_type = "PI scores")
+  
+  # save to disk
+  write_rds(data_discriminability_rpb, "models/data_discriminability_rpb.rds", compress = "gz")
+  
+}
+
+```
+
 ## Model
+
+### Compare scoring methods
 
 ```{r}
 
 # combine
-data_discriminability_combined <- 
+data_discriminability_combined_scoring <- 
   bind_rows(data_discriminability_D,
-            data_discriminability_PI)
+            data_discriminability_PI) %>%
+  filter(method == "bca")
 
 # fit meta analytic model
-fit_disciminability <- 
-  lmer(proportion_discriminable ~ 1 + trial_type * method * DV_type + (1 | domain), 
+fit_disciminability_scoring <- 
+  lmer(proportion_discriminable ~ 1 + trial_type * DV_type + (1 | domain), 
        weights = 1/variance, 
-       data = data_discriminability_combined)
+       data = data_discriminability_combined_scoring)
 
 # results table
-tab_model(fit_disciminability, 
+tab_model(fit_disciminability_scoring, 
           string.p = "p (corrected)", 
           ci.hyphen = ", ",
           #emph.p = FALSE,
           p.adjust = "holm")
 
 # extract marginal means
-results_emm_disciminability <- 
-  summary(emmeans(fit_disciminability, ~ DV_type | trial_type + method)) %>%
-  select(DV_type, trial_type, method, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+results_emm_disciminability_scoring <- 
+  summary(emmeans(fit_disciminability_scoring, ~ DV_type | trial_type)) %>%
+  select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
   
-p_disciminability <- 
-  ggplot(results_emm_disciminability, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+p_disciminability_scoring <- 
+  ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-  facet_wrap(~ DV_type, ncol = 1, nrow = 2) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_shape_discrete() +
+  scale_color_viridis_d(begin = 0.3, end = 0.7) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
   labs(x = "Trial type",
        y = "Proportion of discriminable scores",
-       color = "Bootstrap method",
-       shape = "Bootstrap method") + 
+       color = "Scoring method",
+       shape = "Scoring method") + 
   theme(legend.position = "top")
 
-p_disciminability
+p_disciminability_scoring
+
+# tests
+emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
+emmeans(fit_disciminability_scoring, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
+
+```
+
+
+### Compare CI methods
+
+```{r}
+
+# combine
+data_discriminability_combined_method <- 
+  bind_rows(data_discriminability_D,
+            data_discriminability_rpb)
+
+# fit meta analytic model
+fit_disciminability_method <- 
+  lmer(proportion_discriminable ~ 1 + trial_type * DV_type + (1 | domain), 
+       weights = 1/variance, 
+       data = data_discriminability_combined_method)
+
+# results table
+tab_model(fit_disciminability_method, 
+          string.p = "p (corrected)", 
+          ci.hyphen = ", ",
+          #emph.p = FALSE,
+          p.adjust = "holm")
+
+# extract marginal means
+results_emm_disciminability_method <- 
+  summary(emmeans(fit_disciminability_method, ~ DV_type | trial_type)) %>%
+  select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+  
+p_disciminability_method <- 
+  ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  scale_shape_discrete() +
+  scale_color_viridis_d(begin = 0.3, end = 0.7) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "Proportion of discriminable scores",
+       color = "Scoring method",
+       shape = "Scoring method") + 
+  theme(legend.position = "top")
+
+p_disciminability_method
+
+# tests
+emmeans(fit_disciminability_method, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
+emmeans(fit_disciminability_method, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
 
 ```
 
@@ -979,7 +1067,9 @@ data_ci_width_proportions_combined <-
 
 ```
 
-## Compare scoring methods
+## Model
+
+### Compare scoring methods
 
 ```{r}
 
@@ -1031,7 +1121,7 @@ emmeans(fit_ci_width_proportions_scoring, list(pairwise ~ trial_type | DV_type),
 
 ```
 
-## Compare CI methods
+### Compare CI methods
 
 ```{r}
 
