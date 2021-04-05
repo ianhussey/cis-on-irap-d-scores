@@ -1,0 +1,320 @@
+---
+title: "Bootstrapped estimation of D scores for individual participants"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+# Overview 
+
+IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,
+                      warning=FALSE,
+                      cache.lazy=FALSE)
+```
+
+```{r}
+
+# dependencies
+library(tidyverse)
+library(boot)
+library(parallel)
+library(bayestestR)
+library(patchwork)
+library(mdthemes)
+library(lme4)
+library(sjPlot)
+library(emmeans)
+library(ggstance)
+
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
+# for plot
+dodge_width <- 0.25
+
+```
+
+# CI widths
+
+Widths cant be directly compared between *D* and PI as they have different ranges, so *D* scores only.
+
+Not meta analyzed as extreme skew in data means that residuals are very non-normal, violating assumptions and underestimating MAP estimates. Instead I simply present MAP estimates for each trial type & method, and then domain, trial type, and method.
+
+## Plot by domain
+
+```{r fig.height=6, fig.width=9}
+
+# save to disk
+data_ci_width_map_D <- read_rds("models/data_ci_width_map_D.rds")
+
+# plot
+p_ci_widths <- 
+  ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) + 
+  geom_line() +
+  geom_point() +
+  scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(15, 16, 17, 7)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4, nrow = 1) +
+  labs(x = "MAP 95% CI width",
+       y = "",
+       color = "Bootstrap method",
+       shape = "Bootstrap method") + 
+  theme(legend.position = "top")
+
+p_ci_widths
+
+```
+
+# Proportion different from zero
+
+## Plots
+
+### Compare scoring methods
+
+```{r fig.height=6, fig.width=9}
+
+data_diff_zero <- read_rds("models/data_diff_zero.rds")
+
+p_diff_zero_scoring <- 
+  data_diff_zero %>%
+  filter(method == "bca") %>%
+  mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
+  ggplot(aes(proportion_diff_zero, domain, color = DV_type, shape = DV_type)) +
+  geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
+                      xmax = proportion_diff_zero + sqrt(variance)*1.96),
+                  position = position_dodge(width = 1)) + 
+  geom_point(position = position_dodge(width = 1)) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4) +
+  labs(x = "Proportion of scores different from zero point",
+       y = "",
+       color = "Scoring method",
+       shape = "Scoring method") + 
+  theme(legend.position = "top")
+
+p_diff_zero_scoring
+
+```
+
+### Compare CI bootstrapping methods 
+
+```{r fig.height=9, fig.width=9}
+
+p_diff_zero_method <- 
+  data_diff_zero %>%
+  filter(DV_type == "*D* scores") %>%
+  mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
+  ggplot(aes(proportion_diff_zero, domain, color = method, shape = method)) +
+  geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
+                      xmax = proportion_diff_zero + sqrt(variance)*1.96),
+                  position = position_dodge(width = 1)) + 
+  geom_point(position = position_dodge(width = 1)) +
+    scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(15, 16, 17, 7)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4) +
+  labs(x = "Proportion of scores different from zero point",
+       y = "",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
+  theme(legend.position = "top")
+
+p_diff_zero_method
+
+```
+
+## Model
+
+### Compare scoring methods
+
+```{r}
+
+# save to disk
+results_emm_diff_zero_scoring <- read_rds("models/results_emm_diff_zero_scoring.rds")
+
+p_prop_nonzero_scoring <- ggplot(results_emm_diff_zero_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("Trial type 1" = "1", "Trial type 2" = "2", "Trial type 3" = "3", "Trial type 4" = "4")) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  labs(shape = "Scoring method",
+       color = "Scoring method",
+       x = "Trial type",
+       y = "Proportion of non-zero scores") + 
+  theme(legend.position = "top")
+
+p_prop_nonzero_scoring
+
+```
+
+### Compare CI bootstrapping methods
+
+```{r}
+
+# save to disk
+results_emm_diff_zero_method <- read_rds("models/results_emm_diff_zero_method.rds")
+
+p_prop_nonzero_method <- ggplot(results_emm_diff_zero_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  labs(shape = "Bootstrapping method",
+       color = "Bootstrapping method",
+       x = "Trial type",
+       y = "Proportion of non-zero scores") + 
+  theme(legend.position = "top")
+
+p_prop_nonzero_method
+
+```
+
+# Proportion different from one another
+
+Within domain and trial type
+
+## Calculate discriminability
+
+Many have argued that the zero point is arbitrary and not a useful reference point. Instead of asking "what proportion of *D*/PI scores are different from zero?", we could also ask "what proportion of *D*/PI scores are different from one another?"
+
+## Model
+
+### Compare scoring methods
+
+```{r}
+
+# save to disk
+results_emm_disciminability_scoring <- read_rds("models/results_emm_disciminability_scoring.rds")
+
+p_prop_discriminable_scoring <- ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  scale_shape_discrete() +
+  scale_color_viridis_d(begin = 0.3, end = 0.7) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "Proportion of discriminable scores",
+       color = "Scoring method",
+       shape = "Scoring method") + 
+  theme(legend.position = "top")
+
+p_prop_discriminable_scoring
+
+```
+
+
+### Compare CI bootstrapping methods
+
+```{r}
+
+# save to disk
+results_emm_disciminability_method <- read_rds("models/results_emm_disciminability_method.rds")
+
+p_prop_discriminable_method <- 
+  ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "Proportion of discriminable scores",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
+  theme(legend.position = "top")
+
+p_prop_discriminable_method
+
+```
+
+# CI widths as a proportion of observed range
+
+## Model
+
+### Compare scoring method
+
+```{r}
+
+# save to disk
+results_emm_ci_width_proportions_scoring <- read_rds("models/results_emm_ci_width_proportions_scoring.rds")
+
+# plot
+dodge_width <- 0.15
+
+p_ci_width_proportion_observed_range_scoring <- 
+  ggplot(results_emm_ci_width_proportions_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "95% CI width / observed range",
+       color = "Scoring method",
+       shape = "Scoring method") +
+  theme(legend.position = "top")
+
+p_ci_width_proportion_observed_range_scoring
+
+```
+
+### Compare CI bootstrapping methods
+
+```{r}
+
+# save to disk
+results_emm_ci_width_proportions_method <- read_rds("models/results_emm_ci_width_proportions_method.rds")
+
+# plot
+p_ci_width_proportion_observed_range_method <- 
+  ggplot(results_emm_ci_width_proportions_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
+  geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  labs(x = "Trial type",
+       y = "95% CI width / observed range",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
+  theme(legend.position = "top") 
+
+p_ci_width_proportion_observed_range_method
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
