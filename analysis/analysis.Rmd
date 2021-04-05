@@ -11,9 +11,11 @@ output:
     toc_float: yes
 ---
 
-# to do
+to do
 
-- consider moving method to sensitivity analyses
+- reorder and relabel boot methods for all plots
+- prop diff from zero labs(color = "Bootstrapping method") + , add coloring
+
 
 # Overview 
 
@@ -39,13 +41,13 @@ library(pim)
 library(boot)
 library(parallel)
 library(bayestestR)
-library(afex)
-library(lsmeans)
 library(patchwork)
 library(mdthemes)
 library(lme4)
 library(sjPlot)
 library(emmeans)
+library(ggstance)
+
 
 # set seed for reproducibility
 set.seed(42)
@@ -351,6 +353,10 @@ data_ci_width_map_D <- data_estimates_D %>%
   mutate(domain = fct_reorder(domain, MAP, .fun = min)) %>%
   arrange(domain)
 
+# save to disk
+write_rds(data_ci_width_map_D, "models/data_ci_width_map_D.rds")
+
+# plot
 ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) + 
   geom_line() +
   geom_point() +
@@ -388,6 +394,9 @@ data_diff_zero <-
             variance = plotrix::std.error(sig)^2,
             .groups = "drop") %>%
   mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset by a miniscule amount
+
+# save to disk
+write_rds(data_diff_zero, "models/data_diff_zero.rds")
 
 ```
 
@@ -478,8 +487,8 @@ data_estimates_D %>%
         legend.position = "top") +
   scale_color_viridis_d(end = 0.6, direction = -1) +
   xlab("Participant (ranked by *D* score)") +
-  ylab("IRAP D score") +
-  labs(color = "95% CI excludes zero") + 
+  ylab("*D* score") +
+  labs(color = "95% CI excludes zero point") + 
   facet_wrap(~ domain, ncol = 4)
 
 ```
@@ -506,8 +515,6 @@ data_diff_zero %>%
 
 ```{r fig.height=6, fig.width=9}
 
-library(ggstance)
-
 data_diff_zero %>%
   filter(method == "bca") %>%
   mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
@@ -520,8 +527,8 @@ data_diff_zero %>%
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
-  labs(x = "Proportion of scores different from zero",
-       y = "Domain",
+  labs(x = "Proportion of scores different from zero point",
+       y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
   theme(legend.position = "top")
@@ -563,8 +570,10 @@ results_emm_diff_zero_scoring <-
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
-p_diff_zero_scoring <- 
-  ggplot(results_emm_diff_zero_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+# save to disk
+write_rds(results_emm_diff_zero_scoring, "models/results_emm_diff_zero_scoring.rds")
+
+ggplot(results_emm_diff_zero_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -574,8 +583,6 @@ p_diff_zero_scoring <-
   labs(x = "Trial type",
        y = "Proportion of non-zero scores") + 
   theme(legend.position = "top")
-
-p_diff_zero_scoring
 
 # tests
 emmeans(fit_diff_zero_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
@@ -612,26 +619,27 @@ summary(fit_diff_zero_method)
 
 # extract marginal means
 results_emm_diff_zero_method <- 
-  summary(emmeans(fit_diff_zero_method, ~ DV_type | trial_type)) %>%
-  select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
+  summary(emmeans(fit_diff_zero_method, ~ method | trial_type)) %>%
+  select(method, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
-p_diff_zero_method <- 
-  ggplot(results_emm_diff_zero_method, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+# save to disk
+write_rds(results_emm_diff_zero_method, "models/results_emm_diff_zero_method.rds")
+
+ggplot(results_emm_diff_zero_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7) +
   labs(x = "Trial type",
        y = "Proportion of non-zero scores") + 
   theme(legend.position = "top")
 
-p_diff_zero_method
-
 # tests
-emmeans(fit_diff_zero_method, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-emmeans(fit_diff_zero_method, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
+emmeans(fit_diff_zero_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
+emmeans(fit_diff_zero_method, list(pairwise ~ trial_type | method), adjust = "bonferroni")
 
 ```
 
@@ -791,8 +799,7 @@ results_emm_disciminability_scoring <-
   select(DV_type, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
-p_disciminability_scoring <- 
-  ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+ggplot(results_emm_disciminability_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -806,7 +813,8 @@ p_disciminability_scoring <-
        shape = "Scoring method") + 
   theme(legend.position = "top")
 
-p_disciminability_scoring
+# save to disk
+write_rds(results_emm_disciminability_scoring, "models/results_emm_disciminability_scoring.rds")
 
 # tests
 emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
@@ -840,8 +848,10 @@ results_emm_disciminability_method <-
   select(method, trial_type, estimate = emmean, ci_lower = lower.CL, ci_upper = upper.CL) %>%
   mutate(trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
-p_disciminability_method <- 
-  ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+# save to disk
+write_rds(results_emm_disciminability_method, "models/results_emm_disciminability_method.rds")
+
+ggplot(results_emm_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -855,8 +865,6 @@ p_disciminability_method <-
        shape = "Bootstrapping method") + 
   theme(legend.position = "top")
   #coord_cartesian(ylim = c(0, .3))
-
-p_disciminability_method
 
 # tests
 emmeans(fit_disciminability_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
@@ -937,12 +945,13 @@ results_emm_ci_width_proportions_scoring <-
   mutate(DV_type = fct_relevel(DV_type, "*D* scores", "*r*<sub>pb</sub> scores", "PI scores"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
+# save to disk
+write_rds(results_emm_ci_width_proportions_scoring, "models/results_emm_ci_width_proportions_scoring.rds")
 
 # plot
 dodge_width <- 0.15
 
-p_ci_width_proportions_scoring <-
-  ggplot(results_emm_ci_width_proportions_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+ggplot(results_emm_ci_width_proportions_scoring, aes(trial_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -955,8 +964,6 @@ p_ci_width_proportions_scoring <-
        color = "Scoring method",
        shape = "Scoring method") +
   theme(legend.position = "top")
-
-p_ci_width_proportions_scoring
 
 # tests
 emmeans(fit_ci_width_proportions_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
@@ -1010,9 +1017,11 @@ results_emm_ci_width_proportions_method <-
   mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent", "arithmethic"),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
 
+# save to disk
+write_rds(results_emm_ci_width_proportions_method, "models/results_emm_ci_width_proportions_method.rds")
+
 # plot
-p_ci_width_proportions_method <- 
-  ggplot(results_emm_ci_width_proportions_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+ggplot(results_emm_ci_width_proportions_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
   geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -1033,8 +1042,6 @@ p_ci_width_proportions_method <-
        color = "Confidence Interval method",
        shape = "Confidence Interval method") + 
   theme(legend.position = "right")
-
-p_ci_width_proportions_method
 
 # tests
 emmeans(fit_ci_width_proportions_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
