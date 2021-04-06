@@ -331,7 +331,7 @@ p_cis_by_domain <-
   ggplot() +
   geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
                  alpha = 1) +
-  geom_point(aes(ordered_id, estimate), size = 0.5) +
+  geom_point(aes(ordered_id, estimate), size = 0.5, shape = "square") +
   geom_hline(yintercept = 0, linetype = "dotted") +
   mdthemes::md_theme_linedraw() +
   theme(axis.text.x = element_blank(),
@@ -411,10 +411,10 @@ data_ci_width_map_D <- data_estimates_D %>%
 
 # save to disk
 write_rds(data_ci_width_map_D, "models/data_ci_width_map_D.rds")
-#data_ci_width_map_D <- read_rds("models/data_ci_width_map_D.rds")
 
 # plot
-ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) + 
+p_ci_widths <- 
+  ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) + 
   geom_line() +
   geom_point() +
   scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(15, 16, 17, 7)) +
@@ -426,6 +426,8 @@ ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) +
        color = "Bootstrap method",
        shape = "Bootstrap method") + 
   theme(legend.position = "top")
+
+p_ci_widths
 
 ```
 
@@ -594,7 +596,7 @@ dodge_width <- 0.8
 
 p_prop_nonzero_scoring <- 
   ggplot(results_diff_zero_scoring, aes(fct_rev(trial_type), estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_errorbar(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), width = dodge_width/2, linetype = "dotted") +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -604,7 +606,7 @@ p_prop_nonzero_scoring <-
   labs(shape = "Scoring method",
        color = "Scoring method",
        x = "",
-       y = "Proportion of participants with non-zero scores") + 
+       y = "Proportion of participants with non-zero scores<br/>") + 
   theme(legend.position = "top") +
   coord_flip(ylim = c(0, 1))
 
@@ -673,7 +675,7 @@ emmeans(fit_diff_zero_method, list(pairwise ~ trial_type | method), adjust = "bo
 # plot
 p_prop_nonzero_method <- 
   ggplot(results_diff_zero_method, aes(fct_rev(trial_type), estimate, color = method, shape = method, group = method)) +
-  geom_errorbar(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), width = dodge_width/2, linetype = "dotted") +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -887,7 +889,7 @@ emmeans(fit_disciminability_scoring, list(pairwise ~ trial_type | DV_type), adju
 # plot
 p_prop_discriminable_scoring <- 
   ggplot(results_disciminability_scoring, aes(fct_rev(trial_type), estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_errorbar(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), width = dodge_width/2, linetype = "dotted") +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -897,7 +899,7 @@ p_prop_discriminable_scoring <-
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "Trial type 1", "tt2" = "Trial type 2", "tt3" = "Trial type 3", "tt4" = "Trial type 4")) +
   labs(x = "",
-       y = "Proportion of participants who whose scores<br/>differ from one another in pairwise comparisons",
+       y = "Proportion of participants who whose scores<br/>differ from one another in pairwise comparisons<br/>",
        color = "Scoring method",
        shape = "Scoring method") + 
   theme(legend.position = "top") +
@@ -973,7 +975,7 @@ emmeans(fit_disciminability_method, list(pairwise ~ method | trial_type), adjust
 # plot
 p_prop_discriminable_method <- 
   ggplot(results_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
-  geom_errorbar(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), width = dodge_width/2, linetype = "dotted") +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -1107,7 +1109,7 @@ dodge_width <- 0.8
 
 p_ci_width_proportion_observed_range_scoring <- 
   ggplot(results_ci_width_proportions_scoring, aes(fct_rev(trial_type), estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_errorbar(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), width = dodge_width/2, linetype = "dotted") +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
@@ -1117,7 +1119,7 @@ p_ci_width_proportion_observed_range_scoring <-
   mdthemes::md_theme_linedraw() +
   scale_x_discrete(labels = c("tt1" = "Trial type 1", "tt2" = "Trial type 2", "tt3" = "Trial type 3", "tt4" = "Trial type 4")) +
   labs(x = "",
-       y = "Within-subject 95% CI widths /<br/>between-subjects observed range",
+       y = "Within-subject 95% CI widths /<br/>between-subjects observed range<br/>",
        color = "Scoring method",
        shape = "Scoring method") +
   theme(legend.position = "top") +
@@ -1161,34 +1163,71 @@ tab_model(fit_ci_width_proportions_method,
           #emph.p = FALSE,
           p.adjust = "holm")
 
+# summary
+summary(fit_ci_width_proportions_method)
+
+# # plot re
+# plot_model(fit_ci_width_proportions_method, 
+#            colors = "bw",
+#            type = "re") +
+#   mdthemes::md_theme_linedraw() +
+#   ggtitle("")
+
+# extract re Tau
+results_re_tau_ci_width_proportions_method <- fit_ci_width_proportions_method %>%
+  merTools::REsdExtract() %>%
+  as_tibble(rownames = "trial_type") %>%
+  rename(tau = value) %>%
+  mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
+                                trial_type == "domain.trial_typett2" ~ "Trial type 2",	
+                                trial_type == "domain.trial_typett3" ~ "Trial type 3",	
+                                trial_type == "domain.trial_typett4" ~ "Trial type 4"))
+
 # extract marginal means
 results_emm_ci_width_proportions_method <- 
-  summary(emmeans(fit_ci_width_proportions_method, ~ trial_type | method)) %>%
-  select(method, trial_type, estimate = emmean, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent", "arithmethic"),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+  summary(emmeans(fit_ci_width_proportions_method, ~ method | trial_type)) %>%
+  dplyr::select(method, trial_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
+  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
+                                trial_type == "tt2" ~ "Trial type 2",
+                                trial_type == "tt3" ~ "Trial type 3",
+                                trial_type == "tt4" ~ "Trial type 4"),
+         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
+
+# combine
+results_ci_width_proportions_method <- results_emm_ci_width_proportions_method %>%
+  full_join(results_re_tau_ci_width_proportions_method, by = "trial_type") %>%
+  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
+         cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2))) %>%
+  drop_na()
 
 # save to disk
-write_rds(results_emm_ci_width_proportions_method, "models/results_emm_ci_width_proportions_method.rds")
-
-# plot
-p_ci_width_proportion_observed_range_method <- 
-  ggplot(results_emm_ci_width_proportions_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width = dodge_width)) +
-  geom_line(position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  mdthemes::md_theme_linedraw() +
-  scale_x_discrete(labels = c("tt1" = "1", "tt2" = "2", "tt3" = "3", "tt4" = "4")) +
-  labs(x = "Trial type",
-       y = "95% CI width / observed range",
-       color = "Bootstrapping method",
-       shape = "Bootstrapping method") + 
-  theme(legend.position = "top") 
+write_rds(results_ci_width_proportions_method, "models/results_ci_width_proportions_method.rds")
 
 # tests
 emmeans(fit_ci_width_proportions_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
+
+# plot
+p_ci_width_proportion_observed_range_method <- 
+  ggplot(results_ci_width_proportions_method, aes(trial_type, estimate, 
+                                                  color = method, 
+                                                  shape = method, 
+                                                  group = method)) +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
+  # geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  mdthemes::md_theme_linedraw() +
+  scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  labs(shape = "Bootstrapping method",
+       color = "Bootstrapping method",
+       x = "",
+       y = "95% CI width / observed range") +
+  theme(legend.position = "top") +
+  coord_flip(ylim = c(0, 1))
+
+p_ci_width_proportion_observed_range_method
 
 ```
 
@@ -1202,6 +1241,16 @@ Plot 1 is merely illusatrative. It shows the bootstrapped CIs for all participan
 
 p_cis_by_domain
 
+ggsave(filename  = "plots/figure_1_cis_by_domain.pdf",
+       plot      = p_cis_by_domain,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 8,
+       limitsize = TRUE)
+
 ```
 
 ## Plot 2
@@ -1213,9 +1262,19 @@ NB I elected not to meta-analyze these widths as they demonstrate very large ske
 Given the minimal differences between bootstrapping methods, I employ the Bias Corrected and Accelerated methods (BCA) for all subsequent primary analyses. Sensitivity analyses that compare between bootstrapping methods are computed but not included in the main manuscript.
 
 
-```{r fig.height=6, fig.width=7}
+```{r fig.height=6, fig.width=6}
 
 p_ci_widths
+
+ggsave(filename  = "plots/figure_2_ci_widths.pdf",
+       plot      = p_ci_widths,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 6,
+       limitsize = TRUE)
 
 ```
 
@@ -1231,10 +1290,23 @@ Note that the theoretical max possible range of D scores is -2 to +2, but such e
 
 ```{r fig.height=7, fig.width=5}
 
-p_prop_nonzero_scoring + 
+p_combined <- 
+  p_prop_nonzero_scoring + 
   p_prop_discriminable_scoring + 
   p_ci_width_proportion_observed_range_scoring +
   plot_layout(ncol = 1, guides = "collect") & theme(legend.position = "bottom")
+
+p_combined
+
+ggsave(filename  = "plots/figure_3_metaanalyses.pdf",
+       plot      = p_combined,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 5,
+       height    = 7,
+       limitsize = TRUE)
 
 ```
 
