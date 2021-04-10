@@ -148,11 +148,73 @@ ggplot(data_trimmed, aes(rt, fill = block_type)) +
 
 data_trimmed %>%
   group_by(trial_type, block_type) %>%
-  summarize(mean = mean(rt, na.rm = TRUE),
-            sd = sd(rt, na.rm = TRUE)) %>%
+  summarize(mean_rt = mean(rt, na.rm = TRUE),
+            sd_rt = sd(rt, na.rm = TRUE),
+            .groups = "drop") %>%
   round_df(0) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_trimmed %>%
+  group_by(unique_id, trial_type, block_type) %>%
+  summarize(mean_rt = mean(rt, na.rm = TRUE),
+            sd_rt = sd(rt, na.rm = TRUE),
+            .groups = "drop") %>%
+  group_by(trial_type, block_type) %>%
+  summarize(mean_mean_rt = mean(mean_rt, na.rm = TRUE),
+            mean_sd_rt = mean(sd_rt, na.rm = TRUE),
+            .groups = "drop") %>%
+  round_df(0) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_trimmed %>%
+  group_by(unique_id, trial_type) %>%
+  summarize(sd_rt = sd(rt, na.rm = TRUE),
+            .groups = "drop") %>%
+  group_by(trial_type) %>%
+  summarize(mean_sd_rt = mean(sd_rt, na.rm = TRUE),
+            .groups = "drop") %>%
+  round_df(0) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+# TODO example participant. median participant by d score in a domain with a high percent of sig di scores
+
+```{r}
+
+data_eg_1 <- data_trimmed %>%
+  filter(unique_id == "Disgust (2)36.1" & trial_type == "tt1") 
+
+data_eg_1_D <- 
+  data_estimates_D %>%
+    filter(unique_id == "Disgust (2)36.1" & trial_type == "tt1" & method == "bca")
+
+ggplot(data_eg_1, aes(rt, block_type)) +
+  geom_point(alpha = 0.5, position = position_jitter(height = 0.2, width = 0)) +
+  xlim(500, 2500) +
+  mdthemes::md_theme_linedraw() +
+  labs(x = "Reaction time (ms)",
+       y = "Block type") 
+
+library(pwr)
+
+pwr.t.test(n = 18, d = 0.4, type = "two.sample", sig.level = 0.05)
+
+pwr.t.test(n = 18*6, d = 0.4, type = "two.sample", sig.level = 0.05)
+
+library(esci)
+fit <- esci::estimateStandardizedMeanDifference(m1 = 1566, 
+                                                m2 = 1402, 
+                                                s1 = 527, 
+                                                s2 = 452, 
+                                                n1 = 18*10, 
+                                                n2 = 18*10,
+                                                conf.level = .95,
+                                                paired = FALSE) 
+
 
 ```
 
