@@ -236,7 +236,6 @@ temp %>%
 
 # simulated data
 my_sample %>%
-  
   group_by(key) %>%
   summarize(mean = mean(value),
             sd = sd(value))
@@ -312,8 +311,16 @@ ggplot(data_param, aes(log_sd_con, log_sd_incon)) +
 # sim level 1 
 data_sim_level_1 <- 
   MASS::mvrnorm(n = 1000, 
-                mu = colMeans(dplyr::select(data_param, mean_con, mean_incon, log_sd_con, log_sd_incon)), 
-                Sigma = as.matrix(cov(dplyr::select(data_param, mean_con, mean_incon, log_sd_con, log_sd_incon))), 
+                mu = colMeans(dplyr::select(data_param, 
+                                            mean_con, 
+                                            mean_incon, 
+                                            log_sd_con, 
+                                            log_sd_incon)), 
+                Sigma = as.matrix(cov(dplyr::select(data_param, 
+                                                    mean_con, 
+                                                    mean_incon, 
+                                                    log_sd_con, 
+                                                    log_sd_incon))), 
                 empirical = TRUE) %>%
   as.data.frame() %>%
   mutate(sd_con = exp(log_sd_con),
@@ -349,74 +356,83 @@ ggplot(data_sim_level_1, aes(log_sd_con, log_sd_incon)) +
 # generate data from a normal distribution that conforms to a known mean and SD
 # from https://stackoverflow.com/questions/18919091/generate-random-numbers-with-fixed-mean-and-sd
 
-rnorm_empirical_basic <- function(n, mean, sd) { 
-  mean + sd * scale(rnorm(n))
-}
+# rnorm_empirical_basic <- function(n, mean, sd) { 
+#   mean + sd * scale(rnorm(n))
+# }
+# 
+# results <- rnorm_empirical_basic(n = 18, mean = 1395, sd = 567)
+# mean(results$simulated_value)
+# sd(results$simulated_value)
 
-results <- rnorm_empirical(n = 18, mean = 1395, sd = 567)
-mean(results$simulated_value)
-sd(results$simulated_value)
-
-
-data_sim_level_2 <- data_sim_level_1 %>%
+data_sim_level_1_tidied <- data_sim_level_1 %>%
   dplyr::select(-log_sd_con, -log_sd_incon) %>%
   pivot_longer(names_to = "metric",
                values_to = "value",
                cols = c(mean_con, mean_incon, sd_con, sd_incon)) %>%
   mutate(recip_value = 1/(value/1000)) %>%# convert from ms to s, then reciprocally transforms
+  separate(col = metric, into = c("metric", "block_order")) %>%
   pivot_wider(names_from = "metric",
-               values_from = c("value", "recip_value")) %>%
+              values_from = c("value", "recip_value")) %>%
   rename_all(funs(stringr::str_remove_all(., "value_"))) 
 
 
-temp <- data_sim_level_2 %>%
-  #group_by(id) %>%
-  select(id, mean_con, sd_con) %>%
-  #nest() %>%
-  #mutate(sim_rts = map(data, function(df) lm(mpg ~ wt, data = df)))
-  mutate(sim_rts = map(rnorm_empirical(n = 18, mean = mean_con, sd = sd_con))) 
-
-x <- temp[[2]][[1]]
-
-
-
-results <- tibble()
-
-1:max(data_sim_level_2) %>%
-  walk(rnorm_empirical(n = 18, mean = mean_con, sd = sd_con))
-
-
-
-rnorm_empirical_helper <- function(id, n, mean, sd) { 
-  tibble(id = id,
-         mean = mean,
-         sd = sd,
-         n = n,
-         simulated_value = mean + sd * scale(rnorm(n)))
+rnorm_empirical_helper <- function(n, mean, sd) { 
+  tibble(simulated_value = mean + sd * scale(rnorm(n)))
 }
 
-temp <- data_sim_level_2 %>%
+# solution https://blog.az.sg/posts/map-and-walk/
+data_sim_level_2 <- data_sim_level_1_tidied %>%
   pmap_dfr(function(...) {
     current <- tibble(...)
-    # do cool stuff and access content from current row with
-    rnorm_empirical_helper(id = current$id, mean = current$mean_con, sd = current$sd_con, n = 18)
-    # # # return
-    # current %>
-    #   mutate(date = Sys.Date())
+    #rnorm_empirical_helper(mean = current$recip_mean, sd = current$recip_sd, n = 18) %>%
+    rnorm_empirical_helper(mean = current$mean, sd = current$sd, n = 18) %>%
+      mutate(id = current$id, block_order = current$block_order)
   })
 
-temp2 <- temp %>%
-  group_by(id) %>%
+# # test
+# test <- data_sim_level_2 %>%
+#   group_by(id, block_order) %>%
+#   summarize(sim_recip_mean = mean(simulated_value),
+#             sim_recip_sd = sd(simulated_value)) %>%
+#   mutate(sim_mean = (1/sim_recip_mean)*1000,
+#          sim_sd = (1/sim_recip_sd)*1000) %>%
+#   left_join(data_sim_level_1_tidied, by = c("id", "block_order"))
+# 
+# ggplot(test, aes(sim_mean, mean)) +
+#   geom_point() +
+#   facet_wrap(~ block_order)
+# 
+# ggplot(test, aes(sim_sd, sd)) +
+#   geom_point() +
+#   facet_wrap(~ block_order)
+
+# test
+test <- data_sim_level_2 %>%
+  group_by(id, block_order) %>%
   summarize(sim_mean = mean(simulated_value),
-            sim_sd = sd(simulated_value),
-            orig_mean = min(mean),
-            orig_sd = min(sd))
+            sim_sd = sd(simulated_value)) %>%
+  left_join(data_sim_level_1_tidied, by = c("id", "block_order"))
 
-ggplot(temp2, aes(sim_mean, orig_mean)) +
-  geom_point()
+ggplot(test, aes(sim_mean, mean)) +
+  geom_point() +
+  facet_wrap(~ block_order)
 
-ggplot(temp2, aes(sim_sd, orig_sd)) +
-  geom_point()
+ggplot(test, aes(sim_sd, sd)) +
+  geom_point() +
+  facet_wrap(~ block_order)
+
+
+
+# x <- data_sim_level_2 %>%
+#   mutate(sim_rt = (1/simulated_value)*1000)
+# ggplot(, aes(, color = block_order)) +
+#   geom_density(alpha = 0.3) 
+
+ggplot(data_sim_level_2, aes(simulated_value, color = block_order)) +
+  geom_density(alpha = 0.3)
+
+
+
 
 ```
 
