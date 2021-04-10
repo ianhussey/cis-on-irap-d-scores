@@ -1,0 +1,427 @@
+---
+title: "Bootstrapped estimation of D scores for individual participants"
+author: "Ian Hussey"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    highlight: haddock
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+# Overview 
+
+IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
+
+# Note on confidence vs credibility intervals
+
+"Credibility Interval" is used in a number of different ways in the literature, sometimes denoting the difference between frequentist vs Bayesian approaches to probability, and other times denoting whether the interval takes into account not only the variance of the fixed effect in question but also the random effects. Here I employ the latter sense of the word. 
+
+The metafor R package easily produces credibility intervals but typically employed effect sizes as its input, whereas here I employ lme4 to fit mutilevel/metaanalytic models using the data itself. lme4 and helper packages built on top of it do not provide a method to produce credibility intervals in the sense that metafor does. As such, I implemented this myself using the metafor package's code. The key conceptual link between the two is that lme4 models return the SD of the random effect, whereas metafor refers to this as Tau and return it as its squared value. These values refer to the same property: "In random-effects meta-analysis, the extent of variation among the effects observed in different studies (between-study variance) is referred to as tau-squared, τ2, or Tau2 (Deeks et al 2008). τ2 is the variance of the effect size parameters across the population of studies and it reflects the variance of the true effect sizes. The square root of this number is referred to as tau (T). T2 and Tau reflect the amount of true heterogeneity. T2 represents the absolute value of the true variance (heterogeneity). T2 is the variance of the true effects while tau (T) is the estimated standard deviation of underlying true effects across studies (Deeks et al 2008). The summary meta-analysis effect and T as standard deviation may be reported in random-effects meta-analysis to describe the distribution of true effects (Borenstein et al 2009)." ([Source](https://wiki.jbi.global/display/MANUAL/3.3.10.3+Tau-squared+for+random+effects+model+meta-analysis)).
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,
+                      warning=FALSE,
+                      cache.lazy=FALSE)
+```
+
+```{r}
+
+# dependencies
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(boot)
+library(parallel)
+library(bayestestR)
+library(patchwork)
+library(mdthemes)
+library(lme4)
+library(sjPlot)
+library(emmeans)
+library(ggstance)
+# library(merTools) called via merTools:: to avoid namespace collisions between MASS and dplyr
+library(faux)
+
+
+# set seed for reproducibility
+set.seed(42)
+
+# number of bootstraps
+n_boots <- 2000 
+
+# options
+options(knitr.table.format = "html") # necessary configuration of tables
+
+# disable scientific notation
+options(scipen = 999) 
+
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  df %>% mutate_if(is.numeric, round, digits = n_digits)
+}
+
+
+# get data from evaluative IRAPs
+data_trial_level <- read_csv("../data/data_trial_level.csv") %>%
+  filter(timepoint == "baseline") %>%
+  group_by(domain, unique_id, block_type, trial_type) %>%
+  mutate(trial_n = row_number()) %>%
+  ungroup()
+
+# outliers
+data_outliers <- data_trial_level %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  dplyr::select(unique_id, domain, mean_rt) %>%
+  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+  # exclude median +- 2MAD
+  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+  filter(rt_outlier == FALSE) %>%
+  dplyr::select(unique_id, rt_outlier) %>%
+  full_join(data_trial_level, by = "unique_id") %>%
+  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+
+data_outliers_removed <- data_outliers %>%
+  filter(rt_outlier == FALSE)
+
+# trim RTs>10000 ms, as part of D scoring
+data_trimmed <- data_outliers_removed %>%
+  dplyr::select(unique_id, domain, trial_type, trial_n, rt, block_type) %>%
+  filter(rt <= 10000)
+
+# for plot
+dodge_width <- 0.25
+
+```
+
+# simulation
+
+https://simglm.brandonlebeau.org/articles/simulation_arguments.html#power-arguments-1
+
+## fit
+
+```{r}
+
+data_transformed <- data_trimmed %>%
+  filter(trial_type == "tt1") %>%
+  mutate(recriprocal_rt_per_second = ifelse(rt > 600, 1/(rt/1000), NA)) %>%
+  select(subject = unique_id, block = block_type, recriprocal_rt_per_second, rt)
+
+
+data_trimmed %>%
+  filter(trial_type == "tt1") %>%
+  group_by(block_type) %>%
+  dplyr::summarize(mean_rt = mean(rt),
+                   sd_rt = sd(rt))
+
+data_transformed %>%
+  group_by(block) %>%
+  summarize(mean_rt = mean(rt)) %>%
+  spread(block, mean_rt) %>%
+  mutate(diff = incon - con)
+
+ggplot(data_transformed, aes(recriprocal_rt_per_second, color = block)) +
+  geom_density()
+
+# fit <- lmer(rt ~ block + (1 + block | subject),
+#             data = data_transformed)
+
+fit <- 
+  lmer(rt ~ block + (1 | subject),
+       data = data_transformed)
+
+summary(fit)
+
+```
+
+
+
+```{r}
+
+library(MASS)
+#empirical=T forces mean and sd to be exact
+x <- mvrnorm(n = 18, mu = 1395, Sigma = 567, empirical = TRUE)
+mean(x)
+sd(x)
+#empirical=F does not impose this constraint
+x <- mvrnorm(n = 18, mu = 1395, Sigma = 567, empirical = FALSE)
+x 
+mean(x)
+sd(x)
+
+
+
+
+
+
+# generate data from a normal distribution that conforms to a known mean and SD
+# from https://stackoverflow.com/questions/18919091/generate-random-numbers-with-fixed-mean-and-sd
+rnorm_empirical <- function(n, mean, sd) { mean + sd * scale(rnorm(n)) }
+r <- rnorm_empirical(n = 18, mean = 1395, sd = 567)
+mean(r)  ## 4
+sd(r)    ## 1
+
+```
+
+# Generate trial level data
+
+## rts
+
+```{r}
+
+temp <- data_trimmed %>%
+  filter(trial_type == "tt1") %>%
+  spread(block_type, rt) %>%
+  dplyr::select(con, incon) %>%
+  drop_na()
+
+my_sample <- MASS::mvrnorm(n = 100, 
+                           mu = colMeans(temp), 
+                           Sigma = as.matrix(cov(temp)), 
+                           empirical = TRUE)
+
+# real data
+temp %>%
+  gather() %>%
+  group_by(key) %>%
+  summarize(mean = mean(value),
+            sd = sd(value))
+
+# simulated data
+as.data.frame(my_sample) %>%
+  gather() %>%
+  group_by(key) %>%
+  summarize(mean = mean(value),
+            sd = sd(value))
+
+as.data.frame(my_sample) %>%
+  gather() %>%
+  gather() %>%
+  ggplot(aes(value, color = key)) +
+  geom_density()
+
+```
+
+## recriprocal rts
+
+```{r}
+
+temp <- data_trimmed %>%
+  filter(trial_type == "tt1") %>%
+  mutate(recip_rtps = ifelse(rt < 500, NA, 1/(rt/1000))) %>%
+  spread(block_type, recip_rtps) %>%
+  dplyr::select(con, incon) %>%
+  drop_na()
+
+my_sample <- 
+  MASS::mvrnorm(n = 100, 
+                mu = colMeans(temp), 
+                Sigma = as.matrix(cov(temp)), 
+                empirical = TRUE) %>%
+  as.data.frame() %>%
+  gather(block_type, recip_rtps) %>%
+  mutate(rt = (1/recip_rtps)*1000)
+
+# real data
+temp %>%
+  gather() %>%
+  group_by(key) %>%
+  summarize(mean = mean(value),
+            sd = sd(value))
+
+# simulated data
+my_sample %>%
+  
+  group_by(key) %>%
+  summarize(mean = mean(value),
+            sd = sd(value))
+
+ggplot(my_sample, aes(rt, color = block_type, fill = block_type)) +
+  geom_density(alpha = 0.2)
+
+```
+
+# goals
+
+it is possible to simulate data that is plausible in terms of its (a) skewed distribution, (b) mean and sd within blocks, (c) mean difference between blocks, (d) variation in mean difference between blocks between individuals, to therefore be able to calculate D scores. to be able to increase the number of trials that are simulated to then observe its influence on the D score CI widths.  
+
+
+
+could i simply estimate the mean diff's mean and sd, the pooled sd's mean and sd, and the correlation among them? then sim data meeting this with varying N, and compare CI widths.
+
+
+# 2 level simulation
+
+## Level 1 - simulate multivariate normal distribution of means and standard deviations by block
+
+```{r fig.height=5, fig.width=5}
+
+# paramaterize
+data_param <- data_trimmed %>%
+  group_by(unique_id, trial_type) %>%
+  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+            sd_con = sd(rt[block_type == "con"], na.rm = TRUE),
+            sd_incon = sd(rt[block_type == "incon"], na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(log_sd_con = log(sd_con),
+         log_sd_incon = log(sd_incon))
+
+data_param %>%
+  dplyr::select(-sd_con, -sd_incon) %>%
+  gather(metric, value, c(mean_con,
+                          mean_incon,
+                          log_sd_con,
+                          log_sd_incon)) %>% 
+  group_by(metric) %>%
+  summarize(mean = mean(value),
+            sd = sd(value))
+
+# visualize
+data_param %>%
+  gather(block, mean, c("mean_con", "mean_incon")) %>%
+  ggplot(aes(mean, color = block)) +
+  geom_density()
+
+data_param %>%
+  gather(block, log_sd, c("log_sd_con", "log_sd_incon")) %>%
+  ggplot(aes(log_sd, color = block)) +
+  geom_density()
+
+ggplot(data_param, aes(mean_con, log_sd_con)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(data_param, aes(mean_incon, log_sd_incon)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(data_param, aes(mean_con, mean_incon)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(data_param, aes(log_sd_con, log_sd_incon)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+# sim level 1 
+data_sim_level_1 <- 
+  MASS::mvrnorm(n = 1000, 
+                mu = colMeans(dplyr::select(data_param, mean_con, mean_incon, log_sd_con, log_sd_incon)), 
+                Sigma = as.matrix(cov(dplyr::select(data_param, mean_con, mean_incon, log_sd_con, log_sd_incon))), 
+                empirical = TRUE) %>%
+  as.data.frame() %>%
+  mutate(sd_con = exp(log_sd_con),
+         sd_incon = exp(log_sd_incon),
+         id = row_number()) %>%
+  dplyr::select(id, mean_con, mean_incon, sd_con, sd_incon, log_sd_con, log_sd_incon)
+
+# visualize sim
+ggplot(data_sim_level_1, aes(mean_con, log_sd_con)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(data_sim_level_1, aes(mean_incon, log_sd_incon)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(data_sim_level_1, aes(mean_con, mean_incon)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(data_sim_level_1, aes(log_sd_con, log_sd_incon)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+```
+
+- both diff in means and log SD are normally distributed; therefore covariance matrix parameterizes them appropriately. 
+
+## Level 2 - use means and SDs to simulate trial level data that meets these parameters
+
+```{r}
+
+# generate data from a normal distribution that conforms to a known mean and SD
+# from https://stackoverflow.com/questions/18919091/generate-random-numbers-with-fixed-mean-and-sd
+
+rnorm_empirical_basic <- function(n, mean, sd) { 
+  mean + sd * scale(rnorm(n))
+}
+
+results <- rnorm_empirical(n = 18, mean = 1395, sd = 567)
+mean(results$simulated_value)
+sd(results$simulated_value)
+
+
+data_sim_level_2 <- data_sim_level_1 %>%
+  dplyr::select(-log_sd_con, -log_sd_incon) %>%
+  pivot_longer(names_to = "metric",
+               values_to = "value",
+               cols = c(mean_con, mean_incon, sd_con, sd_incon)) %>%
+  mutate(recip_value = 1/(value/1000)) %>%# convert from ms to s, then reciprocally transforms
+  pivot_wider(names_from = "metric",
+               values_from = c("value", "recip_value")) %>%
+  rename_all(funs(stringr::str_remove_all(., "value_"))) 
+
+
+temp <- data_sim_level_2 %>%
+  #group_by(id) %>%
+  select(id, mean_con, sd_con) %>%
+  #nest() %>%
+  #mutate(sim_rts = map(data, function(df) lm(mpg ~ wt, data = df)))
+  mutate(sim_rts = map(rnorm_empirical(n = 18, mean = mean_con, sd = sd_con))) 
+
+x <- temp[[2]][[1]]
+
+
+
+results <- tibble()
+
+1:max(data_sim_level_2) %>%
+  walk(rnorm_empirical(n = 18, mean = mean_con, sd = sd_con))
+
+
+
+rnorm_empirical_helper <- function(id, n, mean, sd) { 
+  tibble(id = id,
+         mean = mean,
+         sd = sd,
+         n = n,
+         simulated_value = mean + sd * scale(rnorm(n)))
+}
+
+temp <- data_sim_level_2 %>%
+  pmap_dfr(function(...) {
+    current <- tibble(...)
+    # do cool stuff and access content from current row with
+    rnorm_empirical_helper(id = current$id, mean = current$mean_con, sd = current$sd_con, n = 18)
+    # # # return
+    # current %>
+    #   mutate(date = Sys.Date())
+  })
+
+temp2 <- temp %>%
+  group_by(id) %>%
+  summarize(sim_mean = mean(simulated_value),
+            sim_sd = sd(simulated_value),
+            orig_mean = min(mean),
+            orig_sd = min(sd))
+
+ggplot(temp2, aes(sim_mean, orig_mean)) +
+  geom_point()
+
+ggplot(temp2, aes(sim_sd, orig_sd)) +
+  geom_point()
+
+```
+
+
+
+
+
+
