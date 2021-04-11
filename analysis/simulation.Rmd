@@ -23,7 +23,7 @@ knitr::opts_chunk$set(message=FALSE,
 library(tidyverse)
 library(knitr)
 library(kableExtra)
-library(faux)
+
 
 # set seed for reproducibility
 set.seed(42)
@@ -164,7 +164,7 @@ ggplot(data_param, aes(sd_con, sd_incon)) +
 
 ```{r fig.height=5, fig.width=5}
 
-n_simulated_participants <- 250
+n_simulated_participants <- 100
 
 # sim level 1
 simiulate_parameters_from_data <- function(data){
