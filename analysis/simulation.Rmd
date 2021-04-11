@@ -69,34 +69,60 @@ data_outliers <- data_trial_level %>%
 data_outliers_removed <- data_outliers %>%
   filter(rt_outlier == FALSE)
 
+# # trim RTs>10000 ms, as part of D scoring
+# data_trimmed <- data_outliers_removed %>%
+#   dplyr::select(unique_id, domain, trial_type, trial_n, rt, block_type) %>%
+#   filter(rt <= 10000 & rt > 0)
+
 # trim RTs>10000 ms, as part of D scoring
 data_trimmed <- data_outliers_removed %>%
   dplyr::select(unique_id, domain, trial_type, trial_n, rt, block_type) %>%
-  filter(rt <= 10000 & rt > 0)
+  filter(rt > 500 & rt < 10000) %>%
+  mutate(log_rt = log(rt))
+
+ggplot(data_trimmed, aes(log_rt, color = block_type)) +
+  geom_density() +
+  facet_wrap(~ trial_type)
+
+```
+
+
+```{r}
+
+# # paramaterize real data
+# data_param <- data_trimmed %>%
+#   group_by(unique_id, domain, trial_type) %>%
+#   summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
+#             mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+#             sd_con = sd(rt[block_type == "con"], na.rm = TRUE),
+#             sd_incon = sd(rt[block_type == "incon"], na.rm = TRUE)) %>%
+#   ungroup() %>%
+#   mutate(log_sd_con = log(sd_con),
+#          log_sd_incon = log(sd_incon))
 
 # paramaterize real data
 data_param <- data_trimmed %>%
   group_by(unique_id, domain, trial_type) %>%
-  summarize(mean_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd_con = sd(rt[block_type == "con"], na.rm = TRUE),
-            sd_incon = sd(rt[block_type == "incon"], na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(log_sd_con = log(sd_con),
-         log_sd_incon = log(sd_incon))
+  summarize(mean_con = mean(log_rt[block_type == "con"], na.rm = TRUE),
+            mean_incon = mean(log_rt[block_type == "incon"], na.rm = TRUE),
+            sd_con = sd(log_rt[block_type == "con"], na.rm = TRUE),
+            sd_incon = sd(log_rt[block_type == "incon"], na.rm = TRUE)) %>%
+  ungroup() 
+  # mutate(log_sd_con = log(sd_con),
+  #        log_sd_incon = log(sd_incon))
 
 # table
 data_param %>%
   gather(metric, value, c(mean_con,
                           mean_incon,
                           sd_con,
-                          sd_incon,
-                          log_sd_con,
-                          log_sd_incon)) %>% 
+                          sd_incon)) %>% 
+                          #log_sd_con,
+                          #log_sd_incon)) %>% 
   group_by(metric) %>%
   summarize(mean = mean(value),
             sd = sd(value)) %>%
-  round_df(1) %>%
+  #round_df(1) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -106,16 +132,21 @@ data_param %>%
   ggplot(aes(mean, color = block)) +
   geom_density()
 
+# data_param %>%
+#   gather(block, log_sd, c("log_sd_con", "log_sd_incon")) %>%
+#   ggplot(aes(log_sd, color = block)) +
+#   geom_density()
+
 data_param %>%
-  gather(block, log_sd, c("log_sd_con", "log_sd_incon")) %>%
-  ggplot(aes(log_sd, color = block)) +
+  gather(block, sd, c("sd_con", "sd_incon")) %>%
+  ggplot(aes(sd, color = block)) +
   geom_density()
 
-ggplot(data_param, aes(mean_con, log_sd_con)) +
+ggplot(data_param, aes(mean_con, sd_con)) +
   geom_point() +
   geom_smooth(method = "lm")
 
-ggplot(data_param, aes(mean_incon, log_sd_incon)) +
+ggplot(data_param, aes(mean_incon, sd_incon)) +
   geom_point() +
   geom_smooth(method = "lm")
 
@@ -123,7 +154,7 @@ ggplot(data_param, aes(mean_con, mean_incon)) +
   geom_point() +
   geom_smooth(method = "lm")
 
-ggplot(data_param, aes(log_sd_con, log_sd_incon)) +
+ggplot(data_param, aes(sd_con, sd_incon)) +
   geom_point() +
   geom_smooth(method = "lm")
 
@@ -133,24 +164,31 @@ ggplot(data_param, aes(log_sd_con, log_sd_incon)) +
 
 ```{r fig.height=5, fig.width=5}
 
-n_simulated_participants <- 50
+n_simulated_participants <- 250
 
 # sim level 1
 simiulate_parameters_from_data <- function(data){
   data %>%
     dplyr::select(mean_con, 
                   mean_incon, 
-                  log_sd_con, 
-                  log_sd_incon) %>%
+                  sd_con,
+                  sd_incon) %>%
     MASS::mvrnorm(n = n_simulated_participants,
                   mu = colMeans(.), 
                   Sigma = as.matrix(cov(.)), 
                   empirical = TRUE) %>%
     as.data.frame() %>%
-    mutate(sd_con = exp(log_sd_con),
-           sd_incon = exp(log_sd_incon),
-           id = row_number()) %>%
-    dplyr::select(id, mean_con, mean_incon, sd_con, sd_incon, log_sd_con, log_sd_incon)  
+    # mutate(sd_con = exp(log_sd_con),
+    #        sd_incon = exp(log_sd_incon),
+    #        id = row_number()) %>%
+    mutate(id = row_number()) %>%
+    dplyr::select(id, 
+                  mean_con, 
+                  mean_incon, 
+                  sd_con, 
+                  sd_incon)
+                  #log_sd_con,
+                  #log_sd_incon)
 }
 
 data_sim_level_1 <- data_param %>%
@@ -165,11 +203,11 @@ data_sim_level_1 <- data_param %>%
 
 ```{r fig.height=5, fig.width=5}
 
-ggplot(data_sim_level_1, aes(mean_con, log_sd_con)) +
+ggplot(data_sim_level_1, aes(mean_con, sd_con)) +
   geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
-ggplot(data_sim_level_1, aes(mean_incon, log_sd_incon)) +
+ggplot(data_sim_level_1, aes(mean_incon, sd_incon)) +
   geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
@@ -177,7 +215,7 @@ ggplot(data_sim_level_1, aes(mean_con, mean_incon)) +
   geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
-ggplot(data_sim_level_1, aes(log_sd_con, log_sd_incon)) +
+ggplot(data_sim_level_1, aes(sd_con, sd_incon)) +
   geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
@@ -201,7 +239,7 @@ trim any simulated participants with implausibly short simulated RTs. only .5% o
 #   pull(n)
 
 data_sim_level_1_tidied <- data_sim_level_1 %>%
-  dplyr::select(-log_sd_con, -log_sd_incon) %>%
+  #dplyr::select(-log_sd_con, -log_sd_incon) %>%
   pivot_longer(names_to = "metric",
                values_to = "value",
                cols = c(mean_con, mean_incon, sd_con, sd_incon)) %>%
@@ -238,47 +276,28 @@ simiulate_data_from_simulated_parameters <- function(data, n_simulated_trials) {
 simulated_data_18_temp <- 
   simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 18) 
 
-# simulated_data_18_include <- simulated_data_18_temp %>%
-#   group_by(id) %>%
-#   summarize(min = min(simulated_value, na.rm = TRUE),
-#             .groups = "drop") %>%
-#   filter(min > 750) 
-# 
-# simulated_data_18 <- simulated_data_18_temp %>%
-#   semi_join(simulated_data_18_include, by = "id")
-
-
-simulated_data_18 <- simulated_data_18_temp %>%
-  mutate(simulated)
-
 simulated_data_180_temp <- 
   simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 180) 
 
-simulated_data_180_exclude <- simulated_data_180_temp %>%
-  filter(simulated_value < 0) 
+# exponentiate back to millisecond scale ie RTs
+simulated_data_18 <- simulated_data_18_temp %>%
+  mutate(simulated_value = exp(simulated_value))
 
 simulated_data_180 <- simulated_data_180_temp %>%
-  anti_join(simulated_data_180_include, by = "id")
-
-simulated_data_180_temp %>%
-  count(domain)
-
-simulated_data_180 %>%
-  count(domain)
-
-data_estimates_D %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  count(domain)
-
-ggplot(simulated_data_180_temp, aes(simulated_value, color = block_type)) +
-  geom_density() +
-  facet_wrap(~ trial_type)
+  mutate(simulated_value = exp(simulated_value))
 
 ```
 
 ## Test
 
+### 18 trials (as in real data)
+
 ```{r}
+
+simulated_data_18 %>%
+  distinct(id, .keep_all = TRUE) %>%
+  count(domain) %>%
+  count(n)
 
 simulated_data_18_summary <- simulated_data_18 %>%
   group_by(id, block_type) %>%
@@ -288,23 +307,64 @@ simulated_data_18_summary <- simulated_data_18 %>%
   ungroup() %>%
   left_join(data_sim_level_1_tidied, by = c("id", "block_type"))
 
-ggplot(simulated_data_18_summary, aes(sim_mean, mean)) +
-  geom_point(alpha = 0.3) +
+ggplot(simulated_data_18_summary, aes(mean, sim_mean)) +
+  geom_point(alpha = 0.1) +
   facet_wrap(~ block_type)
 
-ggplot(simulated_data_18_summary, aes(sim_sd, sd)) +
-  geom_point(alpha = 0.3) +
+ggplot(simulated_data_18_summary, aes(sd, sim_sd)) +
+  geom_point(alpha = 0.1) +
   facet_wrap(~ block_type)
 
 ggplot(data_trimmed, aes(rt, color = block_type)) +
-  geom_density(alpha = 0.3) +
+  geom_density(alpha = 0.1) +
+  facet_wrap(~ trial_type) +
   xlim(0, 5000) +
   ggtitle("Real IRAP data")
 
 ggplot(simulated_data_18, aes(simulated_value, color = block_type)) +
-  geom_density(alpha = 0.3) +
+  geom_density(alpha = 0.1) +
+  facet_wrap(~ trial_type) +
   xlim(0, 5000) +
-  ggtitle("Simulated IRAP data")
+  ggtitle("Simulated IRAP data (18 trials per D score)")
+
+```
+
+### 180 trials
+
+```{r}
+
+simulated_data_180 %>%
+  distinct(id, .keep_all = TRUE) %>%
+  count(domain) %>%
+  count(n)
+
+simulated_data_180_summary <- simulated_data_180 %>%
+  group_by(id, block_type) %>%
+  summarize(sim_mean = mean(simulated_value),
+            sim_sd = sd(simulated_value),
+            .groups = "drop") %>%
+  ungroup() %>%
+  left_join(data_sim_level_1_tidied, by = c("id", "block_type"))
+
+ggplot(simulated_data_180_summary, aes(mean, sim_mean)) +
+  geom_point(alpha = 0.1) +
+  facet_wrap(~ block_type)
+
+ggplot(simulated_data_180_summary, aes(sd, sim_sd)) +
+  geom_point(alpha = 0.1) +
+  facet_wrap(~ block_type)
+
+ggplot(data_trimmed, aes(rt, color = block_type)) +
+  geom_density(alpha = 0.1) +
+  facet_wrap(~ trial_type) +
+  xlim(0, 5000) +
+  ggtitle("Real IRAP data")
+
+ggplot(simulated_data_180, aes(simulated_value, color = block_type)) +
+  geom_density(alpha = 0.1) +
+  facet_wrap(~ trial_type) +
+  xlim(0, 5000) +
+  ggtitle("Simulated IRAP data (180 trials per D score)")
 
 ```
 
@@ -312,8 +372,11 @@ ggplot(simulated_data_18, aes(simulated_value, color = block_type)) +
 
 ```{r}
 
-write_csv(simulated_data_18,  "../data/data_trial_level_simulated_18_trials.csv")
-write_csv(simulated_data_180, "../data/data_trial_level_simulated_180_trials.csv")
+# write_csv(simulated_data_18,  "../data/data_trial_level_simulated_18_trials.csv")
+# write_csv(simulated_data_180, "../data/data_trial_level_simulated_180_trials.csv")
+
+write_rds(simulated_data_18,  "../data/data_trial_level_simulated_18_trials.rds", compress = "gz")
+write_rds(simulated_data_180, "../data/data_trial_level_simulated_180_trials.rds", compress = "gz")
 
 ```
 
