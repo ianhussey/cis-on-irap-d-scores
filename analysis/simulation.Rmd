@@ -276,11 +276,17 @@ simiulate_data_from_simulated_parameters <- function(data, n_simulated_trials) {
 simulated_data_18_temp <- 
   simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 18) 
 
+simulated_data_90_temp <- 
+  simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 90) 
+
 simulated_data_180_temp <- 
   simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 180) 
 
 # exponentiate back to millisecond scale ie RTs
 simulated_data_18 <- simulated_data_18_temp %>%
+  mutate(simulated_value = exp(simulated_value))
+
+simulated_data_90 <- simulated_data_90_temp %>%
   mutate(simulated_value = exp(simulated_value))
 
 simulated_data_180 <- simulated_data_180_temp %>%
@@ -326,6 +332,45 @@ ggplot(simulated_data_18, aes(simulated_value, color = block_type)) +
   facet_wrap(~ trial_type) +
   xlim(0, 5000) +
   ggtitle("Simulated IRAP data (18 trials per D score)")
+
+```
+
+### 90 trials
+
+```{r}
+
+simulated_data_90 %>%
+  distinct(id, .keep_all = TRUE) %>%
+  count(domain) %>%
+  count(n)
+
+simulated_data_90_summary <- simulated_data_90 %>%
+  group_by(id, block_type) %>%
+  summarize(sim_mean = mean(simulated_value),
+            sim_sd = sd(simulated_value),
+            .groups = "drop") %>%
+  ungroup() %>%
+  left_join(data_sim_level_1_tidied, by = c("id", "block_type"))
+
+ggplot(simulated_data_90_summary, aes(mean, sim_mean)) +
+  geom_point(alpha = 0.1) +
+  facet_wrap(~ block_type)
+
+ggplot(simulated_data_90_summary, aes(sd, sim_sd)) +
+  geom_point(alpha = 0.1) +
+  facet_wrap(~ block_type)
+
+ggplot(data_trimmed, aes(rt, color = block_type)) +
+  geom_density(alpha = 0.1) +
+  facet_wrap(~ trial_type) +
+  xlim(0, 5000) +
+  ggtitle("Real IRAP data")
+
+ggplot(simulated_data_90, aes(simulated_value, color = block_type)) +
+  geom_density(alpha = 0.1) +
+  facet_wrap(~ trial_type) +
+  xlim(0, 5000) +
+  ggtitle("Simulated IRAP data (180 trials per D score)")
 
 ```
 
@@ -376,6 +421,7 @@ ggplot(simulated_data_180, aes(simulated_value, color = block_type)) +
 # write_csv(simulated_data_180, "../data/data_trial_level_simulated_180_trials.csv")
 
 write_rds(simulated_data_18,  "../data/data_trial_level_simulated_18_trials.rds", compress = "gz")
+write_rds(simulated_data_90,  "../data/data_trial_level_simulated_90_trials.rds", compress = "gz")
 write_rds(simulated_data_180, "../data/data_trial_level_simulated_180_trials.rds", compress = "gz")
 
 ```
