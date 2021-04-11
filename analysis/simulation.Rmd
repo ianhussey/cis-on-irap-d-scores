@@ -163,22 +163,22 @@ data_sim_level_1 <- data_param %>%
 
 ## Plot
 
-```{r}
+```{r fig.height=5, fig.width=5}
 
 ggplot(data_sim_level_1, aes(mean_con, log_sd_con)) +
-  geom_point() +
+  geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
 ggplot(data_sim_level_1, aes(mean_incon, log_sd_incon)) +
-  geom_point() +
+  geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
 ggplot(data_sim_level_1, aes(mean_con, mean_incon)) +
-  geom_point() +
+  geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
 ggplot(data_sim_level_1, aes(log_sd_con, log_sd_incon)) +
-  geom_point() +
+  geom_point(alpha = 0.2) +
   geom_smooth(method = "lm")
 
 ```
@@ -186,6 +186,8 @@ ggplot(data_sim_level_1, aes(log_sd_con, log_sd_incon)) +
 - Both diff in means and log SD are normally distributed; therefore covariance matrix parameterizes them appropriately. 
 
 # Level 2 - Use means and SDs to simulate trial level data that meets these parameters
+
+trim any simulated participants with implausibly short simulated RTs. only .5% of RTs in the real data are less than 750 MS, so ditch these. can't trim individual negative values or the data wont match the parameters, so ditch them wholesale
 
 ```{r}
 
@@ -223,7 +225,6 @@ simiulate_data_from_simulated_parameters <- function(data, n_simulated_trials) {
     # solution https://blog.az.sg/posts/map-and-walk/
     pmap_dfr(function(...) {
       current <- tibble(...)
-      #rnorm_empirical_helper(mean = current$recip_mean, sd = current$recip_sd, n = 18) %>%
       tibble(id = current$id, 
              domain = current$domain,
              trial_type = current$trial_type,
@@ -231,22 +232,47 @@ simiulate_data_from_simulated_parameters <- function(data, n_simulated_trials) {
              simulated_value = rnorm_empirical(mean = current$mean, 
                                                sd = current$sd, 
                                                n = n_simulated_trials)) 
-    }) %>%
-    # trim any simulated participants with implausibly short simulated RTs.
-    # only .5% of RTs in the real data are less than 750 MS, so ditch these.
-    # can't trim individual negative values or the data wont match the parameters, so ditch them wholesale
-    group_by(id) %>%
-    mutate(exclude = ifelse(min(simulated_value > 750), TRUE, FALSE)) %>%
-    filter(exclude == TRUE) %>%
-    ungroup() %>%
-    dplyr::select(-exclude)
+    }) 
 }
 
-simulated_data_18 <- simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, 
-                                                              n_simulated_trials = 18)
+simulated_data_18_temp <- 
+  simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 18) 
 
-simulated_data_180 <- simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, 
-                                                               n_simulated_trials = 180)
+# simulated_data_18_include <- simulated_data_18_temp %>%
+#   group_by(id) %>%
+#   summarize(min = min(simulated_value, na.rm = TRUE),
+#             .groups = "drop") %>%
+#   filter(min > 750) 
+# 
+# simulated_data_18 <- simulated_data_18_temp %>%
+#   semi_join(simulated_data_18_include, by = "id")
+
+
+simulated_data_18 <- simulated_data_18_temp %>%
+  mutate(simulated)
+
+simulated_data_180_temp <- 
+  simiulate_data_from_simulated_parameters(data = data_sim_level_1_tidied, n_simulated_trials = 180) 
+
+simulated_data_180_exclude <- simulated_data_180_temp %>%
+  filter(simulated_value < 0) 
+
+simulated_data_180 <- simulated_data_180_temp %>%
+  anti_join(simulated_data_180_include, by = "id")
+
+simulated_data_180_temp %>%
+  count(domain)
+
+simulated_data_180 %>%
+  count(domain)
+
+data_estimates_D %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  count(domain)
+
+ggplot(simulated_data_180_temp, aes(simulated_value, color = block_type)) +
+  geom_density() +
+  facet_wrap(~ trial_type)
 
 ```
 
@@ -263,11 +289,11 @@ simulated_data_18_summary <- simulated_data_18 %>%
   left_join(data_sim_level_1_tidied, by = c("id", "block_type"))
 
 ggplot(simulated_data_18_summary, aes(sim_mean, mean)) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
   facet_wrap(~ block_type)
 
 ggplot(simulated_data_18_summary, aes(sim_sd, sd)) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
   facet_wrap(~ block_type)
 
 ggplot(data_trimmed, aes(rt, color = block_type)) +
