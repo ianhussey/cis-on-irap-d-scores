@@ -65,54 +65,7 @@ round_df <- function(df, n_digits = 3) {
 }
 
 
-# # get data from evaluative IRAPs
-# data_trial_level_18 <- read_rds("../data/data_trial_level_simulated_18_trials.rds") %>%
-#   dplyr::rename(unique_id = id,
-#                 rt = simulated_value) %>%
-#   mutate(DV_type = "*D* scores 18 trials") 
-# 
-# data_trial_level_90 <- read_rds("../data/data_trial_level_simulated_90_trials.rds") %>%
-#   dplyr::rename(unique_id = id,
-#                 rt = simulated_value) %>%
-#   mutate(DV_type = "*D* scores 90 trials") 
-# 
-# data_trial_level_180 <- read_rds("../data/data_trial_level_simulated_180_trials.rds") %>%
-#   dplyr::rename(unique_id = id,
-#                 rt = simulated_value) %>%
-#   mutate(DV_type = "*D* scores 180 trials") 
-# 
-# data_trial_level <- 
-#   bind_rows(data_trial_level_18,
-#             data_trial_level_90,
-#             data_trial_level_180)
-# 
-# # outliers
-# data_outliers <- data_trial_level %>%
-#   group_by(unique_id, domain, DV_type) %>%
-#   mutate(mean_rt = mean(rt, na.rm = TRUE)) %>%
-#   distinct(unique_id, .keep_all = TRUE) %>%
-#   select(unique_id, domain, mean_rt) %>%
-#   mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
-#          mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
-#   # exclude median +- 2MAD
-#   mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-#                                mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
-#   filter(rt_outlier == FALSE) %>%
-#   select(unique_id, rt_outlier) %>%
-#   full_join(data_trial_level, by = c("unique_id", "domain", "DV_type")) %>%
-#   mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
-# 
-# data_outliers_removed <- data_outliers %>%
-#   filter(rt_outlier == FALSE)
-# 
-# # trim RTs>10000 ms, as part of D scoring
-# data_trimmed <- data_outliers_removed %>%
-#   select(DV_type, unique_id, domain, trial_type, rt, block_type) %>%
-#   filter(rt <= 10000)
-# 
-# write_rds(data_trimmed, "../data/data_trial_level_simulated_combined_trimmed.rds", compress = "gz")
 data_trimmed <- read_rds("../data/data_trial_level_simulated_combined_trimmed.rds")
-
 
 # for plot
 dodge_width <- 0.25
