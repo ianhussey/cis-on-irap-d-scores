@@ -452,7 +452,7 @@ data_estimates_D %>%
 
 ```
 
-## Plot by domain
+## Plot by domain and trial type
 
 ```{r fig.height=6, fig.width=9}
 
@@ -490,6 +490,36 @@ p_ci_widths <-
   theme(legend.position = "top")
 
 p_ci_widths
+
+```
+
+## Plot by trial type
+
+```{r}
+
+data_ci_width_map_D %>%
+  filter(method == "bca") %>%
+  ggplot(aes(MAP, trial_type)) +
+  geom_jitter(width = 0, height = 0.25) +
+  scale_shape_manual(values = c(15, 16, 17, 7)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8) +
+  mdthemes::md_theme_linedraw() +
+  labs(x = "MAP 95% CI width",
+       y = "") +
+       #color = "Bootstrap method",
+       #shape = "Bootstrap method") +
+  theme(legend.position = "top") 
+
+ggplot(data_ci_width_map_D, aes(MAP, method, color = trial_type, shape = trial_type)) +
+  geom_jitter(width = 0, height = 0.25) +
+  scale_shape_manual(values = c(15, 16, 17, 7)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8) +
+  mdthemes::md_theme_linedraw() +
+  labs(x = "MAP 95% CI width",
+       y = "") +
+       #color = "Bootstrap method",
+       #shape = "Bootstrap method") +
+  theme(legend.position = "top") 
 
 ```
 

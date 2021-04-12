@@ -234,6 +234,65 @@ if(file.exists("models/simulated_estimates_D_18_trials.rds")) {
 
 ```
 
+### 36 trials *D* scores calculated by trial-type
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/simulated_estimates_D_36_trials.rds")) {
+  
+  data_estimates_D_36 <- read_rds("models/simulated_estimates_D_36_trials.rds")
+  
+} else {
+  
+  # bootstrap D scores 
+  data_estimates_D_36 <- data_trimmed %>%
+    filter(DV_type == "*D* scores 36 trials") %>%
+    select(unique_id, domain, trial_type, rt, block_type) %>%
+    group_by(unique_id, domain, trial_type) %>%
+    do(bootstrap_D_score(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
+    round_df(3) %>%
+    mutate(DV_type = "*D* scores 36 trials")
+  
+  # save to disk
+  write_rds(data_estimates_D_36, "models/simulated_estimates_D_36_trials.rds", compress = "gz")
+  
+}
+
+```
+
+### 54 trials *D* scores calculated by trial-type
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("models/simulated_estimates_D_54_trials.rds")) {
+  
+  data_estimates_D_54 <- read_rds("models/simulated_estimates_D_54_trials.rds")
+  
+} else {
+  
+  # bootstrap D scores 
+  data_estimates_D_54 <- data_trimmed %>%
+    filter(DV_type == "*D* scores 54 trials") %>%
+    select(unique_id, domain, trial_type, rt, block_type) %>%
+    group_by(unique_id, domain, trial_type) %>%
+    do(bootstrap_D_score(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
+    round_df(3) %>%
+    mutate(DV_type = "*D* scores 54 trials")
+  
+  # save to disk
+  write_rds(data_estimates_D_54, "models/simulated_estimates_D_54_trials.rds", compress = "gz")
+  
+}
+
+```
 
 ### 90 trials *D* scores calculated by trial-type
 
@@ -299,16 +358,20 @@ if(file.exists("models/simulated_estimates_D_180_trials.rds")) {
 
 ### By bootstrapping method
 
-```{r fig.height=4, fig.width=9}
+```{r fig.height=6, fig.width=9}
 
 data_estimates_D <- 
   bind_rows(data_estimates_D_18,
             data_estimates_D_90,
-            data_estimates_D_180)
+            data_estimates_D_180) %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+         DV_type = fct_relevel(DV_type, 
+                               "*D* scores 18 trials", 
+                               "*D* scores 90 trials", 
+                               "*D* scores 180 trials"))
 
 data_estimates_D %>%
   arrange(estimate) %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percentile")) %>%
   group_by(method) %>%
   mutate(ordered_id = row_number()/n()) %>%
   ungroup() %>%
@@ -371,24 +434,22 @@ Not meta analyzed as extreme skew in data means that residuals are very non-norm
 
 ```{r fig.height=16, fig.width=16}
 
-full_join(data_estimates_D_18 %>%
-            mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-            group_by(method) %>%
+full_join(data_estimates_D %>%
+            group_by(DV_type, method) %>%
             do(point_estimate(.$ci_width, centrality = "MAP")),
-          data_estimates_D_18 %>%
-            mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-            group_by(method) %>%
+          data_estimates_D %>%
+            group_by(DV_type, method) %>%
             summarize(min = min(ci_width),
                       max = max(ci_width),
                       .groups = "drop"),
-          by = "method") %>%
+          by = c("DV_type", "method")) %>%
+  arrange(method) %>%
   round_df(2) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 data_estimates_D %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-  group_by(trial_type, method) %>%
+  group_by(DV_type, trial_type, method) %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   round_df(2) %>%
   pivot_wider(names_from = method, values_from = MAP) %>%
@@ -396,7 +457,7 @@ data_estimates_D %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 data_estimates_D %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
+  group_by(DV_type) %>%
   summarize(min_Dscore = min(estimate),
             max_Dscore = max(estimate)) %>%
   mutate(range_Dscore = max_Dscore - min_Dscore) %>% 
@@ -404,7 +465,7 @@ data_estimates_D %>%
 
 ```
 
-## Plot by domain
+## Plot by domain and trial type
 
 ```{r fig.height=6, fig.width=9}
 
@@ -439,9 +500,41 @@ p_ci_widths <-
        color = "Bootstrap method",
        shape = "Bootstrap method") +
   theme(legend.position = "top") +
-  facet_wrap(~ DV_type + trial_type, ncol = 4, nrow = 2)
+  facet_wrap(~ DV_type + trial_type, ncol = 4)
 
 p_ci_widths
+
+```
+
+## By trial type
+
+CHANGE TO RAINCLOUD PLOTS? POSSIBLY ADD ANOVA TO ESTIMATE MEAN MAP VALUES?
+
+```{r fig.height=3, fig.width=9}
+
+ggplot(data_ci_width_map_D, aes(MAP, DV_type, color = method, shape = method)) +
+  geom_jitter(width = 0, height = 0.25) +
+  scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(15, 16, 17, 7)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  labs(x = "MAP 95% CI width",
+       y = "",
+       color = "Bootstrap method",
+       shape = "Bootstrap method") +
+  theme(legend.position = "top") +
+  facet_wrap(~ trial_type, ncol = 4)
+
+ggplot(data_ci_width_map_D, aes(MAP, DV_type, color = trial_type, shape = trial_type)) +
+  geom_jitter(width = 0, height = 0.25) +
+  scale_shape_manual(values = c(15, 16, 17, 7)) + # labels = c("BCA", "Basic", "Normal", "Percentile"), 
+  scale_color_viridis_d(begin = 0.2, end = 0.8) + # , labels = c("BCA", "Basic", "Normal", "Percentile")
+  mdthemes::md_theme_linedraw() +
+  labs(x = "MAP 95% CI width",
+       y = "",
+       color = "Trial type",
+       shape = "Trial type") +
+  theme(legend.position = "top") +
+  facet_wrap(~ method, ncol = 4)
 
 ```
 
