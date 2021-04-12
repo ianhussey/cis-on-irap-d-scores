@@ -111,7 +111,7 @@ round_df <- function(df, n_digits = 3) {
 #   filter(rt <= 10000)
 # 
 # write_rds(data_trimmed, "../data/data_trial_level_simulated_combined_trimmed.rds", compress = "gz")
-data_trimmed <- write_rds("../data/data_trial_level_simulated_combined_trimmed.rds")
+data_trimmed <- read_rds("../data/data_trial_level_simulated_combined_trimmed.rds")
 
 
 # for plot
@@ -217,7 +217,7 @@ if(file.exists("models/simulated_estimates_D_18_trials.rds")) {
   
   # bootstrap D scores 
   data_estimates_D_18 <- data_trimmed %>%
-    filter(DV_type = "*D* scores 18 trials") %>%
+    filter(DV_type == "*D* scores 18 trials") %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -248,7 +248,7 @@ if(file.exists("models/simulated_estimates_D_90_trials.rds")) {
 
   # bootstrap D scores 
   data_estimates_D_90 <- data_trimmed %>%
-    filter(DV_type = "*D* scores 90 trials") %>%
+    filter(DV_type == "*D* scores 90 trials") %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -278,7 +278,7 @@ if(file.exists("models/simulated_estimates_D_180_trials.rds")) {
   
   # bootstrap D scores 
   data_estimates_D_180 <- data_trimmed %>%
-    filter(DV_type = "*D* scores 180 trials") %>%
+    filter(DV_type == "*D* scores 180 trials") %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
