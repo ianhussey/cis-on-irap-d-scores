@@ -72,6 +72,41 @@ dodge_width <- 0.25
 
 ```
 
+# Duration of task
+
+In minutes. Note that this does not take fatigue or breaks into account, it assumes people continue to complete a longer task at the same speed they complete the standard task. 
+
+```{r}
+
+results_duration <- data_trimmed %>%
+  # add ITI
+  mutate(rt = rt + 400) %>% 
+  # add rough correction for incorrect responses, at 5% incorrect (generous estimate) and + 500ms per correction
+  mutate(rt = rt + 500*0.05) %>% 
+  group_by(DV_type, unique_id) %>%
+  summarize(total_time = sum(rt, na.rm = TRUE)/60000,
+            .groups = "drop") %>%
+  # add estimated time for practice blocks
+  # median of two practice block pairs before these test block pairs used to calculate results
+  # so use 2/3 the length of the 18 trials IRAP, ie the minimum of the lengths included here, and add to all.
+  mutate(total_time = total_time + min(total_time)*2/3) %>%
+  # add estimated time for instructions. this is a very conservative estimate.
+  mutate(total_time = total_time + 3)
+  
+# ggplot(results_duration, aes(total_time, color = DV_type)) +
+#   geom_density()
+
+results_duration %>%
+  group_by(DV_type) %>%
+  summarize(mean_total_time = mean(total_time, na.rm = TRUE),
+            sd_total_time = sd(total_time, na.rm = TRUE),
+            .groups = "drop") %>%
+  round_df(1) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
 # Distribution of RTs
 
 ```{r}
