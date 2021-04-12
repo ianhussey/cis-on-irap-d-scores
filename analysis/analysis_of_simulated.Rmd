@@ -65,34 +65,54 @@ round_df <- function(df, n_digits = 3) {
 }
 
 
-# get data from evaluative IRAPs
-data_trial_level <- read_rds("../data/data_trial_level_simulated_18_trials.rds") %>%
-  dplyr::rename(unique_id = id,
-                rt = simulated_value) 
+# # get data from evaluative IRAPs
+# data_trial_level_18 <- read_rds("../data/data_trial_level_simulated_18_trials.rds") %>%
+#   dplyr::rename(unique_id = id,
+#                 rt = simulated_value) %>%
+#   mutate(DV_type = "*D* scores 18 trials") 
+# 
+# data_trial_level_90 <- read_rds("../data/data_trial_level_simulated_90_trials.rds") %>%
+#   dplyr::rename(unique_id = id,
+#                 rt = simulated_value) %>%
+#   mutate(DV_type = "*D* scores 90 trials") 
+# 
+# data_trial_level_180 <- read_rds("../data/data_trial_level_simulated_180_trials.rds") %>%
+#   dplyr::rename(unique_id = id,
+#                 rt = simulated_value) %>%
+#   mutate(DV_type = "*D* scores 180 trials") 
+# 
+# data_trial_level <- 
+#   bind_rows(data_trial_level_18,
+#             data_trial_level_90,
+#             data_trial_level_180)
+# 
+# # outliers
+# data_outliers <- data_trial_level %>%
+#   group_by(unique_id, domain, DV_type) %>%
+#   mutate(mean_rt = mean(rt, na.rm = TRUE)) %>%
+#   distinct(unique_id, .keep_all = TRUE) %>%
+#   select(unique_id, domain, mean_rt) %>%
+#   mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+#          mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+#   # exclude median +- 2MAD
+#   mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+#                                mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+#   filter(rt_outlier == FALSE) %>%
+#   select(unique_id, rt_outlier) %>%
+#   full_join(data_trial_level, by = c("unique_id", "domain", "DV_type")) %>%
+#   mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+# 
+# data_outliers_removed <- data_outliers %>%
+#   filter(rt_outlier == FALSE)
+# 
+# # trim RTs>10000 ms, as part of D scoring
+# data_trimmed <- data_outliers_removed %>%
+#   select(DV_type, unique_id, domain, trial_type, rt, block_type) %>%
+#   filter(rt <= 10000)
+# 
+# write_rds(data_trimmed, "../data/data_trial_level_simulated_combined_trimmed.rds", compress = "gz")
+data_trimmed <- write_rds("../data/data_trial_level_simulated_combined_trimmed.rds")
 
-# outliers
-data_outliers <- data_trial_level %>%
-  group_by(unique_id, domain) %>%
-  mutate(mean_rt = mean(rt, na.rm = TRUE)) %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, domain, mean_rt) %>%
-  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
-         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
-  # exclude median +- 2MAD
-  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
-  filter(rt_outlier == FALSE) %>%
-  select(unique_id, rt_outlier) %>%
-  full_join(data_trial_level, by = c("unique_id", "domain")) %>%
-  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
-
-data_outliers_removed <- data_outliers %>%
-  filter(rt_outlier == FALSE)
-
-# trim RTs>10000 ms, as part of D scoring
-data_trimmed <- data_outliers_removed %>%
-  select(unique_id, domain, trial_type, rt, block_type) %>%
-  filter(rt <= 10000)
 
 # for plot
 dodge_width <- 0.25
@@ -150,6 +170,44 @@ data_trimmed %>%
 
 ```{r}
 
+D_score <- function(data, i) {
+  data_with_indexes <- data[i,] # boot function requires data and index
+  mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
+  mean_incon <- mean(data_with_indexes$rt[data_with_indexes$block_type == "incon"], na.rm = TRUE)
+  sd <- sd(data_with_indexes$rt, na.rm = TRUE)
+  D <- (mean_incon - mean_con) / sd
+  return(D)
+}
+
+bootstrap_D_score <- function(data){
+  
+  require(dplyr)
+  require(boot)
+  
+  fit <- 
+    boot::boot(data      = data, 
+               statistic = D_score, 
+               R         = n_boots, 
+               sim       = "ordinary", 
+               stype     = "i",
+               parallel  = "multicore", 
+               ncpus     = parallel::detectCores())
+  
+  results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
+  
+  output <- 
+    tibble(method   = c("normal", "basic", "percent", "bca"),
+           estimate = rep(fit$t0, 4),
+           ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+           ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+  
+  return(output)
+}
+
+```
+
+```{r}
+
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("models/simulated_estimates_D_18_trials.rds")) {
   
@@ -157,42 +215,9 @@ if(file.exists("models/simulated_estimates_D_18_trials.rds")) {
   
 } else {
   
-  D_score <- function(data, i) {
-    data_with_indexes <- data[i,] # boot function requires data and index
-    mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
-    mean_incon <- mean(data_with_indexes$rt[data_with_indexes$block_type == "incon"], na.rm = TRUE)
-    sd <- sd(data_with_indexes$rt, na.rm = TRUE)
-    D <- (mean_incon - mean_con) / sd
-    return(D)
-  }
-  
-  bootstrap_D_score <- function(data){
-    
-    require(dplyr)
-    require(boot)
-    
-    fit <- 
-      boot::boot(data      = data, 
-                 statistic = D_score, 
-                 R         = n_boots, 
-                 sim       = "ordinary", 
-                 stype     = "i",
-                 parallel  = "multicore", 
-                 ncpus     = parallel::detectCores())
-    
-    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
-    
-    output <- 
-      tibble(method   = c("normal", "basic", "percent", "bca"),
-             estimate = rep(fit$t0, 4),
-             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
-    
-    return(output)
-  }
-  
   # bootstrap D scores 
   data_estimates_D_18 <- data_trimmed %>%
+    filter(DV_type = "*D* scores 18 trials") %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -220,43 +245,10 @@ if(file.exists("models/simulated_estimates_D_90_trials.rds")) {
   data_estimates_D_90 <- read_rds("models/simulated_estimates_D_90_trials.rds")
   
 } else {
-  
-  D_score <- function(data, i) {
-    data_with_indexes <- data[i,] # boot function requires data and index
-    mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
-    mean_incon <- mean(data_with_indexes$rt[data_with_indexes$block_type == "incon"], na.rm = TRUE)
-    sd <- sd(data_with_indexes$rt, na.rm = TRUE)
-    D <- (mean_incon - mean_con) / sd
-    return(D)
-  }
-  
-  bootstrap_D_score <- function(data){
-    
-    require(dplyr)
-    require(boot)
-    
-    fit <- 
-      boot::boot(data      = data, 
-                 statistic = D_score, 
-                 R         = n_boots, 
-                 sim       = "ordinary", 
-                 stype     = "i",
-                 parallel  = "multicore", 
-                 ncpus     = parallel::detectCores())
-    
-    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
-    
-    output <- 
-      tibble(method   = c("normal", "basic", "percent", "bca"),
-             estimate = rep(fit$t0, 4),
-             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
-    
-    return(output)
-  }
-  
+
   # bootstrap D scores 
   data_estimates_D_90 <- data_trimmed %>%
+    filter(DV_type = "*D* scores 90 trials") %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -284,42 +276,9 @@ if(file.exists("models/simulated_estimates_D_180_trials.rds")) {
   
 } else {
   
-  D_score <- function(data, i) {
-    data_with_indexes <- data[i,] # boot function requires data and index
-    mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
-    mean_incon <- mean(data_with_indexes$rt[data_with_indexes$block_type == "incon"], na.rm = TRUE)
-    sd <- sd(data_with_indexes$rt, na.rm = TRUE)
-    D <- (mean_incon - mean_con) / sd
-    return(D)
-  }
-  
-  bootstrap_D_score <- function(data){
-    
-    require(dplyr)
-    require(boot)
-    
-    fit <- 
-      boot::boot(data      = data, 
-                 statistic = D_score, 
-                 R         = n_boots, 
-                 sim       = "ordinary", 
-                 stype     = "i",
-                 parallel  = "multicore", 
-                 ncpus     = parallel::detectCores())
-    
-    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
-    
-    output <- 
-      tibble(method   = c("normal", "basic", "percent", "bca"),
-             estimate = rep(fit$t0, 4),
-             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
-    
-    return(output)
-  }
-  
   # bootstrap D scores 
   data_estimates_D_180 <- data_trimmed %>%
+    filter(DV_type = "*D* scores 180 trials") %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -344,6 +303,7 @@ if(file.exists("models/simulated_estimates_D_180_trials.rds")) {
 
 data_estimates_D <- 
   bind_rows(data_estimates_D_18,
+            data_estimates_D_90,
             data_estimates_D_180)
 
 data_estimates_D %>%
@@ -1006,7 +966,7 @@ results_re_tau_disciminability_method <- fit_disciminability_method %>%
 results_emm_disciminability_method <- 
   summary(emmeans(fit_disciminability_method, ~ method | trial_type)) %>%
   dplyr::select(method, trial_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
-  #mutate(trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
+#mutate(trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
 
 # combine
 results_disciminability_method <- results_emm_disciminability_method %>%
