@@ -215,7 +215,7 @@ ggplot(data_eg_1, aes(rt, block_type)) +
 
 ## Bootstrap 95% CIs on *D* scores
 
-Calculated by trial-type
+Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 
 ```{r}
 
@@ -279,7 +279,7 @@ if(file.exists("../data/data_estimates_D.rds")) {
 
 ## Bootstrapped 95% CIs on PI scores 
 
-calculated by trial-type
+Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 
 ```{r}
 
