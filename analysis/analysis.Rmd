@@ -15,12 +15,6 @@ output:
 
 IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
 
-# Note on confidence vs credibility intervals
-
-"Credibility Interval" is used in a number of different ways in the literature, sometimes denoting the difference between frequentist vs Bayesian approaches to probability, and other times denoting whether the interval takes into account not only the variance of the fixed effect in question but also the random effects. Here I employ the latter sense of the word. 
-
-The metafor R package easily produces credibility intervals but typically employed effect sizes as its input, whereas here I employ lme4 to fit mutilevel/metaanalytic models using the data itself. lme4 and helper packages built on top of it do not provide a method to produce credibility intervals in the sense that metafor does. As such, I implemented this myself using the metafor package's code. The key conceptual link between the two is that lme4 models return the SD of the random effect, whereas metafor refers to this as Tau and return it as its squared value. These values refer to the same property: "In random-effects meta-analysis, the extent of variation among the effects observed in different studies (between-study variance) is referred to as tau-squared, τ2, or Tau2 (Deeks et al 2008). τ2 is the variance of the effect size parameters across the population of studies and it reflects the variance of the true effect sizes. The square root of this number is referred to as tau (T). T2 and Tau reflect the amount of true heterogeneity. T2 represents the absolute value of the true variance (heterogeneity). T2 is the variance of the true effects while tau (T) is the estimated standard deviation of underlying true effects across studies (Deeks et al 2008). The summary meta-analysis effect and T as standard deviation may be reported in random-effects meta-analysis to describe the distribution of true effects (Borenstein et al 2009)." ([Source](https://wiki.jbi.global/display/MANUAL/3.3.10.3+Tau-squared+for+random+effects+model+meta-analysis)).
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,
                       warning=FALSE,
@@ -50,7 +44,7 @@ library(janitor)
 set.seed(42)
 
 # number of bootstraps
-n_boots <- 2000 
+n_boots <- 3000 
 
 # options
 options(knitr.table.format = "html") # necessary configuration of tables
@@ -68,7 +62,7 @@ round_df <- function(df, n_digits = 3) {
 
 # get data from evaluative IRAPs
 data_trial_level <- read_csv("../data/data_trial_level.csv") %>%
-  filter(timepoint == "baseline")
+  filter(timepoint == "baseline" & age >= 18)
 
 # outliers
 data_outliers <- data_trial_level %>%
@@ -97,7 +91,7 @@ dodge_width <- 0.25
 
 ```
 
-# Descriptives
+# Sample descriptives
 
 ```{r}
 
@@ -122,14 +116,16 @@ data_descriptives %>%
             max_n_per_domain = max(n),
             mean_n_per_domain = round(mean(n, na.rm = TRUE), 2),
             sd_n_per_domain = round(sd(n, na.rm = TRUE), 2)) %>%
+  gather() %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 data_descriptives %>%
-  summarize(min_age = round(min(age, na.rm = TRUE), 2),
-            max_age = round(max(age, na.rm = TRUE), 2),
+  summarize(min_age  = round(min(age, na.rm = TRUE), 2),
+            max_age  = round(max(age, na.rm = TRUE), 2),
             mean_age = round(mean(age, na.rm = TRUE), 2),
-            sd_age = round(sd(age, na.rm = TRUE), 2)) %>%
+            sd_age   = round(sd(age, na.rm = TRUE), 2)) %>%
+  gather() %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -142,136 +138,77 @@ data_descriptives %>%
 
 # Distribution of RTs
 
+In order to convey how small these effects are and what they're estimated from for a given participant.
+
+## All RTs
+
 ```{r}
 
-ggplot(data_trimmed, aes(rt, fill = block_type)) +
+data_trimmed %>%
+  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
+                                trial_type == "tt2" ~ "Trial type 2",
+                                trial_type == "tt3" ~ "Trial type 3",
+                                trial_type == "tt4" ~ "Trial type 4")) %>%
+  ggplot(aes(rt, fill = block_type)) +
   geom_density(alpha = 0.3) +
-  facet_wrap(~ trial_type)
+  facet_wrap(~ trial_type, ncol = 1) +
+  mdthemes::md_theme_linedraw() +
+  scale_fill_viridis_d(begin = 0.3, end = 0.7) +
+  ylab("Frequency") +
+  xlab("Reaction time (ms)") +
+  labs(fill = "Block type")
 
-data_trimmed %>%
-  group_by(trial_type, block_type) %>%
-  summarize(mean_rt = mean(rt, na.rm = TRUE),
-            sd_rt = sd(rt, na.rm = TRUE),
-            .groups = "drop") %>%
-  round_df(0) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_trimmed %>%
-  group_by(unique_id, trial_type, block_type) %>%
-  summarize(mean_rt = mean(rt, na.rm = TRUE),
-            sd_rt = sd(rt, na.rm = TRUE),
-            .groups = "drop") %>%
-  group_by(trial_type, block_type) %>%
-  summarize(mean_mean_rt = mean(mean_rt, na.rm = TRUE),
-            mean_sd_rt = mean(sd_rt, na.rm = TRUE),
-            .groups = "drop") %>%
-  round_df(0) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_trimmed %>%
-  group_by(unique_id, trial_type) %>%
-  summarize(sd_rt = sd(rt, na.rm = TRUE),
-            .groups = "drop") %>%
-  group_by(trial_type) %>%
-  summarize(mean_sd_rt = mean(sd_rt, na.rm = TRUE),
-            .groups = "drop") %>%
-  round_df(0) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+# data_trimmed %>%
+#   group_by(unique_id, trial_type) %>%
+#   summarize(mean_rt_con = mean(rt[block_type == "con"], na.rm = TRUE),
+#             mean_rt_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+#             sd_rt_con = sd(rt[block_type == "con"], na.rm = TRUE),
+#             sd_rt_incon = sd(rt[block_type == "con"], na.rm = TRUE),
+#             sd_rt = sd(rt, na.rm = TRUE),
+#             .groups = "drop") %>%
+#   mutate(diff_mean_rt = mean_rt_incon - mean_rt_con) %>%
+#   select(-unique_id) %>%
+#   group_by(trial_type) %>%
+#   summarize_all(median) %>%
+#   round_df(0) %>%
+#   select(trial_type, 
+#          median_mean_rt_con = mean_rt_con, 
+#          median_mean_rt_incon = mean_rt_incon, 
+#          median_diff_mean_rt = diff_mean_rt, 
+#          median_sd_rt_con = sd_rt_con, 
+#          median_sd_rt_incon = sd_rt_incon, 
+#          median_sd_rt = sd_rt) %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
-# TODO example participant. median participant by d score in a domain with a high percent of sig di scores
+## Single participant with median D score (D = 0.10)
 
 ```{r}
 
 data_eg_1 <- data_trimmed %>%
-  filter(unique_id == "Disgust (2)36.1" & trial_type == "tt1") 
+  filter(unique_id == "clintontrump_221_clinton_trump" & trial_type == "tt3") 
 
-data_eg_1_D <- 
-  data_estimates_D %>%
-    filter(unique_id == "Disgust (2)36.1" & trial_type == "tt1" & method == "bca")
-
-data_eg_1_D
+data_eg_1 %>%
+  group_by(trial_type) %>%
+  summarize(mean_rt_con = mean(rt[block_type == "con"], na.rm = TRUE),
+            mean_rt_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
+            sd_rt = sd(rt, na.rm = TRUE)) %>%
+  mutate(D = (mean_rt_incon - mean_rt_con)/sd_rt)
 
 ggplot(data_eg_1, aes(rt, block_type)) +
   geom_point(alpha = 0.5, position = position_jitter(height = 0.2, 
                                                      width = 0,
                                                      seed = 43)) +
-  xlim(500, 2500) +
   mdthemes::md_theme_linedraw() +
   labs(x = "Reaction time (ms)",
        y = "Block type") 
-
-# library(pwr)
-# 
-# pwr.t.test(n = 18, d = 0.4, type = "two.sample", sig.level = 0.05)
-# 
-# pwr.t.test(n = 18*6, d = 0.4, type = "two.sample", sig.level = 0.05)
-# 
-# library(esci)
-# fit <- esci::estimateStandardizedMeanDifference(m1 = 1566, 
-#                                                 m2 = 1402, 
-#                                                 s1 = 527, 
-#                                                 s2 = 452, 
-#                                                 n1 = 18*10, 
-#                                                 n2 = 18*10,
-#                                                 conf.level = .95,
-#                                                 paired = FALSE) 
 
 ```
 
 
 # Calculate scores
-
-## Arithmetic 95% CIs on *D* scores
-
-Calculated by trial-type
-
-```{r}
-
-# bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_estimates_D_arithmetic.rds")) {
-  
-  data_estimates_D_arithmetic <- 
-    read_rds("models/data_estimates_D_arithmetic.rds")
-  
-} else {
-  
-  arithmetic_D_score <- function(data){
-    fit <- t.test(rt ~ block_type, data = data, var.equal = FALSE)
-    
-    rt_mean_diff <- as.numeric(fit$estimate[1] - fit$estimate[2])
-    # rt_sem       <- fit$stderr
-    d            <- rt_mean_diff/sd(dat$rt)
-    d_ci_lower   <- fit$conf.int[1]/sd(dat$rt)
-    d_ci_upper   <- fit$conf.int[2]/sd(dat$rt)
-    
-    return(data.frame(estimate = d,
-                      ci_lower = d_ci_lower,
-                      ci_upper = d_ci_upper))  
-  }
-  
-  # bootstrap D scores 
-  data_estimates_D_arithmetic <- data_trimmed %>%
-    select(unique_id, domain, trial_type, rt, block_type) %>%
-    group_by(unique_id, domain, trial_type) %>%
-    do(arithmetic_D_score(data = .)) %>%
-    ungroup() %>%
-    mutate(method   = "arithmetic",
-           sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
-           ci_width = ci_upper - ci_lower) %>%
-    round_df(3)
-  
-  # save to disk
-  write_rds(data_estimates_D_arithmetic, 
-            "models/data_estimates_D_arithmetic.rds", compress = "gz")
-  
-}
-
-```
 
 ## Bootstrap 95% CIs on *D* scores
 
@@ -282,7 +219,7 @@ Calculated by trial-type
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("models/data_estimates_D.rds")) {
   
-  data_estimates_D_boot <- read_rds("models/data_estimates_D_boot.rds")
+  data_estimates_D <- read_rds("models/data_estimates_D.rds")
   
 } else {
   
@@ -321,7 +258,7 @@ if(file.exists("models/data_estimates_D.rds")) {
   }
   
   # bootstrap D scores 
-  data_estimates_D_boot <- data_trimmed %>%
+  data_estimates_D <- data_trimmed %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
@@ -331,19 +268,9 @@ if(file.exists("models/data_estimates_D.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_D_boot, "models/data_estimates_D_boot.rds", compress = "gz")
+  write_rds(data_estimates_D, "models/data_estimates_D.rds", compress = "gz")
   
 }
-
-```
-
-## Combined *D* scores
-
-```{r}
-
-data_estimates_D <- 
-  bind_rows(data_estimates_D_arithmetic,
-            data_estimates_D_boot)
 
 ```
 
@@ -415,40 +342,13 @@ if(file.exists("models/data_estimates_PI.rds")) {
 
 ## Plots
 
-### By bootstrapping method
-
-```{r fig.height=4, fig.width=9}
-
-data_estimates_D %>%
-  arrange(estimate) %>%
-  mutate(method = fct_relevel(method, "arithmetic", "bca", "basic", "normal", "percent")) %>%
-  group_by(method) %>%
-  mutate(ordered_id = row_number()/n()) %>%
-  ungroup() %>%
-  ggplot() +
-  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
-                 alpha = 1) +
-  geom_point(aes(ordered_id, estimate), size = 0.5) +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  mdthemes::md_theme_linedraw() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        legend.position = "top") +
-  scale_color_viridis_d(end = 0.6, direction = -1) +
-  xlab("Participant (ranked by *D* score)") +
-  ylab("*D* score") +
-  labs(color = "95% CI excludes zero point") + 
-  facet_wrap(~ method, ncol = 5)
-
-```
-
-### By domain
+By domain, using normal bootstrapping
 
 ```{r fig.height=8, fig.width=8}
 
 p_cis_by_domain <- 
   data_estimates_D %>%
-  filter(method == "bca") %>%
+  filter(method == "basic") %>%
   mutate(domain = str_replace(domain, "Personality - ", "Big5: "),
          domain = str_replace(domain, "Stigma - ", "Stigma: ")) %>%
   arrange(estimate) %>%
@@ -478,42 +378,46 @@ p_cis_by_domain
 
 Widths cant be directly compared between *D* and PI as they have different ranges, so *D* scores only.
 
-Not meta analyzed as extreme skew in data means that residuals are very non-normal, violating assumptions and underestimating MAP estimates. Instead I simply present MAP estimates for each trial type & method, and then domain, trial type, and method.
+Not meta analyzed as extreme skew in data means that residuals are very non-normal, violating assumptions and underestimating MAP estimates. Instead I simply present MAP estimates. 
 
-## Descriptives
+## MAP-MAP width
+
+Most probable estimate among the most probable estimates
+
+```{r}
+
+data_map_ci_widths <- data_estimates_D %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
+  group_by(domain, trial_type, method) %>%
+  do(point_estimate(.$ci_width, centrality = "MAP")) %>%
+  ungroup()
+
+data_map_ci_widths %>%
+  group_by(method) %>%
+  summarize(map_map = point_estimate(MAP, centrality = "MAP"),
+            min_map = min(MAP),
+            max_map = max(MAP)) %>%
+  unnest(map_map) %>%
+  rename(MAP_MAP = MAP) %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+## MAP CI width
+
+By domain and trial type using basic bootstrapping, on the basis that it has the best performance for % of non-zero *D* scores (further below).
 
 ```{r fig.height=16, fig.width=16}
 
-full_join(data_estimates_D %>%
-            mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-            group_by(method) %>%
-            do(point_estimate(.$ci_width, centrality = "MAP")),
-          data_estimates_D %>%
-            mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-            group_by(method) %>%
-            summarize(min = min(ci_width),
-                      max = max(ci_width),
-                      .groups = "drop"),
-          by = "method") %>%
+data_map_ci_widths %>%
+  filter(method == "basic") %>%
+  pivot_wider(names_from = trial_type, values_from = MAP) %>%
   round_df(2) %>%
+  dplyr::select(-method) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_estimates_D %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-  group_by(trial_type, method) %>%
-  do(point_estimate(.$ci_width, centrality = "MAP")) %>%
-  round_df(2) %>%
-  pivot_wider(names_from = method, values_from = MAP) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_estimates_D %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-  summarize(min_Dscore = min(estimate),
-            max_Dscore = max(estimate)) %>%
-  mutate(range_Dscore = max_Dscore - min_Dscore) %>% 
-  round_df(2) 
 
 ```
 
@@ -526,65 +430,36 @@ data_ci_width_map_D <- data_estimates_D %>%
   #summarize(median = median(ci_width), .groups = "drop") %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   ungroup() %>%
-  mutate(method = fct_relevel(method, "arithmetic", "bca", "basic", "normal", "percent"),
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          method = fct_rev(method),
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
                                 trial_type == "tt3" ~ "Trial type 3",
                                 trial_type == "tt4" ~ "Trial type 4"),
          trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
-  mutate(domain = fct_reorder(domain, MAP, .fun = min)) %>%
-  arrange(domain)
+  #mutate(domain = fct_reorder(domain, MAP, .fun = min)) %>%
+  #arrange(domain) %>%
+  mutate(domain = fct_rev(domain)) 
 
-# save to disk
-write_rds(data_ci_width_map_D, "models/data_ci_width_map_D.rds")
+# # save to disk
+# write_rds(data_ci_width_map_D, "models/data_ci_width_map_D.rds")
 
 # plot
 p_ci_widths <- 
   ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) + 
   geom_line() +
   geom_point() +
-  scale_shape_manual(labels = c("Arithmetic", "BCA", "Basic", "Normal", "Percentile"), values = c(19, 15, 16, 17, 7)) +
-  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("Arithmetic", "BCA", "Basic", "Normal", "Percentile")) +
+  scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(19, 15, 16, 17, 7)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4, nrow = 1) +
-  labs(x = "MAP 95% CI width",
+  labs(x = "Highest probability (MAP) 95% CI width",
        y = "",
-       color = "CI estimation method",
-       shape = "CI estimation method") + 
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
   theme(legend.position = "top")
 
 p_ci_widths
-
-```
-
-## Plot by trial type
-
-```{r}
-
-data_ci_width_map_D %>%
-  filter(method == "bca") %>%
-  ggplot(aes(MAP, trial_type)) +
-  geom_jitter(width = 0, height = 0.25) +
-  scale_shape_manual(values = c(15, 16, 17, 7)) +
-  scale_color_viridis_d(begin = 0.2, end = 0.8) +
-  mdthemes::md_theme_linedraw() +
-  labs(x = "MAP 95% CI width",
-       y = "") +
-       #color = "Bootstrap method",
-       #shape = "Bootstrap method") +
-  theme(legend.position = "top") 
-
-ggplot(data_ci_width_map_D, aes(MAP, method, color = trial_type, shape = trial_type)) +
-  geom_jitter(width = 0, height = 0.25) +
-  scale_shape_manual(values = c(15, 16, 17, 7)) +
-  scale_color_viridis_d(begin = 0.2, end = 0.8) +
-  mdthemes::md_theme_linedraw() +
-  labs(x = "MAP 95% CI width",
-       y = "") +
-       #color = "Bootstrap method",
-       #shape = "Bootstrap method") +
-  theme(legend.position = "top") 
 
 ```
 
@@ -598,7 +473,7 @@ data_diff_zero <-
   bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
             mutate(data_estimates_PI, DV_type = "PI scores")) %>%
   mutate(domain = as.factor(domain),
-         method = fct_relevel(method, "arithmetic", "bca", "basic", "normal", "percent"),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          method = fct_rev(method),
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
@@ -609,46 +484,124 @@ data_diff_zero <-
   summarize(proportion_diff_zero = mean(sig),
             variance = plotrix::std.error(sig)^2,
             .groups = "drop") %>%
-  mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset by a miniscule amount
+  mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset by a minuscule amount
 
 # save to disk
 write_rds(data_diff_zero, "models/data_diff_zero.rds")
 
 ```
 
-## Plots
+## Compare CI bootstrapping methods 
 
-### Compare scoring methods
+### Plot
 
-```{r}
+```{r fig.height=9, fig.width=9}
 
-data_diff_zero %>%
-  #filter(method == "bca") %>%
-  filter(method %in% c("arithmetic", "bca")) %>%
-  mutate(DV_type = case_when(DV_type == "*D* scores" ~ "D",
-                             DV_type == "PI scores" ~ "PI")) %>%
-  select(-variance) %>%
-  pivot_wider(names_from = c(trial_type, DV_type, method),
-              values_from = proportion_diff_zero) %>%
-  round_df(2) %>%
-  janitor::clean_names() %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+p_diff_zero_method <- 
+  data_diff_zero %>%
+  filter(DV_type == "*D* scores") %>%
+  mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
+  ggplot(aes(proportion_diff_zero, domain, color = method, shape = method)) +
+  geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
+                      xmax = proportion_diff_zero + sqrt(variance)*1.96),
+                  position = position_dodge(width = 0.75)) + 
+  geom_point(position = position_dodge(width = 0.75)) +
+  # scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(19, 15, 16, 17, 7)) +
+  # scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4) +
+  labs(x = "Proportion of scores different from zero point",
+       y = "",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") + 
+  theme(legend.position = "top")
+
+p_diff_zero_method
 
 ```
 
+### Model
+
+```{r}
+
+# fit model
+fit_diff_zero_method <- 
+  data_diff_zero %>%
+  filter(DV_type == "*D* scores") %>%
+  lmer(proportion_diff_zero ~ 1 + method + (1 | domain/trial_type),
+       weights = 1/variance, 
+       data = .)
+
+# results table
+tab_model(fit_diff_zero_method, 
+          ci.hyphen = ", ")
+
+# extract re Tau
+results_re_tau_diff_zero_method <- fit_diff_zero_method %>%
+  merTools::REsdExtract() %>%
+  as_tibble(rownames = "trial_type") %>%
+  rename(tau = value) 
+
+# extract marginal means
+results_emm_diff_zero_method <- 
+  summary(emmeans(fit_diff_zero_method, ~ method)) %>%
+  dplyr::select(method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
+
+# combine
+results_diff_zero_method <- results_emm_diff_zero_method %>%
+  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
+         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_method$tau)^2)))
+
+# plot
+p_prop_nonzero_method <- 
+  ggplot(results_diff_zero_method, aes(method, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
+  # geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  mdthemes::md_theme_linedraw() +
+  scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
+  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  labs(shape = "Bootstrapping method",
+       color = "Bootstrapping method",
+       x = "",
+       y = "Proportion of participants with non-zero scores<br/>") + 
+  theme(legend.position = "top") +
+  coord_flip(ylim = c(0, 1))
+
+p_prop_nonzero_method
+
+```
+
+## Compare *D* vs PI scores
+
+### Plot
+
 ```{r fig.height=6, fig.width=9}
+
+# data_diff_zero %>%
+#   filter(method %in% c("basic")) %>%
+#   mutate(DV_type = case_when(DV_type == "*D* scores" ~ "D",
+#                              DV_type == "PI scores" ~ "PI")) %>%
+#   select(-variance) %>%
+#   pivot_wider(names_from = c(DV_type, method),
+#               values_from = proportion_diff_zero) %>%
+#   round_df(2) %>%
+#   arrange(domain, trial_type) %>%
+#   janitor::clean_names() %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 p_diff_zero_scoring <- 
   data_diff_zero %>%
-  # filter(method == "bca") %>%
-  filter(method %in% c("arithmetic", "bca")) %>%
+  filter(method %in% c("basic")) %>%
   mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
   ggplot(aes(proportion_diff_zero, domain, color = DV_type, shape = DV_type)) +
   geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
                       xmax = proportion_diff_zero + sqrt(variance)*1.96),
-                  position = position_dodge(width = 1)) + 
-  geom_point(position = position_dodge(width = 1)) +
+                  position = position_dodge(width = 0.75)) + 
+  geom_point(position = position_dodge(width = 0.75)) +
   scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
@@ -663,129 +616,53 @@ p_diff_zero_scoring
 
 ```
 
-### Compare CI bootstrapping methods 
-
-```{r fig.height=9, fig.width=9}
-
-p_diff_zero_method <- 
-  data_diff_zero %>%
-  filter(DV_type == "*D* scores") %>%
-  mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
-  ggplot(aes(proportion_diff_zero, domain, color = method, shape = method)) +
-  geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
-                      xmax = proportion_diff_zero + sqrt(variance)*1.96),
-                  position = position_dodge(width = 1)) + 
-  geom_point(position = position_dodge(width = 1)) +
-  # scale_shape_manual(labels = c("Arithmetic", "BCA", "Basic", "Normal", "Percentile"), values = c(19, 15, 16, 17, 7)) +
-  # scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("Arithmetic", "BCA", "Basic", "Normal", "Percentile")) +
-  mdthemes::md_theme_linedraw() +
-  facet_wrap(~ trial_type, ncol = 4) +
-  labs(x = "Proportion of scores different from zero point",
-       y = "",
-       color = "Bootstrapping method",
-       shape = "Bootstrapping method") + 
-  theme(legend.position = "top")
-
-p_diff_zero_method
-
-```
-
-## Model
-
-### Compare scoring methods
-
-#### Overall
+### Model
 
 ```{r}
 
 # fit model
 fit_diff_zero_scoring <- 
   data_diff_zero %>%
-  # filter(method == "bca") %>%
-  filter(method %in% c("arithmetic", "bca")) %>%
-  mutate(method = paste(method, DV_type)) %>%
-  glmer(proportion_diff_zero ~ 1 + method + (1 | domain),
-       weights = 1/variance, 
-       family = "binomial",
-       data = .)
-
-# results table
-tab_model(fit_diff_zero_scoring, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
-
-# summary
-summary(fit_diff_zero_scoring)
-
-```
-
-#### Between trialtypes
-
-```{r}
-
-# fit model
-fit_diff_zero_scoring <- 
-  data_diff_zero %>%
-  # filter(method == "bca") %>%
-  filter(method %in% c("arithmetic", "bca")) %>%
-  mutate(method = paste(method, DV_type)) %>%
-  lmer(proportion_diff_zero ~ 1 + trial_type * method + (trial_type | domain),
+  filter(method %in% c("basic")) %>%
+  lmer(proportion_diff_zero ~ 1 + DV_type + (1 | domain/trial_type),
        weights = 1/variance, 
        data = .)
 
 # results table
 tab_model(fit_diff_zero_scoring, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
+          ci.hyphen = ", ")
 
-# summary
-summary(fit_diff_zero_scoring)
-
-# plot RE effects
-plot_model(fit_diff_zero_scoring, 
-           colors = "bw",
-           type = "re") +
-  mdthemes::md_theme_linedraw() +
-  ggtitle("")
+# # summary
+# summary(fit_diff_zero_scoring,  correlation = FALSE)
+# 
+# # plot RE effects
+# plot_model(fit_diff_zero_scoring, 
+#            colors = "bw",
+#            type = "re") +
+#   mdthemes::md_theme_linedraw() +
+#   ggtitle("")
 
 # extract re Tau
 results_re_tau_diff_zero_scoring <- fit_diff_zero_scoring %>%
   merTools::REsdExtract() %>%
   as_tibble(rownames = "trial_type") %>%
-  rename(tau = value) %>%
-  mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
-                                trial_type == "domain.trial_typeTrial type 2" ~ "Trial type 2",	
-                                trial_type == "domain.trial_typeTrial type 3" ~ "Trial type 3",	
-                                trial_type == "domain.trial_typeTrial type 4" ~ "Trial type 4"))
+  rename(tau = value) 
 
 # extract marginal means
 results_emm_diff_zero_scoring <- 
-  summary(emmeans(fit_diff_zero_scoring, ~ DV_type | trial_type)) %>%
-  dplyr::select(DV_type, trial_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) %>%
-  mutate(trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
+  summary(emmeans(fit_diff_zero_scoring, ~ DV_type)) %>%
+  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # combine
 results_diff_zero_scoring <- results_emm_diff_zero_scoring %>%
-  full_join(results_re_tau_diff_zero_scoring, by = "trial_type") %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2)))
-
-# save to disk
-write_rds(results_diff_zero_scoring, "models/results_diff_zero_scoring.rds")
-
-# tests
-emmeans(fit_diff_zero_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-emmeans(fit_diff_zero_scoring, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
+  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)))
 
 # plot
 dodge_width <- 0.8
 
 p_prop_nonzero_scoring <- 
-  ggplot(results_diff_zero_scoring, aes(fct_rev(trial_type), estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  ggplot(results_diff_zero_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
@@ -801,86 +678,6 @@ p_prop_nonzero_scoring <-
   coord_flip(ylim = c(0, 1))
 
 p_prop_nonzero_scoring
-
-```
-
-### Compare CI bootstrapping methods
-
-```{r}
-
-# fit model
-fit_diff_zero_method <- 
-  data_diff_zero %>%
-  filter(DV_type == "*D* scores") %>%
-  lmer(proportion_diff_zero ~ 1 + trial_type * method + (trial_type | domain),
-       weights = 1/variance, 
-       data = .)
-
-# results table
-tab_model(fit_diff_zero_method, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
-
-# summary
-summary(fit_diff_zero_method)
-
-# plot re
-plot_model(fit_diff_zero_method, 
-           colors = "bw",
-           type = "re") +
-  mdthemes::md_theme_linedraw() +
-  ggtitle("")
-
-# extract re Tau
-results_re_tau_diff_zero_method <- fit_diff_zero_method %>%
-  merTools::REsdExtract() %>%
-  as_tibble(rownames = "trial_type") %>%
-  rename(tau = value) %>%
-  mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
-                                trial_type == "domain.trial_typeTrial type 2" ~ "Trial type 2",	
-                                trial_type == "domain.trial_typeTrial type 3" ~ "Trial type 3",	
-                                trial_type == "domain.trial_typeTrial type 4" ~ "Trial type 4"))
-
-# extract marginal means
-results_emm_diff_zero_method <- 
-  summary(emmeans(fit_diff_zero_method, ~ method | trial_type)) %>%
-  dplyr::select(method, trial_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) %>%
-  mutate(trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
-
-# combine
-results_diff_zero_method <- results_emm_diff_zero_method %>%
-  full_join(results_re_tau_diff_zero_method, by = "trial_type") %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2)))
-
-# save to disk
-write_rds(results_diff_zero_method, "models/results_diff_zero_method.rds")
-
-# tests
-emmeans(fit_diff_zero_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
-emmeans(fit_diff_zero_method, list(pairwise ~ trial_type | method), adjust = "bonferroni")
-
-# plot
-p_prop_nonzero_method <- 
-  ggplot(results_diff_zero_method, aes(fct_rev(trial_type), estimate, color = method, shape = method, group = method)) +
-  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  # geom_line(position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-  mdthemes::md_theme_linedraw() +
-  scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  labs(shape = "Bootstrapping method",
-       color = "Bootstrapping method",
-       x = "",
-       y = "Proportion of participants with non-zero scores") + 
-  theme(legend.position = "top") +
-  coord_flip(ylim = c(0, 1))
-
-p_prop_nonzero_method
 
 ```
 
@@ -902,9 +699,9 @@ discriminability <- function(data, i) {
   data_with_indexes <- data[i,] # boot function requires data and index
   
   estimate <- data_with_indexes$estimate
-  di_lower <- data_with_indexes$di_lower
+  di_lower <- data_with_indexes$di_lower 
   di_upper <- data_with_indexes$di_upper
-  
+
   n_estimate <- length(estimate)
   n_di_lower <- length(di_lower)
   n_di_upper <- length(di_upper)
@@ -935,19 +732,29 @@ bootstrap_discriminability <- function(data){
                parallel  = "multicore", 
                ncpus     = parallel::detectCores())
   
-  results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+  #results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+  results <- boot::boot.ci(fit, conf = 0.95, type = c("basic"))
+  
+  # output <- 
+  #   tibble(
+  #     method   = c("normal", "basic", "percent", "bca"),
+  #     estimate = rep(fit$t0, 4),
+  #     ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+  #     ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5])
+  #   )
   
   output <- 
-    tibble(method   = c("normal", "basic", "percent", "bca"),
-           estimate = rep(fit$t0, 4),
-           ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-           ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    tibble(
+      method   = "basic",
+      estimate = fit$t0,
+      ci_lower = results$basic[4],
+      ci_upper = results$basic[5]
+    )
   
   return(output)
 }
 
 ```
-
 
 ### *D* scores
 
@@ -964,7 +771,7 @@ if(file.exists("models/data_discriminability_D.rds")) {
   data_discriminability_D <- data_estimates_D %>%
     
     # expand CIs by sqrt(2) to form discriminability intervals
-    mutate(di_lower = estimate + (ci_lower - estimate)*sqrt(2),
+    mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2),
            di_width = di_upper - di_lower) |>
     
@@ -1001,7 +808,7 @@ if(file.exists("models/data_discriminability_PI.rds")) {
   data_discriminability_PI <- data_estimates_PI %>%
     
     # expand CIs by sqrt(2) to form discriminability intervals
-    mutate(di_lower = estimate + (ci_lower - estimate)*sqrt(2),
+    mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2),
            di_width = di_upper - di_lower) |>
     
@@ -1023,9 +830,40 @@ if(file.exists("models/data_discriminability_PI.rds")) {
 
 ```
 
-## Model
+## Compare CI bootstrapping methods
 
-### Compare scoring methods
+```{r}
+
+# fit meta analytic model
+fit_disciminability_method <- data_discriminability_D %>%
+  filter(DV_type == "*D* scores") %>%
+  lmer(proportion_discriminable ~ 1 + method + (1 | domain/trial_type),
+       weights = 1/variance, 
+       data = .)
+
+# results table
+tab_model(fit_disciminability_method, 
+          ci.hyphen = ", ")
+
+# # extract re Tau
+# results_re_tau_disciminability_method <- fit_disciminability_method %>%
+#   merTools::REsdExtract() %>%
+#   #as_tibble(rownames = "trial_type") %>%
+#   as_tibble(rownames = "method") %>%
+#   rename(tau = value) 
+# 
+# # extract marginal means
+# results_emm_disciminability_method <- 
+#   summary(emmeans(fit_disciminability_method, ~ 1)) %>%  # throws "system is computationally singular" error. ie estimates are identical. therefore taken from table
+#   dplyr::select(method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
+
+```
+
+- singular fit error; estimates are identical between methods, therefore no plot.
+
+## Compare *D* vs PI scores
+
+Model & plot
 
 ```{r}
 
@@ -1033,21 +871,16 @@ if(file.exists("models/data_discriminability_PI.rds")) {
 data_discriminability_combined_scoring <- 
   bind_rows(data_discriminability_D,
             data_discriminability_PI) %>%
-  #data_discriminability_PI |>
-
-  filter(method == "bca") %>%
+  filter(method == "basic") %>%
   mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
-                                trial_type == "tt4" ~ "Trial type 4"))
+                                trial_type == "tt4" ~ "Trial type 4"),
+         variance = ifelse(variance == 0, 0.0001, variance))
 
 # fit meta analytic model
 fit_disciminability_scoring <- 
-  # glmer(proportion_discriminable ~ 1 + trial_type + (1 | domain), # * DV_type
-  #       weights = 1/variance, 
-  #       family = "binomial",
-  #       data = data_discriminability_combined_scoring)
-  lmer(proportion_discriminable ~ 1 + DV_type + (1 | domain), # * DV_type
+  lmer(proportion_discriminable ~ 1 + DV_type + (1 | domain/trial_type), 
        weights = 1/variance, 
        data = data_discriminability_combined_scoring)
 
@@ -1059,155 +892,67 @@ tab_model(fit_disciminability_scoring,
           p.adjust = "holm")
 
 # # plot RE effects
-# plot_model(fit_disciminability_scoring, 
+# plot_model(fit_disciminability_scoring,
 #            colors = "bw",
 #            type = "re") +
 #   mdthemes::md_theme_linedraw() +
 #   ggtitle("")
-#
-# # extract re Tau
-# results_re_tau_disciminability_scoring <- fit_disciminability_scoring %>%
-#   merTools::REsdExtract() %>%
-#   as_tibble(rownames = "trial_type") %>%
-#   rename(tau = value) %>%
-#   mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
-#                                 trial_type == "domain.trial_typeTrial type 2" ~ "Trial type 2",	
-#                                 trial_type == "domain.trial_typeTrial type 3" ~ "Trial type 3",	
-#                                 trial_type == "domain.trial_typeTrial type 4" ~ "Trial type 4"))
-#
-# # extract marginal means
-# results_emm_disciminability_scoring <- 
-#   summary(emmeans(fit_disciminability_scoring, ~ 1 | domain)) %>%
-#   dplyr::select(DV_type, trial_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) %>%
-#   mutate(trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
-# 
-# # combine
-# results_disciminability_scoring <- results_emm_disciminability_scoring %>%
-#   full_join(results_re_tau_disciminability_scoring, by = "trial_type") %>%
-#   mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-#          cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2)))
-# 
-# # save to disk
-# write_rds(results_disciminability_scoring, "models/results_disciminability_scoring.rds")
-# 
-# # tests
-# emmeans(fit_disciminability_scoring, list(pairwise ~ 1 | trial_type), adjust = "bonferroni")
-# 
-# emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-# emmeans(fit_disciminability_scoring, list(pairwise ~ DV_type), adjust = "bonferroni")
-# 
-# emmeans(fit_disciminability_scoring, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
-# 
-# # plot
-# p_prop_discriminable_scoring <- 
-#   ggplot(results_disciminability_scoring, aes(fct_rev(trial_type), estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-#   geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-#   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-#   # geom_line(position = position_dodge(width = dodge_width)) +
-#   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-#   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-#   scale_shape_discrete() +
-#   scale_color_viridis_d(begin = 0.3, end = 0.7) +
-#   mdthemes::md_theme_linedraw() +
-#   scale_x_discrete(labels = c("tt1" = "Trial type 1", "tt2" = "Trial type 2", "tt3" = "Trial type 3", "tt4" = "Trial type 4")) +
-#   labs(x = "",
-#        y = "Proportion of participants who whose scores<br/>differ from one another in pairwise comparisons<br/>",
-#        color = "Scoring method",
-#        shape = "Scoring method") + 
-#   theme(legend.position = "top") +
-#   coord_flip(ylim = c(0, 1))
-# 
-# p_prop_discriminable_scoring
-
-```
-
-
-### Compare CI bootstrapping methods
-
-```{r}
-
-# fit meta analytic model
-fit_disciminability_method <- 
-  lmer(proportion_discriminable ~ 1 + trial_type * method + (method | domain),  # non convergence with trial_type as random slope, so had to remove
-       weights = 1/variance, 
-       data = data_discriminability_D)
-
-# results table
-tab_model(fit_disciminability_method, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
-
-# summary
-summary(fit_disciminability_method)
-
-# plot re
-plot_model(fit_disciminability_method, 
-           colors = "bw",
-           type = "re") +
-  mdthemes::md_theme_linedraw() +
-  ggtitle("")
 
 # extract re Tau
-results_re_tau_disciminability_method <- fit_disciminability_method %>%
+results_re_tau_disciminability_scoring <- fit_disciminability_scoring %>%
   merTools::REsdExtract() %>%
-  #as_tibble(rownames = "trial_type") %>%
-  as_tibble(rownames = "method") %>%
-  rename(tau = value) %>%
-  # mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
-  #                               trial_type == "domain.trial_typeTrial type 2" ~ "Trial type 2",	
-  #                               trial_type == "domain.trial_typeTrial type 3" ~ "Trial type 3",	
-  #                               trial_type == "domain.trial_typeTrial type 4" ~ "Trial type 4"))
-  mutate(method = case_when(method == "domain.(Intercept)" ~ "bca",
-                            method == "domain.methodbasic" ~ "basic",
-                            method == "domain.methodnormal" ~ "normal",
-                            method == "domain.methodpercent" ~ "percent"))
+  as_tibble(rownames = "trial_type") %>%
+  rename(tau = value) 
 
 # extract marginal means
-results_emm_disciminability_method <- 
-  summary(emmeans(fit_disciminability_method, ~ method | trial_type)) %>%
-  dplyr::select(method, trial_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
-  #mutate(trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
+results_emm_disciminability_scoring <-
+  summary(emmeans(fit_disciminability_scoring, ~ DV_type)) %>%
+  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
 
 # combine
-results_disciminability_method <- results_emm_disciminability_method %>%
-  #full_join(results_re_tau_disciminability_method, by = "trial_type") %>%
-  full_join(results_re_tau_disciminability_method, by = "method") %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2))) %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"))
-
-# save to disk
-write_rds(results_disciminability_method, "models/results_disciminability_method.rds")
-
-# tests
-emmeans(fit_disciminability_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
+results_disciminability_scoring <- results_emm_disciminability_scoring %>%
+  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)))
 
 # plot
-p_prop_discriminable_method <- 
-  ggplot(results_disciminability_method, aes(trial_type, estimate, color = method, shape = method, group = method)) +
+p_prop_discriminable_scoring <-
+  ggplot(results_disciminability_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
   geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
   # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_shape_discrete() +
+  scale_color_viridis_d(begin = 0.3, end = 0.7) +
   mdthemes::md_theme_linedraw() +
-  scale_x_discrete(labels = c("tt1" = "Trial type 1", "tt2" = "Trial type 2", "tt3" = "Trial type 3", "tt4" = "Trial type 4")) +
   labs(x = "",
-       y = "Proportion of participants who whose scores<br/>differ from one another in pairwise comparisons",
-       color = "Bootstrapping method",
-       shape = "Bootstrapping method") + 
+       y = "Proportion of participants who whose scores<br/>differ from one another<br/>",
+       color = "Scoring method",
+       shape = "Scoring method") +
   theme(legend.position = "top") +
   coord_flip(ylim = c(0, 1))
 
-p_prop_discriminable_method
+p_prop_discriminable_scoring
 
 ```
 
 # CI widths as a proportion of observed range
+
+## Observed range
+
+```{r}
+
+data_estimates_D %>%
+  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
+  summarize(min_observed_Dscore = min(estimate),
+            max_observed_Dscore = max(estimate)) %>%
+  mutate(observed_range_Dscore = max_observed_Dscore - min_observed_Dscore) %>% 
+  round_df(2) %>%
+  gather() %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
 
 ## Calculate scores
 
@@ -1254,96 +999,7 @@ data_ci_width_proportions_combined <-
 
 ```
 
-## Model
-
-### Compare scoring method
-
-```{r}
-
-# fit model
-fit_ci_width_proportions_scoring <- 
-  data_ci_width_proportions_combined %>%
-  filter(method == "bca" & DV_type %in% c("*D* scores", "PI scores")) %>%
-  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
-                                trial_type == "tt2" ~ "Trial type 2",	
-                                trial_type == "tt3" ~ "Trial type 3",	
-                                trial_type == "tt4" ~ "Trial type 4")) %>%
-  # lmer(ci_width_proportion ~ trial_type * DV_type + (trial_type | domain) + (1 | unique_id), 
-  #      data = .)
-  lmer(ci_width_proportion ~ 1 + DV_type + (1 | domain) + (1 | unique_id), 
-       data = .)
-
-# results table
-tab_model(fit_ci_width_proportions_scoring,
-          string.p = "p (corrected)",
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
-
-# # plot RE effects
-# plot_model(fit_ci_width_proportions_scoring, 
-#            colors = "bw",
-#            type = "re")[[1]] +
-#   mdthemes::md_theme_linedraw() +
-#   ggtitle("")
-
-# # extract re Tau
-# results_re_tau_ci_width_proportions_scoring <- 
-#   merTools::REsdExtract(fit_ci_width_proportions_scoring) %>%
-#   as_tibble(rownames = "trial_type") %>%
-#   rename(tau = value) %>%
-#   mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
-#                                 trial_type == "domain.trial_typeTrial type 2" ~ "Trial type 2",	
-#                                 trial_type == "domain.trial_typeTrial type 3" ~ "Trial type 3",	
-#                                 trial_type == "domain.trial_typeTrial type 4" ~ "Trial type 4")) %>%
-#   drop_na()
-# 
-# # extract marginal means
-# results_emm_ci_width_proportions_scoring <-
-#   summary(emmeans(fit_ci_width_proportions_scoring, ~ DV_type | trial_type)) %>%
-#   dplyr::select(DV_type, trial_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
-#   mutate(DV_type = fct_relevel(DV_type, "*D* scores", "PI scores"),
-#          trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
-# 
-# # combine
-# results_ci_width_proportions_scoring <- results_emm_ci_width_proportions_scoring %>%
-#   full_join(results_re_tau_ci_width_proportions_scoring, by = "trial_type") %>%
-#   mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-#          cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2)))
-# 
-# # save to disk
-# write_rds(results_ci_width_proportions_scoring, "models/results_ci_width_proportions_scoring.rds")
-# 
-# # tests
-# emmeans(fit_ci_width_proportions_scoring, list(pairwise ~ DV_type | trial_type), adjust = "bonferroni")
-# emmeans(fit_ci_width_proportions_scoring, list(pairwise ~ trial_type | DV_type), adjust = "bonferroni")
-# 
-# # plot
-# dodge_width <- 0.8
-# 
-# p_ci_width_proportion_observed_range_scoring <- 
-#   ggplot(results_ci_width_proportions_scoring, aes(fct_rev(trial_type), estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-#   geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-#   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-#   # geom_line(position = position_dodge(width = dodge_width)) +
-#   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
-#   scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
-#   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
-#   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
-#   mdthemes::md_theme_linedraw() +
-#   scale_x_discrete(labels = c("tt1" = "Trial type 1", "tt2" = "Trial type 2", "tt3" = "Trial type 3", "tt4" = "Trial type 4")) +
-#   labs(x = "",
-#        y = "Within-subject 95% CI widths /<br/>between-subjects observed range<br/>",
-#        color = "Scoring method",
-#        shape = "Scoring method") +
-#   theme(legend.position = "top") +
-#   coord_flip(ylim = c(0, 1))
-# 
-# p_ci_width_proportion_observed_range_scoring
-
-```
-
-### Compare CI bootstrapping methods
+## Compare CI bootstrapping methods
 
 ```{r}
 
@@ -1356,30 +1012,17 @@ data_ci_width_proportions_combined_method <-
   select(unique_id, domain, trial_type, method, ci_width_proportion) 
 
 # fit model
-if(file.exists("models/fit_ci_width_proportions_method.rds")) {
-  
-  fit_ci_width_proportions_method <- read_rds("models/fit_ci_width_proportions_method.rds")
-  
-} else {
-  
-  fit_ci_width_proportions_method <- 
-    lmer(ci_width_proportion ~ trial_type * method + (trial_type | domain) + (1 | unique_id), 
-         data = data_ci_width_proportions_combined_method)
-  
-  write_rds(fit_ci_width_proportions_method, "models/fit_ci_width_proportions_method.rds")
-  
-}
+fit_ci_width_proportions_method <- 
+  lmer(ci_width_proportion ~ 1 + method + (1 | domain/trial_type), 
+       data = data_ci_width_proportions_combined_method)
 
 # results table
 tab_model(fit_ci_width_proportions_method, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          #emph.p = FALSE,
-          p.adjust = "holm")
+          ci.hyphen = ", ")
 
-# summary
-summary(fit_ci_width_proportions_method)
-
+# # summary
+# summary(fit_ci_width_proportions_method)
+#
 # # plot re
 # plot_model(fit_ci_width_proportions_method, 
 #            colors = "bw",
@@ -1391,38 +1034,21 @@ summary(fit_ci_width_proportions_method)
 results_re_tau_ci_width_proportions_method <- fit_ci_width_proportions_method %>%
   merTools::REsdExtract() %>%
   as_tibble(rownames = "trial_type") %>%
-  rename(tau = value) %>%
-  mutate(trial_type = case_when(trial_type == "domain.(Intercept)" ~ "Trial type 1",
-                                trial_type == "domain.trial_typett2" ~ "Trial type 2",	
-                                trial_type == "domain.trial_typett3" ~ "Trial type 3",	
-                                trial_type == "domain.trial_typett4" ~ "Trial type 4"))
+  rename(tau = value) 
 
 # extract marginal means
 results_emm_ci_width_proportions_method <- 
-  summary(emmeans(fit_ci_width_proportions_method, ~ method | trial_type)) %>%
-  dplyr::select(method, trial_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL) %>%
-  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
-                                trial_type == "tt2" ~ "Trial type 2",
-                                trial_type == "tt3" ~ "Trial type 3",
-                                trial_type == "tt4" ~ "Trial type 4"),
-         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4"))
+  summary(emmeans(fit_ci_width_proportions_method, ~ method)) %>%
+  dplyr::select(method, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
 
 # combine
 results_ci_width_proportions_method <- results_emm_ci_width_proportions_method %>%
-  full_join(results_re_tau_ci_width_proportions_method, by = "trial_type") %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + tau^2))) %>%
-  drop_na()
-
-# save to disk
-write_rds(results_ci_width_proportions_method, "models/results_ci_width_proportions_method.rds")
-
-# tests
-emmeans(fit_ci_width_proportions_method, list(pairwise ~ method | trial_type), adjust = "bonferroni")
+  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
+         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_method$tau)^2))) 
 
 # plot
 p_ci_width_proportion_observed_range_method <- 
-  ggplot(results_ci_width_proportions_method, aes(trial_type, estimate, 
+  ggplot(results_ci_width_proportions_method, aes(method, estimate, 
                                                   color = method, 
                                                   shape = method, 
                                                   group = method)) +
@@ -1437,7 +1063,7 @@ p_ci_width_proportion_observed_range_method <-
   labs(shape = "Bootstrapping method",
        color = "Bootstrapping method",
        x = "",
-       y = "95% CI width / observed range") +
+       y = "Proportion of observed range covered <br/>by individual participants' 95% CIs") +
   theme(legend.position = "top") +
   coord_flip(ylim = c(0, 1))
 
@@ -1445,11 +1071,74 @@ p_ci_width_proportion_observed_range_method
 
 ```
 
+## Compare scoring method
+
+```{r}
+
+# fit model
+fit_ci_width_proportions_scoring <- 
+  data_ci_width_proportions_combined %>%
+  filter(method == "basic" & 
+           DV_type %in% c("*D* scores", "PI scores")) %>%
+  lmer(ci_width_proportion ~ 1 + DV_type + (1 | domain/trial_type), 
+       data = .)
+
+# results table
+tab_model(fit_ci_width_proportions_scoring,
+          ci.hyphen = ", ")
+
+# # plot RE effects
+# plot_model(fit_ci_width_proportions_scoring,
+#            colors = "bw",
+#            type = "re")[[1]] +
+#   mdthemes::md_theme_linedraw() +
+#   ggtitle("")
+
+# extract re Tau
+results_re_tau_ci_width_proportions_scoring <-
+  merTools::REsdExtract(fit_ci_width_proportions_scoring) %>%
+  as_tibble(rownames = "trial_type") %>%
+  rename(tau = value)
+
+# extract marginal means
+results_emm_ci_width_proportions_scoring <-
+  summary(emmeans(fit_ci_width_proportions_scoring, ~ DV_type)) %>%
+  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
+
+# combine
+results_ci_width_proportions_scoring <- results_emm_ci_width_proportions_scoring %>%
+  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)))
+
+# plot
+dodge_width <- 0.8
+
+p_ci_width_proportion_observed_range_scoring <-
+  ggplot(results_ci_width_proportions_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
+  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
+  # geom_line(position = position_dodge(width = dodge_width)) +
+  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
+  scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  mdthemes::md_theme_linedraw() +
+  labs(x = "",
+       y = "Proportion of observed range covered <br/>by individual participants' 95% CIs",
+       color = "Scoring method",
+       shape = "Scoring method") +
+  theme(legend.position = "top") +
+  coord_flip(ylim = c(0, 1))
+
+p_ci_width_proportion_observed_range_scoring
+
+```
+
 # Combined plots
 
 ## Plot 1
 
-Plot 1 is merely illusatrative. It shows the bootstrapped CIs for all participants, split by domain, but not splitting by trial type. *D* scores and the BCA method are displayed as they are used for the subsequent analyses. 
+Plot 1 is merely illustrative. It shows the bootstrapped CIs for all participants, split by domain, but not splitting by trial type. *D* scores and the BCA method are displayed as they are used for the subsequent analyses. 
 
 ```{r fig.height=8, fig.width=8}
 
@@ -1508,7 +1197,7 @@ p_combined <-
   p_prop_nonzero_scoring + 
   p_prop_discriminable_scoring + 
   p_ci_width_proportion_observed_range_scoring +
-  plot_layout(ncol = 1, guides = "collect") & theme(legend.position = "bottom")
+  plot_layout(ncol = 1, guides = "collect") & theme(legend.position = "top")
 
 p_combined
 
