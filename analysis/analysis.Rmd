@@ -11,6 +11,11 @@ output:
     toc_float: yes
 ---
 
+# TODO
+
+- check all labelling/ordering in plots
+
+
 # Overview 
 
 IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
@@ -44,7 +49,7 @@ library(janitor)
 set.seed(42)
 
 # number of bootstraps
-n_boots <- 3000 
+n_boots <- 5000 
 
 # options
 options(knitr.table.format = "html") # necessary configuration of tables
@@ -188,10 +193,14 @@ data_trimmed %>%
 ```{r}
 
 data_eg_1 <- data_trimmed %>%
-  filter(unique_id == "clintontrump_221_clinton_trump" & trial_type == "tt3") 
+  filter(unique_id == "ian death emma_43" & trial_type == "tt1") 
+  #filter(unique_id == "ian death emma_15" & trial_type == "tt1") 
+  #filter(unique_id == "ian death june_57" & trial_type == "tt1") 
+  
 
-data_eg_1 %>%
-  group_by(trial_type) %>%
+#dat <- data_trimmed %>%
+data_eg_1 %>%  
+  group_by(unique_id, trial_type) %>%
   summarize(mean_rt_con = mean(rt[block_type == "con"], na.rm = TRUE),
             mean_rt_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
             sd_rt = sd(rt, na.rm = TRUE)) %>%
@@ -206,7 +215,6 @@ ggplot(data_eg_1, aes(rt, block_type)) +
        y = "Block type") 
 
 ```
-
 
 # Calculate scores
 
@@ -561,8 +569,8 @@ p_prop_nonzero_method <-
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  #scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  #scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
   labs(shape = "Bootstrapping method",
        color = "Bootstrapping method",
        x = "",
@@ -745,7 +753,7 @@ bootstrap_discriminability <- function(data){
   
   output <- 
     tibble(
-      method   = "basic",
+      method   = "bca",
       estimate = fit$t0,
       ci_lower = results$basic[4],
       ci_upper = results$basic[5]
@@ -837,7 +845,7 @@ if(file.exists("models/data_discriminability_PI.rds")) {
 # fit meta analytic model
 fit_disciminability_method <- data_discriminability_D %>%
   filter(DV_type == "*D* scores") %>%
-  lmer(proportion_discriminable ~ 1 + method + (1 | domain/trial_type),
+  lmer(proportion_discriminable ~ 1 + method + (1 | domain/trial_type), 
        weights = 1/variance, 
        data = .)
 
@@ -886,10 +894,7 @@ fit_disciminability_scoring <-
 
 # results table
 tab_model(fit_disciminability_scoring, 
-          string.p = "p (corrected)", 
-          ci.hyphen = ", ",
-          emph.p = FALSE,
-          p.adjust = "holm")
+          ci.hyphen = ", ")
 
 # # plot RE effects
 # plot_model(fit_disciminability_scoring,
