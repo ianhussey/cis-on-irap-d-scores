@@ -11,11 +11,6 @@ output:
     toc_float: yes
 ---
 
-# TODO
-
-- check all labelling/ordering in plots
-
-
 # Overview 
 
 IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
@@ -431,7 +426,7 @@ data_map_ci_widths %>%
 
 ## Plot by domain and trial type
 
-```{r fig.height=6, fig.width=9}
+```{r fig.height=10, fig.width=8}
 
 data_ci_width_map_D <- data_estimates_D %>%
   group_by(domain, trial_type, method) %>%
@@ -455,10 +450,9 @@ data_ci_width_map_D <- data_estimates_D %>%
 # plot
 p_ci_widths <- 
   ggplot(data_ci_width_map_D, aes(MAP, domain, color = method, shape = method)) + 
-  geom_line() +
-  geom_point() +
-  scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(19, 15, 16, 17, 7)) +
-  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  geom_point(position = position_dodge(width = 0.8)) +
+  scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("Percentile", "Normal", "Basic", "BCA"), direction = -1) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4, nrow = 1) +
   labs(x = "Highest probability (MAP) 95% CI width",
@@ -466,7 +460,7 @@ p_ci_widths <-
        color = "Bootstrapping method",
        shape = "Bootstrapping method") + 
   theme(legend.position = "top")
-
+  
 p_ci_widths
 
 ```
@@ -503,7 +497,7 @@ write_rds(data_diff_zero, "models/data_diff_zero.rds")
 
 ### Plot
 
-```{r fig.height=9, fig.width=9}
+```{r fig.height=10, fig.width=8}
 
 p_diff_zero_method <- 
   data_diff_zero %>%
@@ -512,10 +506,10 @@ p_diff_zero_method <-
   ggplot(aes(proportion_diff_zero, domain, color = method, shape = method)) +
   geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
                       xmax = proportion_diff_zero + sqrt(variance)*1.96),
-                  position = position_dodge(width = 0.75)) + 
-  geom_point(position = position_dodge(width = 0.75)) +
-  # scale_shape_manual(labels = c("BCA", "Basic", "Normal", "Percentile"), values = c(19, 15, 16, 17, 7)) +
-  # scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+                  position = position_dodge(width = 0.8)) + 
+  geom_point(position = position_dodge(width = 0.8)) +
+  scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
+  scale_color_viridis_d(begin = 0.2, end = 0.8, labels = c("Percentile", "Normal", "Basic", "BCA"), direction = -1) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
   labs(x = "Proportion of scores different from zero point",
@@ -557,28 +551,32 @@ results_emm_diff_zero_method <-
 
 # combine
 results_diff_zero_method <- results_emm_diff_zero_method %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_method$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
+         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_method$tau)^2)))
 
 # plot
 p_prop_nonzero_method <- 
   ggplot(results_diff_zero_method, aes(method, estimate, color = method, shape = method, group = method)) +
-  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  #scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  #scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
+  scale_color_viridis_d(alpha = 1, begin = 0.2, end = 0.8, labels = c("Percentile", "Normal", "Basic", "BCA"), direction = -1) +
   labs(shape = "Bootstrapping method",
        color = "Bootstrapping method",
        x = "",
        y = "Proportion of participants with non-zero scores<br/>") + 
-  theme(legend.position = "top") +
+  theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
 p_prop_nonzero_method
+
+results_diff_zero_method %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
@@ -586,7 +584,7 @@ p_prop_nonzero_method
 
 ### Plot
 
-```{r fig.height=6, fig.width=9}
+```{r fig.height=7, fig.width=8}
 
 # data_diff_zero %>%
 #   filter(method %in% c("basic")) %>%
@@ -604,7 +602,7 @@ p_prop_nonzero_method
 p_diff_zero_scoring <- 
   data_diff_zero %>%
   filter(method %in% c("basic")) %>%
-  mutate(domain = fct_reorder(domain, proportion_diff_zero, .fun = mean)) %>%
+  mutate(domain = fct_rev(factor(domain))) %>%
   ggplot(aes(proportion_diff_zero, domain, color = DV_type, shape = DV_type)) +
   geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
                       xmax = proportion_diff_zero + sqrt(variance)*1.96),
@@ -640,16 +638,6 @@ fit_diff_zero_scoring <-
 tab_model(fit_diff_zero_scoring, 
           ci.hyphen = ", ")
 
-# # summary
-# summary(fit_diff_zero_scoring,  correlation = FALSE)
-# 
-# # plot RE effects
-# plot_model(fit_diff_zero_scoring, 
-#            colors = "bw",
-#            type = "re") +
-#   mdthemes::md_theme_linedraw() +
-#   ggtitle("")
-
 # extract re Tau
 results_re_tau_diff_zero_scoring <- fit_diff_zero_scoring %>%
   merTools::REsdExtract() %>%
@@ -663,17 +651,16 @@ results_emm_diff_zero_scoring <-
 
 # combine
 results_diff_zero_scoring <- results_emm_diff_zero_scoring %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)))
 
 # plot
 dodge_width <- 0.8
 
 p_prop_nonzero_scoring <- 
   ggplot(results_diff_zero_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
@@ -682,10 +669,15 @@ p_prop_nonzero_scoring <-
        color = "Scoring method",
        x = "",
        y = "Proportion of participants with non-zero scores<br/>") + 
-  theme(legend.position = "top") +
+  theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
 p_prop_nonzero_scoring
+
+results_diff_zero_scoring %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
@@ -916,28 +908,32 @@ results_emm_disciminability_scoring <-
 
 # combine
 results_disciminability_scoring <- results_emm_disciminability_scoring %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)))
 
 # plot
 p_prop_discriminable_scoring <-
   ggplot(results_disciminability_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  scale_shape_discrete() +
-  scale_color_viridis_d(begin = 0.3, end = 0.7) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of participants who whose scores<br/>differ from one another<br/>",
        color = "Scoring method",
        shape = "Scoring method") +
-  theme(legend.position = "top") +
+  theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
-p_prop_discriminable_scoring
+p_prop_discriminable_scoring 
+
+results_disciminability_scoring %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
@@ -1048,31 +1044,37 @@ results_emm_ci_width_proportions_method <-
 
 # combine
 results_ci_width_proportions_method <- results_emm_ci_width_proportions_method %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
-         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_method$tau)^2))) 
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R 
+         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_method$tau)^2))) 
 
 # plot
 p_ci_width_proportion_observed_range_method <- 
-  ggplot(results_ci_width_proportions_method, aes(method, estimate, 
-                                                  color = method, 
-                                                  shape = method, 
-                                                  group = method)) +
-  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  results_ci_width_proportions_method %>%
+  mutate(method = fct_rev(method)) %>%
+  ggplot(aes(method, estimate, 
+             color = method, 
+             shape = method, 
+             group = method)) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
-  scale_shape_discrete(labels = c("BCA", "Basic", "Normal", "Percentile")) +
-  scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("BCA", "Basic", "Normal", "Percentile")) +
+  scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("Percentile", "Normal", "Basic", "BCA"), direction = -1) +
   labs(shape = "Bootstrapping method",
        color = "Bootstrapping method",
        x = "",
        y = "Proportion of observed range covered <br/>by individual participants' 95% CIs") +
-  theme(legend.position = "top") +
+  theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
 p_ci_width_proportion_observed_range_method
+
+results_ci_width_proportions_method %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
@@ -1092,13 +1094,6 @@ fit_ci_width_proportions_scoring <-
 tab_model(fit_ci_width_proportions_scoring,
           ci.hyphen = ", ")
 
-# # plot RE effects
-# plot_model(fit_ci_width_proportions_scoring,
-#            colors = "bw",
-#            type = "re")[[1]] +
-#   mdthemes::md_theme_linedraw() +
-#   ggtitle("")
-
 # extract re Tau
 results_re_tau_ci_width_proportions_scoring <-
   merTools::REsdExtract(fit_ci_width_proportions_scoring) %>%
@@ -1112,20 +1107,20 @@ results_emm_ci_width_proportions_scoring <-
 
 # combine
 results_ci_width_proportions_scoring <- results_emm_ci_width_proportions_scoring %>%
-  mutate(cr_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         cr_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)))
 
 # plot
 dodge_width <- 0.8
 
 p_ci_width_proportion_observed_range_scoring <-
   ggplot(results_ci_width_proportions_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = cr_lower, ymax = cr_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  # geom_line(position = position_dodge(width = dodge_width)) +
   geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
   scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
@@ -1136,6 +1131,11 @@ p_ci_width_proportion_observed_range_scoring <-
   coord_flip(ylim = c(0, 1))
 
 p_ci_width_proportion_observed_range_scoring
+
+results_ci_width_proportions_scoring %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
