@@ -62,7 +62,7 @@ round_df <- function(df, n_digits = 3) {
 
 # get data from evaluative IRAPs
 data_trial_level <- read_csv("../data/data_trial_level.csv") %>%
-  filter(timepoint == "baseline" & age >= 18)
+  filter(timepoint == "baseline" & (age >= 18 | is.na(age)))
 
 # outliers
 data_outliers <- data_trial_level %>%
@@ -249,7 +249,7 @@ if(file.exists("../data/data_estimates_D.rds")) {
                  parallel  = "multicore", 
                  ncpus     = parallel::detectCores())
     
-    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
+    results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
     
     output <- 
       tibble(method   = c("normal", "basic", "percent", "bca"),
