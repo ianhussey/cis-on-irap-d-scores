@@ -778,7 +778,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
            di_width = di_upper - di_lower) |>
     
     select(unique_id, domain, trial_type, estimate, di_upper, di_lower) %>%
-    group_by(domain, trial_type) |>
+    group_by(domain, trial_type, method) |>
     do(bootstrap_discriminability(data = .)) %>%
     ungroup() %>%
     rename(proportion_discriminable = estimate) %>%
@@ -803,7 +803,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("../data/results/data_discriminability_PI.csv")) {
   
-  data_discriminability_PI <- read_csvs("../data/results/data_discriminability_PI.csv")
+  data_discriminability_PI <- read_csv("../data/results/data_discriminability_PI.csv")
   
 } else {
   
@@ -816,7 +816,7 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
            di_width = di_upper - di_lower) |>
     
     select(unique_id, domain, trial_type, estimate, di_upper, di_lower) %>%
-    group_by(domain, trial_type) %>%
+    group_by(domain, trial_type, method) %>%
     do(bootstrap_discriminability(data = .)) %>%
     ungroup() %>%
     rename(proportion_discriminable = estimate) %>%
@@ -840,10 +840,13 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 
 # fit meta analytic model
 fit_disciminability_method <- data_discriminability_D %>%
-  filter(DV_type == "*D* scores") %>%
   lmer(proportion_discriminable ~ 1 + method + (1 | domain/trial_type), 
-       weights = 1/variance, 
+       #weights = 1/variance, 
        data = .)
+
+data_discriminability_D %>%
+  group_by(method) %>%
+  summarize(mean_proportion_discriminable = mean(proportion_discriminable))
 
 # results table
 tab_model(fit_disciminability_method, 
