@@ -63,7 +63,7 @@ round_df <- function(df, n_digits = 3) {
 # create necessary directories
 dir.create("../data/processed")
 dir.create("../data/results")
-dir.create("models")
+#dir.create("models")
 
 
 # get data from evaluative IRAPs
@@ -734,8 +734,7 @@ bootstrap_discriminability <- function(data){
                parallel  = "multicore", 
                ncpus     = parallel::detectCores())
   
-  #results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
-  results <- boot::boot.ci(fit, conf = 0.95, type = c("basic"))
+  results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
   
   output <-
     tibble(
@@ -744,6 +743,8 @@ bootstrap_discriminability <- function(data){
       ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
       ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5])
     )
+  
+  #results <- boot::boot.ci(fit, conf = 0.95, type = c("basic"))
   
   # output <- 
   #   tibble(
