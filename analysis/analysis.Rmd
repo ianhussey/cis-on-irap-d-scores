@@ -770,23 +770,21 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
 } else {
   
   # bootstrap D scores 
-  data_discriminability_D <- data_estimates_D %>%
-    
+  data_discriminability_D <- data_estimates_D |>
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2),
            di_width = di_upper - di_lower) |>
-    
-    select(unique_id, domain, trial_type, estimate, di_upper, di_lower) %>%
-    group_by(domain, trial_type, method) |>
-    do(bootstrap_discriminability(data = .)) %>%
-    ungroup() %>%
-    rename(proportion_discriminable = estimate) %>%
+    select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
+    group_by(domain, trial_type, method) %>%
+    do(bootstrap_discriminability(data = .)) |>
+    ungroup() |>
+    rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
            method = fct_relevel(method, "bca", "basic", "normal", "percent"),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "*D* scores") %>%
+           DV_type = "*D* scores") |>
     round_df(4)
 
   # save to disk
@@ -808,23 +806,21 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 } else {
   
   # bootstrap D scores 
-  data_discriminability_PI <- data_estimates_PI %>%
-    
+  data_discriminability_PI <- data_estimates_PI |>
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2),
            di_width = di_upper - di_lower) |>
-    
-    select(unique_id, domain, trial_type, estimate, di_upper, di_lower) %>%
+    select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
     group_by(domain, trial_type, method) %>%
-    do(bootstrap_discriminability(data = .)) %>%
-    ungroup() %>%
-    rename(proportion_discriminable = estimate) %>%
+    do(bootstrap_discriminability(data = .)) |>
+    ungroup() |>
+    rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
            method = fct_relevel(method, "bca", "basic", "normal", "percent"),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "PI scores") %>%
+           DV_type = "PI scores") |>
     round_df(4)
 
   # save to disk
