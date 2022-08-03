@@ -1130,7 +1130,7 @@ p_ci_width_proportion_observed_range_scoring <-
        y = "Proportion of observed range covered <br/>by individual participants' 95% CIs",
        color = "Scoring method",
        shape = "Scoring method") +
-  theme(legend.position = "top") +
+  theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
 p_ci_width_proportion_observed_range_scoring
@@ -1205,7 +1205,7 @@ p_combined <-
   p_prop_nonzero_scoring + 
   p_prop_discriminable_scoring + 
   p_ci_width_proportion_observed_range_scoring +
-  plot_layout(ncol = 1, guides = "collect") & theme(legend.position = "top")
+  plot_layout(ncol = 1) #, guides = "collect") & theme(legend.position = "top")
 
 p_combined
 
