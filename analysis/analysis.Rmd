@@ -223,9 +223,9 @@ Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("../data/processed/data_estimates_D.rds")) {
+if(file.exists("../data/processed/data_estimates_D.csv")) {
   
-  data_estimates_D <- read_rds("../data/processed/data_estimates_D.rds")
+  data_estimates_D <- read_csv("../data/processed/data_estimates_D.csv")
   
 } else {
   
@@ -274,8 +274,8 @@ if(file.exists("../data/processed/data_estimates_D.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_D, "../data/processed/data_estimates_D.rds", compress = "gz")
-  
+  write_csv(data_estimates_D, "../data/processed/data_estimates_D.csv")
+
 }
 
 ```
@@ -287,9 +287,9 @@ Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("../data/processed/data_estimates_PI.rds")) {
+if(file.exists("../data/processed/data_estimates_PI.csv")) {
   
-  data_estimates_PI <- read_rds("../data/processed/data_estimates_PI.rds")
+  data_estimates_PI <- read_csv("../data/processed/data_estimates_PI.csv")
   
 } else {
   
@@ -340,7 +340,7 @@ if(file.exists("../data/processed/data_estimates_PI.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_PI, "../data/processed/data_estimates_PI.rds", compress = "gz")
+  write_csv(data_estimates_PI, "../data/processed/data_estimates_PI.csv")
   
 }
 
