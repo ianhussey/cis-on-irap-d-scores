@@ -11,6 +11,11 @@ output:
     toc_float: yes
 ---
 
+# TODOs
+
+- add stud boots to all
+- clean up text in this doc
+
 # Overview 
 
 IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
@@ -42,9 +47,6 @@ library(janitor)
 
 # set seed for reproducibility
 set.seed(42)
-
-# number of bootstraps
-n_boots <- 5000 
 
 # options
 options(knitr.table.format = "html") # necessary configuration of tables
@@ -214,9 +216,11 @@ ggplot(data_eg_1, aes(rt, block_type)) +
 
 ```
 
-# Calculate scores
+# Bootstrap confidence intervals
 
-## Bootstrap 95% CIs on *D* scores
+## Calculate scores
+
+### *D* scores
 
 Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 
@@ -246,7 +250,7 @@ if(file.exists("../data/processed/data_estimates_D.csv")) {
     fit <- 
       boot::boot(data      = data, 
                  statistic = D_score, 
-                 R         = n_boots, 
+                 R         = 5000, 
                  sim       = "ordinary", 
                  stype     = "i",
                  parallel  = "multicore", 
@@ -280,7 +284,7 @@ if(file.exists("../data/processed/data_estimates_D.csv")) {
 
 ```
 
-## Bootstrapped 95% CIs on PI scores 
+### PI scores 
 
 Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 
@@ -313,7 +317,7 @@ if(file.exists("../data/processed/data_estimates_PI.csv")) {
     fit <- 
       boot::boot(data      = data, 
                  statistic = PI_score, 
-                 R         = n_boots, 
+                 R         = 5000, 
                  sim       = "ordinary", 
                  stype     = "i",
                  parallel  = "multicore", 
@@ -343,40 +347,6 @@ if(file.exists("../data/processed/data_estimates_PI.csv")) {
   write_csv(data_estimates_PI, "../data/processed/data_estimates_PI.csv")
   
 }
-
-```
-
-## Plots
-
-By domain, using normal bootstrapping
-
-```{r fig.height=8, fig.width=8}
-
-p_cis_by_domain <- 
-  data_estimates_D %>%
-  filter(method == "basic") %>%
-  mutate(domain = str_replace(domain, "Personality - ", "Big5: "),
-         domain = str_replace(domain, "Stigma - ", "Stigma: ")) %>%
-  arrange(estimate) %>%
-  group_by(domain) %>%
-  mutate(ordered_id = row_number()/n()) %>%
-  ungroup() %>%
-  ggplot() +
-  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
-                 alpha = 1) +
-  geom_point(aes(ordered_id, estimate), size = 0.5, shape = "square") +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  mdthemes::md_theme_linedraw() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        legend.position = "top") +
-  scale_color_viridis_d(end = 0.6, direction = -1) +
-  xlab("Ranked participant") +
-  ylab("*D* score") +
-  labs(color = "95% CI excludes zero point") + 
-  facet_wrap(~ domain, ncol = 5)
-
-p_cis_by_domain
 
 ```
 
@@ -584,6 +554,40 @@ results_diff_zero_method %>%
 
 ```
 
+## Caterpillar plot
+
+By domain, using normal bootstrapping
+
+```{r fig.height=12, fig.width=8}
+
+p_cis_by_domain <- 
+  data_estimates_D %>%
+  filter(method == "basic") %>%
+  mutate(domain = str_replace(domain, "Personality - ", "Big5: "),
+         domain = str_replace(domain, "Stigma - ", "Stigma: ")) %>%
+  arrange(estimate) %>%
+  group_by(domain) %>%
+  mutate(ordered_id = row_number()/n()) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_linerange(aes(x = ordered_id, ymin = ci_lower, ymax = ci_upper, color = sig),
+                 alpha = 1) +
+  geom_point(aes(ordered_id, estimate), size = 0.5, shape = "square") +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  mdthemes::md_theme_linedraw() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "top") +
+  scale_color_viridis_d(end = 0.6, direction = -1) +
+  xlab("Ranked participant") +
+  ylab("*D* score") +
+  labs(color = "95% CI excludes zero point") + 
+  facet_wrap(~ domain, ncol = 4)
+
+p_cis_by_domain
+
+```
+
 ## Compare *D* vs PI scores
 
 ### Plot
@@ -667,6 +671,7 @@ p_prop_nonzero_scoring <-
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   labs(shape = "Scoring method",
        color = "Scoring method",
        x = "",
@@ -728,31 +733,30 @@ bootstrap_discriminability <- function(data){
   fit <- 
     boot::boot(data      = data, 
                statistic = discriminability, 
-               R         = n_boots,
+               R         = 2000,
                sim       = "ordinary", 
                stype     = "i",
                parallel  = "multicore", 
                ncpus     = parallel::detectCores())
   
-  results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
+  # results <- boot::boot.ci(fit, conf = 0.95, type = c("norm", "basic", "perc", "bca"))
+  # 
+  # output <-
+  #   tibble(
+  #     method   = c("normal", "basic", "percent", "bca"),
+  #     estimate = rep(fit$t0, 4),
+  #     ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+  #     ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5])
+  #   )
   
+  results <- boot::boot.ci(fit, conf = 0.95, type = "norm")
+
   output <-
     tibble(
-      method   = c("normal", "basic", "percent", "bca"),
-      estimate = rep(fit$t0, 4),
-      ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-      ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5])
+      estimate = fit$t0,
+      ci_lower = results$normal[2],
+      ci_upper = results$normal[3]
     )
-  
-  #results <- boot::boot.ci(fit, conf = 0.95, type = c("basic"))
-  
-  # output <- 
-  #   tibble(
-  #     method   = "bca",
-  #     estimate = fit$t0,
-  #     ci_lower = results$basic[4],
-  #     ci_upper = results$basic[5]
-  #   )
   
   return(output)
 }
@@ -776,11 +780,12 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
     select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
-    group_by(domain, trial_type, method) %>%
+    group_by(domain, trial_type, method) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+           variance = ifelse(variance == 0, 0.0001, variance),
            domain = as.factor(domain),
            method = fct_relevel(method, "bca", "basic", "normal", "percent"),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
@@ -811,11 +816,12 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
     select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
-    group_by(domain, trial_type, method) %>%
+    group_by(domain, trial_type, method) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+           variance = ifelse(variance == 0, 0.0001, variance),
            domain = as.factor(domain),
            method = fct_relevel(method, "bca", "basic", "normal", "percent"),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
@@ -834,34 +840,56 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 ```{r}
 
 # fit meta analytic model
-fit_disciminability_method <- data_discriminability_D %>%
+fit_disciminability_method <- 
   lmer(proportion_discriminable ~ 1 + method + (1 | domain/trial_type), 
        #weights = 1/variance, 
-       data = .)
-
-data_discriminability_D %>%
-  group_by(method) %>%
-  summarize(mean_proportion_discriminable = mean(proportion_discriminable))
+       data = data_discriminability_D)
 
 # results table
 tab_model(fit_disciminability_method, 
           ci.hyphen = ", ")
 
-# # extract re Tau
-# results_re_tau_disciminability_method <- fit_disciminability_method %>%
-#   merTools::REsdExtract() %>%
-#   #as_tibble(rownames = "trial_type") %>%
-#   as_tibble(rownames = "method") %>%
-#   rename(tau = value) 
-# 
-# # extract marginal means
-# results_emm_disciminability_method <- 
-#   summary(emmeans(fit_disciminability_method, ~ 1)) %>%  # throws "system is computationally singular" error. ie estimates are identical. therefore taken from table
-#   dplyr::select(method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
+# extract re Tau
+results_re_tau_disciminability_method <- fit_disciminability_method %>%
+  merTools::REsdExtract() %>%
+  as_tibble(rownames = "method") %>%
+  rename(tau = value) 
+
+# extract marginal means
+results_emm_disciminability_method <-
+  summary(emmeans(fit_disciminability_method, ~ method)) %>%
+  dplyr::select(method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
+
+# combine
+results_disciminability_method <- results_emm_disciminability_method %>%
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_method$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_method$tau)^2)))
+
+# plot
+p_prop_discriminable_method <-
+  ggplot(results_disciminability_method, aes(method, estimate, color = method, shape = method, group = method)) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = 0.8), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = 0.8)) +
+  geom_point(position = position_dodge(width = 0.8), size = 2.5) +
+  scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
+  scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("Percentile", "Normal", "Basic", "BCA"), direction = -1) +
+  mdthemes::md_theme_linedraw() +
+  labs(x = "",
+       y = "Proportion of participants who whose scores<br/>differ from one another<br/>",
+       color = "Bootstrapping method",
+       shape = "Bootstrapping method") +
+  theme(legend.position = "none") +
+  coord_flip(ylim = c(0, 1))
+
+p_prop_discriminable_method 
+
+results_disciminability_method %>%
+  round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
-
-- singular fit error; estimates are identical between methods, therefore no plot.
 
 ## Compare *D* vs PI scores
 
@@ -889,13 +917,6 @@ fit_disciminability_scoring <-
 # results table
 tab_model(fit_disciminability_scoring, 
           ci.hyphen = ", ")
-
-# # plot RE effects
-# plot_model(fit_disciminability_scoring,
-#            colors = "bw",
-#            type = "re") +
-#   mdthemes::md_theme_linedraw() +
-#   ggtitle("")
 
 # extract re Tau
 results_re_tau_disciminability_scoring <- fit_disciminability_scoring %>%
@@ -1006,32 +1027,14 @@ data_ci_width_proportions_combined <-
 
 ```{r}
 
-data_ci_width_proportions_combined_method <- 
-  data_ci_width_proportions_D %>%
-  mutate(domain = as.factor(domain),
-         method = as.factor(method),
-         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
-  select(unique_id, domain, trial_type, method, ci_width_proportion) 
-
 # fit model
 fit_ci_width_proportions_method <- 
   lmer(ci_width_proportion ~ 1 + method + (1 | domain/trial_type), 
-       data = data_ci_width_proportions_combined_method)
+       data = data_ci_width_proportions_combined)
 
 # results table
 tab_model(fit_ci_width_proportions_method, 
           ci.hyphen = ", ")
-
-# # summary
-# summary(fit_ci_width_proportions_method)
-#
-# # plot re
-# plot_model(fit_ci_width_proportions_method, 
-#            colors = "bw",
-#            type = "re") +
-#   mdthemes::md_theme_linedraw() +
-#   ggtitle("")
 
 # extract re Tau
 results_re_tau_ci_width_proportions_method <- fit_ci_width_proportions_method %>%
@@ -1145,7 +1148,7 @@ results_ci_width_proportions_scoring %>%
 
 Plot 1 is merely illustrative. It shows the bootstrapped CIs for all participants, split by domain, but not splitting by trial type. *D* scores and the BCA method are displayed as they are used for the subsequent analyses. 
 
-```{r fig.height=8, fig.width=8}
+```{r fig.height=12, fig.width=8}
 
 p_cis_by_domain
 
@@ -1156,7 +1159,7 @@ ggsave(filename  = "plots/figure_1_cis_by_domain.pdf",
        # dpi       = 300,
        units     = "in",
        width     = 8,
-       height    = 8,
+       height    = 12,
        limitsize = TRUE)
 
 ```
@@ -1196,7 +1199,7 @@ All meta analyses compare *D* and PI scores to assess whether the results are de
 
 Note that the theoretical max possible range of D scores is -2 to +2, but such extreme scores are practically impossible. As such, in order to understand the CI width in terms of realistic data - and also in order to compare *D* and PI which are on different scales and distributions - I standardize CI widths by the observed range of scores for each domain and trial type. 
 
-```{r fig.height=7, fig.width=5}
+```{r fig.height=5, fig.width=5}
 
 p_combined <- 
   p_prop_nonzero_scoring + 
@@ -1213,7 +1216,7 @@ ggsave(filename  = "plots/figure_3_metaanalyses.pdf",
        # dpi       = 300,
        units     = "in",
        width     = 5,
-       height    = 7,
+       height    = 5,
        limitsize = TRUE)
 
 ```
