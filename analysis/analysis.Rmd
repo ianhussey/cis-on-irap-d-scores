@@ -773,8 +773,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
   data_discriminability_D <- data_estimates_D |>
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
-           di_upper = estimate + (ci_upper - estimate)*sqrt(2),
-           di_width = di_upper - di_lower) |>
+           di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
     select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
     group_by(domain, trial_type, method) %>%
     do(bootstrap_discriminability(data = .)) |>
@@ -809,8 +808,7 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
   data_discriminability_PI <- data_estimates_PI |>
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
-           di_upper = estimate + (ci_upper - estimate)*sqrt(2),
-           di_width = di_upper - di_lower) |>
+           di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
     select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
     group_by(domain, trial_type, method) %>%
     do(bootstrap_discriminability(data = .)) |>
