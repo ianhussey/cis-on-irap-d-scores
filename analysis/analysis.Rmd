@@ -60,8 +60,14 @@ round_df <- function(df, n_digits = 3) {
 }
 
 
+# create necessary directories
+dir.create("../data/processed")
+dir.create("../data/results")
+dir.create("models")
+
+
 # get data from evaluative IRAPs
-data_trial_level <- read_csv("../data/data_trial_level.csv") %>%
+data_trial_level <- read_csv("../data/raw/data_trial_level.csv") %>%
   filter(timepoint == "baseline" & (age >= 18 | is.na(age)))
 
 # outliers
@@ -85,9 +91,6 @@ data_outliers_removed <- data_outliers %>%
 data_trimmed <- data_outliers_removed %>%
   select(unique_id, domain, trial_type, rt, block_type) %>%
   filter(rt <= 10000)
-
-# for plot
-dodge_width <- 0.25
 
 ```
 
@@ -220,9 +223,9 @@ Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("../data/data_estimates_D.rds")) {
+if(file.exists("../data/processed/data_estimates_D.rds")) {
   
-  data_estimates_D <- read_rds("../data/data_estimates_D.rds")
+  data_estimates_D <- read_rds("../data/processed/data_estimates_D.rds")
   
 } else {
   
@@ -271,7 +274,7 @@ if(file.exists("../data/data_estimates_D.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_D, "../data/data_estimates_D.rds", compress = "gz")
+  write_rds(data_estimates_D, "../data/processed/data_estimates_D.rds", compress = "gz")
   
 }
 
@@ -284,9 +287,9 @@ Calculated by domain and trial-type. 1+ hour runtime on a good PC.
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("../data/data_estimates_PI.rds")) {
+if(file.exists("../data/processed/data_estimates_PI.rds")) {
   
-  data_estimates_PI <- read_rds("../data/data_estimates_PI.rds")
+  data_estimates_PI <- read_rds("../data/processed/data_estimates_PI.rds")
   
 } else {
   
@@ -337,7 +340,7 @@ if(file.exists("../data/data_estimates_PI.rds")) {
     round_df(3)
   
   # save to disk
-  write_rds(data_estimates_PI, "../data/data_estimates_PI.rds", compress = "gz")
+  write_rds(data_estimates_PI, "../data/processed/data_estimates_PI.rds", compress = "gz")
   
 }
 
@@ -433,7 +436,8 @@ data_ci_width_map_D <- data_estimates_D %>%
   #summarize(median = median(ci_width), .groups = "drop") %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   ungroup() %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent"),
+  mutate(MAP = round_half_up(MAP, 3),
+         method = fct_relevel(method, "bca", "basic", "normal", "percent"),
          method = fct_rev(method),
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
@@ -442,10 +446,10 @@ data_ci_width_map_D <- data_estimates_D %>%
          trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
   #mutate(domain = fct_reorder(domain, MAP, .fun = min)) %>%
   #arrange(domain) %>%
-  mutate(domain = fct_rev(domain)) 
+  mutate(domain = fct_rev(domain))
 
-# # save to disk
-# write_rds(data_ci_width_map_D, "models/data_ci_width_map_D.rds")
+# save to disk
+write_csv(data_ci_width_map_D, "../data/results/data_ci_width_map_D.csv")
 
 # plot
 p_ci_widths <- 
@@ -489,7 +493,7 @@ data_diff_zero <-
   mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset by a minuscule amount
 
 # save to disk
-write_rds(data_diff_zero, "models/data_diff_zero.rds")
+write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
 
 ```
 
@@ -557,9 +561,9 @@ results_diff_zero_method <- results_emm_diff_zero_method %>%
 # plot
 p_prop_nonzero_method <- 
   ggplot(results_diff_zero_method, aes(method, estimate, color = method, shape = method, group = method)) +
-  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = 0.25), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = 0.25)) +
+  geom_point(position = position_dodge(width = 0.25), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
@@ -655,13 +659,11 @@ results_diff_zero_scoring <- results_emm_diff_zero_scoring %>%
          pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)))
 
 # plot
-dodge_width <- 0.8
-
 p_prop_nonzero_scoring <- 
   ggplot(results_diff_zero_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = 0.8), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = 0.8)) +
+  geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
@@ -735,21 +737,21 @@ bootstrap_discriminability <- function(data){
   #results <- boot::boot.ci(fit, conf = 0.95, type = c("norm","basic", "perc", "bca"))
   results <- boot::boot.ci(fit, conf = 0.95, type = c("basic"))
   
+  output <-
+    tibble(
+      method   = c("normal", "basic", "percent", "bca"),
+      estimate = rep(fit$t0, 4),
+      ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+      ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5])
+    )
+  
   # output <- 
   #   tibble(
-  #     method   = c("normal", "basic", "percent", "bca"),
-  #     estimate = rep(fit$t0, 4),
-  #     ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-  #     ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5])
+  #     method   = "bca",
+  #     estimate = fit$t0,
+  #     ci_lower = results$basic[4],
+  #     ci_upper = results$basic[5]
   #   )
-  
-  output <- 
-    tibble(
-      method   = "bca",
-      estimate = fit$t0,
-      ci_lower = results$basic[4],
-      ci_upper = results$basic[5]
-    )
   
   return(output)
 }
@@ -761,9 +763,9 @@ bootstrap_discriminability <- function(data){
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_discriminability_D.rds")) {
+if(file.exists("../data/results/data_discriminability_D.csv")) {
   
-  data_discriminability_D <- read_rds("models/data_discriminability_D.rds")
+  data_discriminability_D <- read_rds("../data/results/data_discriminability_D.csv")
   
 } else {
   
@@ -779,15 +781,20 @@ if(file.exists("models/data_discriminability_D.rds")) {
     group_by(domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) %>%
     ungroup() %>%
-    mutate(proportion_discriminable = estimate,
-           variance = ((ci_upper - ci_lower)/(1.96*2))^2) %>%
-    mutate(domain = as.factor(domain),
+    rename(proportion_discriminable = estimate) %>%
+    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+           domain = as.factor(domain),
            method = fct_relevel(method, "bca", "basic", "normal", "percent"),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "*D* scores")
+           DV_type = "*D* scores") %>%
+    round_df(4)
+  
+  data_discriminability_D <- data_discriminability_D %>%
+    select(-estimate) %>%
+    round_df(4)
   
   # save to disk
-  write_rds(data_discriminability_D, "models/data_discriminability_D.rds", compress = "gz")
+  write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
   
 }
 
@@ -798,9 +805,9 @@ if(file.exists("models/data_discriminability_D.rds")) {
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("models/data_discriminability_PI.rds")) {
+if(file.exists("../data/results/data_discriminability_PI.csv")) {
   
-  data_discriminability_PI <- read_rds("models/data_discriminability_PI.rds")
+  data_discriminability_PI <- read_rds("../data/results/data_discriminability_PI.csv")
   
 } else {
   
@@ -816,15 +823,20 @@ if(file.exists("models/data_discriminability_PI.rds")) {
     group_by(domain, trial_type) %>%
     do(bootstrap_discriminability(data = .)) %>%
     ungroup() %>%
-    mutate(proportion_discriminable = estimate,
-           variance = ((ci_upper - ci_lower)/(1.96*2))^2) %>%
-    mutate(domain = as.factor(domain),
+    rename(proportion_discriminable = estimate) %>%
+    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+           domain = as.factor(domain),
            method = fct_relevel(method, "bca", "basic", "normal", "percent"),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "PI scores")
+           DV_type = "PI scores") %>%
+    round_df(4)
+  
+  data_discriminability_PI <- data_discriminability_PI %>%
+    select(-estimate) %>%
+    round_df(4)
   
   # save to disk
-  write_rds(data_discriminability_PI, "models/data_discriminability_PI.rds", compress = "gz")
+  write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
   
 }
 
@@ -914,9 +926,9 @@ results_disciminability_scoring <- results_emm_disciminability_scoring %>%
 # plot
 p_prop_discriminable_scoring <-
   ggplot(results_disciminability_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = 0.8), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = 0.8)) +
+  geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
@@ -1055,9 +1067,9 @@ p_ci_width_proportion_observed_range_method <-
              color = method, 
              shape = method, 
              group = method)) +
-  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = 0.8), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = 0.8)) +
+  geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
   scale_shape_manual(labels = c("Percentile", "Normal", "Basic", "BCA"), values = c(17, 16, 15, 19)) +
@@ -1111,13 +1123,11 @@ results_ci_width_proportions_scoring <- results_emm_ci_width_proportions_scoring
          pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)))
 
 # plot
-dodge_width <- 0.8
-
 p_ci_width_proportion_observed_range_scoring <-
   ggplot(results_ci_width_proportions_scoring, aes(DV_type, estimate, color = DV_type, shape = DV_type, group = DV_type)) +
-  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = dodge_width), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = dodge_width)) +
-  geom_point(position = position_dodge(width = dodge_width), size = 2.5) +
+  geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), position = position_dodge(width = 0.8), linetype = "dotted") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1, position = position_dodge(width = 0.8)) +
+  geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
   scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +

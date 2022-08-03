@@ -1,0 +1,561 @@
+domain,trial_type,method,MAP
+Body image,Trial type 1,basic,1.327
+Body image,Trial type 1,bca,1.308
+Body image,Trial type 1,normal,1.331
+Body image,Trial type 1,percent,1.327
+Body image,Trial type 2,basic,1.288
+Body image,Trial type 2,bca,1.305
+Body image,Trial type 2,normal,1.319
+Body image,Trial type 2,percent,1.288
+Body image,Trial type 3,basic,1.328
+Body image,Trial type 3,bca,1.339
+Body image,Trial type 3,normal,1.358
+Body image,Trial type 3,percent,1.328
+Body image,Trial type 4,basic,1.277
+Body image,Trial type 4,bca,1.256
+Body image,Trial type 4,normal,1.283
+Body image,Trial type 4,percent,1.277
+Clinton-Trump,Trial type 1,basic,1.28
+Clinton-Trump,Trial type 1,bca,1.288
+Clinton-Trump,Trial type 1,normal,1.302
+Clinton-Trump,Trial type 1,percent,1.28
+Clinton-Trump,Trial type 2,basic,1.288
+Clinton-Trump,Trial type 2,bca,1.309
+Clinton-Trump,Trial type 2,normal,1.32
+Clinton-Trump,Trial type 2,percent,1.288
+Clinton-Trump,Trial type 3,basic,1.312
+Clinton-Trump,Trial type 3,bca,1.312
+Clinton-Trump,Trial type 3,normal,1.322
+Clinton-Trump,Trial type 3,percent,1.312
+Clinton-Trump,Trial type 4,basic,1.316
+Clinton-Trump,Trial type 4,bca,1.314
+Clinton-Trump,Trial type 4,normal,1.324
+Clinton-Trump,Trial type 4,percent,1.316
+Countries (1),Trial type 1,basic,1.274
+Countries (1),Trial type 1,bca,1.273
+Countries (1),Trial type 1,normal,1.268
+Countries (1),Trial type 1,percent,1.274
+Countries (1),Trial type 2,basic,1.329
+Countries (1),Trial type 2,bca,1.325
+Countries (1),Trial type 2,normal,1.339
+Countries (1),Trial type 2,percent,1.329
+Countries (1),Trial type 3,basic,1.296
+Countries (1),Trial type 3,bca,1.293
+Countries (1),Trial type 3,normal,1.308
+Countries (1),Trial type 3,percent,1.296
+Countries (1),Trial type 4,basic,1.287
+Countries (1),Trial type 4,bca,1.304
+Countries (1),Trial type 4,normal,1.304
+Countries (1),Trial type 4,percent,1.287
+Countries (2),Trial type 1,basic,1.294
+Countries (2),Trial type 1,bca,1.316
+Countries (2),Trial type 1,normal,1.32
+Countries (2),Trial type 1,percent,1.294
+Countries (2),Trial type 2,basic,1.301
+Countries (2),Trial type 2,bca,1.306
+Countries (2),Trial type 2,normal,1.318
+Countries (2),Trial type 2,percent,1.301
+Countries (2),Trial type 3,basic,1.317
+Countries (2),Trial type 3,bca,1.314
+Countries (2),Trial type 3,normal,1.317
+Countries (2),Trial type 3,percent,1.317
+Countries (2),Trial type 4,basic,1.308
+Countries (2),Trial type 4,bca,1.308
+Countries (2),Trial type 4,normal,1.327
+Countries (2),Trial type 4,percent,1.308
+Death (1),Trial type 1,basic,1.284
+Death (1),Trial type 1,bca,1.294
+Death (1),Trial type 1,normal,1.315
+Death (1),Trial type 1,percent,1.284
+Death (1),Trial type 2,basic,1.301
+Death (1),Trial type 2,bca,1.302
+Death (1),Trial type 2,normal,1.308
+Death (1),Trial type 2,percent,1.301
+Death (1),Trial type 3,basic,1.144
+Death (1),Trial type 3,bca,1.148
+Death (1),Trial type 3,normal,1.141
+Death (1),Trial type 3,percent,1.144
+Death (1),Trial type 4,basic,1.329
+Death (1),Trial type 4,bca,1.331
+Death (1),Trial type 4,normal,1.335
+Death (1),Trial type 4,percent,1.329
+Death (2),Trial type 1,basic,1.288
+Death (2),Trial type 1,bca,1.291
+Death (2),Trial type 1,normal,1.3
+Death (2),Trial type 1,percent,1.288
+Death (2),Trial type 2,basic,1.272
+Death (2),Trial type 2,bca,1.285
+Death (2),Trial type 2,normal,1.283
+Death (2),Trial type 2,percent,1.272
+Death (2),Trial type 3,basic,1.306
+Death (2),Trial type 3,bca,1.297
+Death (2),Trial type 3,normal,1.292
+Death (2),Trial type 3,percent,1.306
+Death (2),Trial type 4,basic,1.304
+Death (2),Trial type 4,bca,1.295
+Death (2),Trial type 4,normal,1.327
+Death (2),Trial type 4,percent,1.304
+Death (3),Trial type 1,basic,1.252
+Death (3),Trial type 1,bca,1.25
+Death (3),Trial type 1,normal,1.254
+Death (3),Trial type 1,percent,1.252
+Death (3),Trial type 2,basic,1.305
+Death (3),Trial type 2,bca,1.307
+Death (3),Trial type 2,normal,1.305
+Death (3),Trial type 2,percent,1.305
+Death (3),Trial type 3,basic,1.304
+Death (3),Trial type 3,bca,1.295
+Death (3),Trial type 3,normal,1.288
+Death (3),Trial type 3,percent,1.304
+Death (3),Trial type 4,basic,1.305
+Death (3),Trial type 4,bca,1.319
+Death (3),Trial type 4,normal,1.32
+Death (3),Trial type 4,percent,1.305
+Disgust (1),Trial type 1,basic,1.122
+Disgust (1),Trial type 1,bca,1.121
+Disgust (1),Trial type 1,normal,1.12
+Disgust (1),Trial type 1,percent,1.122
+Disgust (1),Trial type 2,basic,1.127
+Disgust (1),Trial type 2,bca,1.132
+Disgust (1),Trial type 2,normal,1.136
+Disgust (1),Trial type 2,percent,1.127
+Disgust (1),Trial type 3,basic,1.136
+Disgust (1),Trial type 3,bca,1.133
+Disgust (1),Trial type 3,normal,1.142
+Disgust (1),Trial type 3,percent,1.136
+Disgust (1),Trial type 4,basic,1.117
+Disgust (1),Trial type 4,bca,1.125
+Disgust (1),Trial type 4,normal,1.13
+Disgust (1),Trial type 4,percent,1.117
+Disgust (2),Trial type 1,basic,1.271
+Disgust (2),Trial type 1,bca,1.28
+Disgust (2),Trial type 1,normal,1.291
+Disgust (2),Trial type 1,percent,1.271
+Disgust (2),Trial type 2,basic,1.307
+Disgust (2),Trial type 2,bca,1.311
+Disgust (2),Trial type 2,normal,1.323
+Disgust (2),Trial type 2,percent,1.307
+Disgust (2),Trial type 3,basic,1.28
+Disgust (2),Trial type 3,bca,1.302
+Disgust (2),Trial type 3,normal,1.299
+Disgust (2),Trial type 3,percent,1.28
+Disgust (2),Trial type 4,basic,1.274
+Disgust (2),Trial type 4,bca,1.244
+Disgust (2),Trial type 4,normal,1.293
+Disgust (2),Trial type 4,percent,1.274
+Friend-Enemy,Trial type 1,basic,1.292
+Friend-Enemy,Trial type 1,bca,1.297
+Friend-Enemy,Trial type 1,normal,1.296
+Friend-Enemy,Trial type 1,percent,1.292
+Friend-Enemy,Trial type 2,basic,1.303
+Friend-Enemy,Trial type 2,bca,1.3
+Friend-Enemy,Trial type 2,normal,1.306
+Friend-Enemy,Trial type 2,percent,1.303
+Friend-Enemy,Trial type 3,basic,1.311
+Friend-Enemy,Trial type 3,bca,1.316
+Friend-Enemy,Trial type 3,normal,1.319
+Friend-Enemy,Trial type 3,percent,1.311
+Friend-Enemy,Trial type 4,basic,1.307
+Friend-Enemy,Trial type 4,bca,1.317
+Friend-Enemy,Trial type 4,normal,1.32
+Friend-Enemy,Trial type 4,percent,1.307
+Gender (1),Trial type 1,basic,1.31
+Gender (1),Trial type 1,bca,1.316
+Gender (1),Trial type 1,normal,1.33
+Gender (1),Trial type 1,percent,1.31
+Gender (1),Trial type 2,basic,1.313
+Gender (1),Trial type 2,bca,1.307
+Gender (1),Trial type 2,normal,1.32
+Gender (1),Trial type 2,percent,1.313
+Gender (1),Trial type 3,basic,1.319
+Gender (1),Trial type 3,bca,1.325
+Gender (1),Trial type 3,normal,1.337
+Gender (1),Trial type 3,percent,1.319
+Gender (1),Trial type 4,basic,1.305
+Gender (1),Trial type 4,bca,1.308
+Gender (1),Trial type 4,normal,1.319
+Gender (1),Trial type 4,percent,1.305
+Gender (2),Trial type 1,basic,1.289
+Gender (2),Trial type 1,bca,1.287
+Gender (2),Trial type 1,normal,1.295
+Gender (2),Trial type 1,percent,1.289
+Gender (2),Trial type 2,basic,1.312
+Gender (2),Trial type 2,bca,1.313
+Gender (2),Trial type 2,normal,1.328
+Gender (2),Trial type 2,percent,1.312
+Gender (2),Trial type 3,basic,1.295
+Gender (2),Trial type 3,bca,1.29
+Gender (2),Trial type 3,normal,1.302
+Gender (2),Trial type 3,percent,1.295
+Gender (2),Trial type 4,basic,1.302
+Gender (2),Trial type 4,bca,1.298
+Gender (2),Trial type 4,normal,1.31
+Gender (2),Trial type 4,percent,1.302
+Lincoln-Hitler,Trial type 1,basic,0.906
+Lincoln-Hitler,Trial type 1,bca,0.908
+Lincoln-Hitler,Trial type 1,normal,0.907
+Lincoln-Hitler,Trial type 1,percent,0.906
+Lincoln-Hitler,Trial type 2,basic,0.92
+Lincoln-Hitler,Trial type 2,bca,0.918
+Lincoln-Hitler,Trial type 2,normal,0.925
+Lincoln-Hitler,Trial type 2,percent,0.92
+Lincoln-Hitler,Trial type 3,basic,0.923
+Lincoln-Hitler,Trial type 3,bca,0.923
+Lincoln-Hitler,Trial type 3,normal,0.929
+Lincoln-Hitler,Trial type 3,percent,0.923
+Lincoln-Hitler,Trial type 4,basic,0.928
+Lincoln-Hitler,Trial type 4,bca,1.302
+Lincoln-Hitler,Trial type 4,normal,0.929
+Lincoln-Hitler,Trial type 4,percent,0.928
+Personality - Agreeableness,Trial type 1,basic,1.314
+Personality - Agreeableness,Trial type 1,bca,1.293
+Personality - Agreeableness,Trial type 1,normal,1.304
+Personality - Agreeableness,Trial type 1,percent,1.314
+Personality - Agreeableness,Trial type 2,basic,1.31
+Personality - Agreeableness,Trial type 2,bca,1.31
+Personality - Agreeableness,Trial type 2,normal,1.324
+Personality - Agreeableness,Trial type 2,percent,1.31
+Personality - Agreeableness,Trial type 3,basic,1.298
+Personality - Agreeableness,Trial type 3,bca,1.304
+Personality - Agreeableness,Trial type 3,normal,1.305
+Personality - Agreeableness,Trial type 3,percent,1.298
+Personality - Agreeableness,Trial type 4,basic,1.32
+Personality - Agreeableness,Trial type 4,bca,1.319
+Personality - Agreeableness,Trial type 4,normal,1.333
+Personality - Agreeableness,Trial type 4,percent,1.32
+Personality - Conscientiousness,Trial type 1,basic,1.303
+Personality - Conscientiousness,Trial type 1,bca,1.304
+Personality - Conscientiousness,Trial type 1,normal,1.3
+Personality - Conscientiousness,Trial type 1,percent,1.303
+Personality - Conscientiousness,Trial type 2,basic,1.319
+Personality - Conscientiousness,Trial type 2,bca,1.32
+Personality - Conscientiousness,Trial type 2,normal,1.331
+Personality - Conscientiousness,Trial type 2,percent,1.319
+Personality - Conscientiousness,Trial type 3,basic,1.296
+Personality - Conscientiousness,Trial type 3,bca,1.302
+Personality - Conscientiousness,Trial type 3,normal,1.314
+Personality - Conscientiousness,Trial type 3,percent,1.296
+Personality - Conscientiousness,Trial type 4,basic,1.311
+Personality - Conscientiousness,Trial type 4,bca,1.299
+Personality - Conscientiousness,Trial type 4,normal,1.32
+Personality - Conscientiousness,Trial type 4,percent,1.311
+Personality - Extraversion,Trial type 1,basic,1.327
+Personality - Extraversion,Trial type 1,bca,1.316
+Personality - Extraversion,Trial type 1,normal,1.333
+Personality - Extraversion,Trial type 1,percent,1.327
+Personality - Extraversion,Trial type 2,basic,1.278
+Personality - Extraversion,Trial type 2,bca,1.29
+Personality - Extraversion,Trial type 2,normal,1.316
+Personality - Extraversion,Trial type 2,percent,1.278
+Personality - Extraversion,Trial type 3,basic,1.309
+Personality - Extraversion,Trial type 3,bca,1.321
+Personality - Extraversion,Trial type 3,normal,1.323
+Personality - Extraversion,Trial type 3,percent,1.309
+Personality - Extraversion,Trial type 4,basic,1.294
+Personality - Extraversion,Trial type 4,bca,1.298
+Personality - Extraversion,Trial type 4,normal,1.301
+Personality - Extraversion,Trial type 4,percent,1.294
+Personality - Neuroticism,Trial type 1,basic,1.246
+Personality - Neuroticism,Trial type 1,bca,1.264
+Personality - Neuroticism,Trial type 1,normal,1.251
+Personality - Neuroticism,Trial type 1,percent,1.246
+Personality - Neuroticism,Trial type 2,basic,1.318
+Personality - Neuroticism,Trial type 2,bca,1.319
+Personality - Neuroticism,Trial type 2,normal,1.329
+Personality - Neuroticism,Trial type 2,percent,1.318
+Personality - Neuroticism,Trial type 3,basic,1.29
+Personality - Neuroticism,Trial type 3,bca,1.298
+Personality - Neuroticism,Trial type 3,normal,1.308
+Personality - Neuroticism,Trial type 3,percent,1.29
+Personality - Neuroticism,Trial type 4,basic,1.296
+Personality - Neuroticism,Trial type 4,bca,1.295
+Personality - Neuroticism,Trial type 4,normal,1.307
+Personality - Neuroticism,Trial type 4,percent,1.296
+Personality - Openness,Trial type 1,basic,1.301
+Personality - Openness,Trial type 1,bca,1.31
+Personality - Openness,Trial type 1,normal,1.302
+Personality - Openness,Trial type 1,percent,1.301
+Personality - Openness,Trial type 2,basic,1.307
+Personality - Openness,Trial type 2,bca,1.309
+Personality - Openness,Trial type 2,normal,1.316
+Personality - Openness,Trial type 2,percent,1.307
+Personality - Openness,Trial type 3,basic,1.328
+Personality - Openness,Trial type 3,bca,1.336
+Personality - Openness,Trial type 3,normal,1.322
+Personality - Openness,Trial type 3,percent,1.328
+Personality - Openness,Trial type 4,basic,1.313
+Personality - Openness,Trial type 4,bca,1.32
+Personality - Openness,Trial type 4,normal,1.319
+Personality - Openness,Trial type 4,percent,1.313
+Race (1),Trial type 1,basic,1.301
+Race (1),Trial type 1,bca,1.293
+Race (1),Trial type 1,normal,1.32
+Race (1),Trial type 1,percent,1.301
+Race (1),Trial type 2,basic,1.303
+Race (1),Trial type 2,bca,1.309
+Race (1),Trial type 2,normal,1.313
+Race (1),Trial type 2,percent,1.303
+Race (1),Trial type 3,basic,1.304
+Race (1),Trial type 3,bca,1.3
+Race (1),Trial type 3,normal,1.318
+Race (1),Trial type 3,percent,1.304
+Race (1),Trial type 4,basic,1.301
+Race (1),Trial type 4,bca,1.297
+Race (1),Trial type 4,normal,1.323
+Race (1),Trial type 4,percent,1.301
+Race (2),Trial type 1,basic,0.743
+Race (2),Trial type 1,bca,0.75
+Race (2),Trial type 1,normal,0.739
+Race (2),Trial type 1,percent,0.743
+Race (2),Trial type 2,basic,0.793
+Race (2),Trial type 2,bca,0.793
+Race (2),Trial type 2,normal,0.8
+Race (2),Trial type 2,percent,0.793
+Race (2),Trial type 3,basic,0.791
+Race (2),Trial type 3,bca,0.792
+Race (2),Trial type 3,normal,0.794
+Race (2),Trial type 3,percent,0.791
+Race (2),Trial type 4,basic,0.789
+Race (2),Trial type 4,bca,0.792
+Race (2),Trial type 4,normal,0.789
+Race (2),Trial type 4,percent,0.789
+Religion,Trial type 1,basic,1.21
+Religion,Trial type 1,bca,1.226
+Religion,Trial type 1,normal,1.221
+Religion,Trial type 1,percent,1.21
+Religion,Trial type 2,basic,1.315
+Religion,Trial type 2,bca,1.305
+Religion,Trial type 2,normal,1.318
+Religion,Trial type 2,percent,1.315
+Religion,Trial type 3,basic,1.304
+Religion,Trial type 3,bca,1.304
+Religion,Trial type 3,normal,1.305
+Religion,Trial type 3,percent,1.304
+Religion,Trial type 4,basic,1.312
+Religion,Trial type 4,bca,1.304
+Religion,Trial type 4,normal,1.329
+Religion,Trial type 4,percent,1.312
+Rich-Poor,Trial type 1,basic,1.311
+Rich-Poor,Trial type 1,bca,1.311
+Rich-Poor,Trial type 1,normal,1.319
+Rich-Poor,Trial type 1,percent,1.311
+Rich-Poor,Trial type 2,basic,1.288
+Rich-Poor,Trial type 2,bca,1.29
+Rich-Poor,Trial type 2,normal,1.31
+Rich-Poor,Trial type 2,percent,1.288
+Rich-Poor,Trial type 3,basic,1.309
+Rich-Poor,Trial type 3,bca,1.305
+Rich-Poor,Trial type 3,normal,1.319
+Rich-Poor,Trial type 3,percent,1.309
+Rich-Poor,Trial type 4,basic,1.312
+Rich-Poor,Trial type 4,bca,1.315
+Rich-Poor,Trial type 4,normal,1.322
+Rich-Poor,Trial type 4,percent,1.312
+Sexuality (1),Trial type 1,basic,0.969
+Sexuality (1),Trial type 1,bca,0.978
+Sexuality (1),Trial type 1,normal,0.978
+Sexuality (1),Trial type 1,percent,0.969
+Sexuality (1),Trial type 2,basic,0.995
+Sexuality (1),Trial type 2,bca,0.998
+Sexuality (1),Trial type 2,normal,1.004
+Sexuality (1),Trial type 2,percent,0.995
+Sexuality (1),Trial type 3,basic,0.981
+Sexuality (1),Trial type 3,bca,0.987
+Sexuality (1),Trial type 3,normal,0.974
+Sexuality (1),Trial type 3,percent,0.981
+Sexuality (1),Trial type 4,basic,0.996
+Sexuality (1),Trial type 4,bca,0.992
+Sexuality (1),Trial type 4,normal,0.991
+Sexuality (1),Trial type 4,percent,0.996
+Sexuality (2),Trial type 1,basic,1.013
+Sexuality (2),Trial type 1,bca,1.012
+Sexuality (2),Trial type 1,normal,1.025
+Sexuality (2),Trial type 1,percent,1.013
+Sexuality (2),Trial type 2,basic,0.885
+Sexuality (2),Trial type 2,bca,0.895
+Sexuality (2),Trial type 2,normal,0.868
+Sexuality (2),Trial type 2,percent,0.885
+Sexuality (2),Trial type 3,basic,0.974
+Sexuality (2),Trial type 3,bca,0.981
+Sexuality (2),Trial type 3,normal,0.981
+Sexuality (2),Trial type 3,percent,0.974
+Sexuality (2),Trial type 4,basic,1.006
+Sexuality (2),Trial type 4,bca,1.012
+Sexuality (2),Trial type 4,normal,1.016
+Sexuality (2),Trial type 4,percent,1.006
+Shapes & colors (1),Trial type 1,basic,1.295
+Shapes & colors (1),Trial type 1,bca,1.289
+Shapes & colors (1),Trial type 1,normal,1.325
+Shapes & colors (1),Trial type 1,percent,1.295
+Shapes & colors (1),Trial type 2,basic,1.305
+Shapes & colors (1),Trial type 2,bca,1.302
+Shapes & colors (1),Trial type 2,normal,1.313
+Shapes & colors (1),Trial type 2,percent,1.305
+Shapes & colors (1),Trial type 3,basic,1.356
+Shapes & colors (1),Trial type 3,bca,1.352
+Shapes & colors (1),Trial type 3,normal,1.367
+Shapes & colors (1),Trial type 3,percent,1.356
+Shapes & colors (1),Trial type 4,basic,1.291
+Shapes & colors (1),Trial type 4,bca,1.281
+Shapes & colors (1),Trial type 4,normal,1.288
+Shapes & colors (1),Trial type 4,percent,1.291
+Shapes & colors (2),Trial type 1,basic,1.304
+Shapes & colors (2),Trial type 1,bca,1.047
+Shapes & colors (2),Trial type 1,normal,1.359
+Shapes & colors (2),Trial type 1,percent,1.304
+Shapes & colors (2),Trial type 2,basic,1.305
+Shapes & colors (2),Trial type 2,bca,1.311
+Shapes & colors (2),Trial type 2,normal,1.298
+Shapes & colors (2),Trial type 2,percent,1.305
+Shapes & colors (2),Trial type 3,basic,1.262
+Shapes & colors (2),Trial type 3,bca,1.289
+Shapes & colors (2),Trial type 3,normal,1.314
+Shapes & colors (2),Trial type 3,percent,1.262
+Shapes & colors (2),Trial type 4,basic,1.205
+Shapes & colors (2),Trial type 4,bca,1.248
+Shapes & colors (2),Trial type 4,normal,1.234
+Shapes & colors (2),Trial type 4,percent,1.205
+Shapes & colors (3),Trial type 1,basic,1.315
+Shapes & colors (3),Trial type 1,bca,1.324
+Shapes & colors (3),Trial type 1,normal,1.33
+Shapes & colors (3),Trial type 1,percent,1.315
+Shapes & colors (3),Trial type 2,basic,1.294
+Shapes & colors (3),Trial type 2,bca,1.31
+Shapes & colors (3),Trial type 2,normal,1.371
+Shapes & colors (3),Trial type 2,percent,1.294
+Shapes & colors (3),Trial type 3,basic,1.311
+Shapes & colors (3),Trial type 3,bca,1.303
+Shapes & colors (3),Trial type 3,normal,1.316
+Shapes & colors (3),Trial type 3,percent,1.311
+Shapes & colors (3),Trial type 4,basic,1.212
+Shapes & colors (3),Trial type 4,bca,1.227
+Shapes & colors (3),Trial type 4,normal,1.193
+Shapes & colors (3),Trial type 4,percent,1.212
+Shapes & colors (4),Trial type 1,basic,1.17
+Shapes & colors (4),Trial type 1,bca,1.162
+Shapes & colors (4),Trial type 1,normal,1.169
+Shapes & colors (4),Trial type 1,percent,1.17
+Shapes & colors (4),Trial type 2,basic,1.315
+Shapes & colors (4),Trial type 2,bca,1.321
+Shapes & colors (4),Trial type 2,normal,1.322
+Shapes & colors (4),Trial type 2,percent,1.315
+Shapes & colors (4),Trial type 3,basic,1.305
+Shapes & colors (4),Trial type 3,bca,1.307
+Shapes & colors (4),Trial type 3,normal,1.31
+Shapes & colors (4),Trial type 3,percent,1.305
+Shapes & colors (4),Trial type 4,basic,1.315
+Shapes & colors (4),Trial type 4,bca,1.35
+Shapes & colors (4),Trial type 4,normal,1.361
+Shapes & colors (4),Trial type 4,percent,1.315
+Shapes & colors (5),Trial type 1,basic,1.215
+Shapes & colors (5),Trial type 1,bca,1.221
+Shapes & colors (5),Trial type 1,normal,1.22
+Shapes & colors (5),Trial type 1,percent,1.215
+Shapes & colors (5),Trial type 2,basic,1.291
+Shapes & colors (5),Trial type 2,bca,1.298
+Shapes & colors (5),Trial type 2,normal,1.299
+Shapes & colors (5),Trial type 2,percent,1.291
+Shapes & colors (5),Trial type 3,basic,1.31
+Shapes & colors (5),Trial type 3,bca,1.317
+Shapes & colors (5),Trial type 3,normal,1.327
+Shapes & colors (5),Trial type 3,percent,1.31
+Shapes & colors (5),Trial type 4,basic,1.314
+Shapes & colors (5),Trial type 4,bca,1.317
+Shapes & colors (5),Trial type 4,normal,1.322
+Shapes & colors (5),Trial type 4,percent,1.314
+Shapes & colors (6),Trial type 1,basic,1.283
+Shapes & colors (6),Trial type 1,bca,1.291
+Shapes & colors (6),Trial type 1,normal,1.307
+Shapes & colors (6),Trial type 1,percent,1.283
+Shapes & colors (6),Trial type 2,basic,1.305
+Shapes & colors (6),Trial type 2,bca,1.29
+Shapes & colors (6),Trial type 2,normal,1.291
+Shapes & colors (6),Trial type 2,percent,1.305
+Shapes & colors (6),Trial type 3,basic,1.295
+Shapes & colors (6),Trial type 3,bca,1.299
+Shapes & colors (6),Trial type 3,normal,1.308
+Shapes & colors (6),Trial type 3,percent,1.295
+Shapes & colors (6),Trial type 4,basic,1.286
+Shapes & colors (6),Trial type 4,bca,1.283
+Shapes & colors (6),Trial type 4,normal,1.287
+Shapes & colors (6),Trial type 4,percent,1.286
+Shapes & colors (7),Trial type 1,basic,0.871
+Shapes & colors (7),Trial type 1,bca,0.958
+Shapes & colors (7),Trial type 1,normal,0.877
+Shapes & colors (7),Trial type 1,percent,0.871
+Shapes & colors (7),Trial type 2,basic,1.224
+Shapes & colors (7),Trial type 2,bca,1.257
+Shapes & colors (7),Trial type 2,normal,1.278
+Shapes & colors (7),Trial type 2,percent,1.224
+Shapes & colors (7),Trial type 3,basic,1.287
+Shapes & colors (7),Trial type 3,bca,1.31
+Shapes & colors (7),Trial type 3,normal,1.308
+Shapes & colors (7),Trial type 3,percent,1.287
+Shapes & colors (7),Trial type 4,basic,1.117
+Shapes & colors (7),Trial type 4,bca,1.138
+Shapes & colors (7),Trial type 4,normal,1.112
+Shapes & colors (7),Trial type 4,percent,1.117
+Stigma - ADHD,Trial type 1,basic,1.131
+Stigma - ADHD,Trial type 1,bca,1.132
+Stigma - ADHD,Trial type 1,normal,1.143
+Stigma - ADHD,Trial type 1,percent,1.131
+Stigma - ADHD,Trial type 2,basic,1.128
+Stigma - ADHD,Trial type 2,bca,1.127
+Stigma - ADHD,Trial type 2,normal,1.133
+Stigma - ADHD,Trial type 2,percent,1.128
+Stigma - ADHD,Trial type 3,basic,1.128
+Stigma - ADHD,Trial type 3,bca,1.127
+Stigma - ADHD,Trial type 3,normal,1.125
+Stigma - ADHD,Trial type 3,percent,1.128
+Stigma - ADHD,Trial type 4,basic,1.129
+Stigma - ADHD,Trial type 4,bca,1.137
+Stigma - ADHD,Trial type 4,normal,1.14
+Stigma - ADHD,Trial type 4,percent,1.129
+Stigma - PTSD,Trial type 1,basic,1.117
+Stigma - PTSD,Trial type 1,bca,1.132
+Stigma - PTSD,Trial type 1,normal,1.131
+Stigma - PTSD,Trial type 1,percent,1.117
+Stigma - PTSD,Trial type 2,basic,1.142
+Stigma - PTSD,Trial type 2,bca,1.138
+Stigma - PTSD,Trial type 2,normal,1.14
+Stigma - PTSD,Trial type 2,percent,1.142
+Stigma - PTSD,Trial type 3,basic,1.13
+Stigma - PTSD,Trial type 3,bca,1.125
+Stigma - PTSD,Trial type 3,normal,1.147
+Stigma - PTSD,Trial type 3,percent,1.13
+Stigma - PTSD,Trial type 4,basic,1.124
+Stigma - PTSD,Trial type 4,bca,1.123
+Stigma - PTSD,Trial type 4,normal,1.134
+Stigma - PTSD,Trial type 4,percent,1.124
+Stigma - Schizophrenia,Trial type 1,basic,1.132
+Stigma - Schizophrenia,Trial type 1,bca,1.111
+Stigma - Schizophrenia,Trial type 1,normal,1.138
+Stigma - Schizophrenia,Trial type 1,percent,1.132
+Stigma - Schizophrenia,Trial type 2,basic,1.136
+Stigma - Schizophrenia,Trial type 2,bca,1.132
+Stigma - Schizophrenia,Trial type 2,normal,1.152
+Stigma - Schizophrenia,Trial type 2,percent,1.136
+Stigma - Schizophrenia,Trial type 3,basic,1.127
+Stigma - Schizophrenia,Trial type 3,bca,1.129
+Stigma - Schizophrenia,Trial type 3,normal,1.135
+Stigma - Schizophrenia,Trial type 3,percent,1.127
+Stigma - Schizophrenia,Trial type 4,basic,1.126
+Stigma - Schizophrenia,Trial type 4,bca,1.13
+Stigma - Schizophrenia,Trial type 4,normal,1.139
+Stigma - Schizophrenia,Trial type 4,percent,1.126
+Valenced words,Trial type 1,basic,1.228
+Valenced words,Trial type 1,bca,1.208
+Valenced words,Trial type 1,normal,1.207
+Valenced words,Trial type 1,percent,1.228
+Valenced words,Trial type 2,basic,1.324
+Valenced words,Trial type 2,bca,1.329
+Valenced words,Trial type 2,normal,1.332
+Valenced words,Trial type 2,percent,1.324
+Valenced words,Trial type 3,basic,1.33
+Valenced words,Trial type 3,bca,1.322
+Valenced words,Trial type 3,normal,1.334
+Valenced words,Trial type 3,percent,1.33
+Valenced words,Trial type 4,basic,1.31
+Valenced words,Trial type 4,bca,1.312
+Valenced words,Trial type 4,normal,1.323
+Valenced words,Trial type 4,percent,1.31
