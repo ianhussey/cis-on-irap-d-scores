@@ -765,7 +765,7 @@ bootstrap_discriminability <- function(data){
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("../data/results/data_discriminability_D.csv")) {
   
-  data_discriminability_D <- read_rds("../data/results/data_discriminability_D.csv")
+  data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv")
   
 } else {
   
@@ -788,11 +788,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            DV_type = "*D* scores") %>%
     round_df(4)
-  
-  data_discriminability_D <- data_discriminability_D %>%
-    select(-estimate) %>%
-    round_df(4)
-  
+
   # save to disk
   write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
   
@@ -807,7 +803,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("../data/results/data_discriminability_PI.csv")) {
   
-  data_discriminability_PI <- read_rds("../data/results/data_discriminability_PI.csv")
+  data_discriminability_PI <- read_csvs("../data/results/data_discriminability_PI.csv")
   
 } else {
   
@@ -830,11 +826,7 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            DV_type = "PI scores") %>%
     round_df(4)
-  
-  data_discriminability_PI <- data_discriminability_PI %>%
-    select(-estimate) %>%
-    round_df(4)
-  
+
   # save to disk
   write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
   
