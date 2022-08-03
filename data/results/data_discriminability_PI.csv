@@ -1,0 +1,561 @@
+domain,trial_type,method,proportion_discriminable,ci_lower,ci_upper,variance,DV_type
+Body image,tt1,normal,0.0782,0.0279,0.123,6e-4,PI scores
+Body image,tt1,basic,0.0782,0.0279,0.123,6e-4,PI scores
+Body image,tt1,percent,0.0782,0.0279,0.123,6e-4,PI scores
+Body image,tt1,bca,0.0782,0.0279,0.123,6e-4,PI scores
+Body image,tt2,normal,0.0709,0.0265,0.1086,4e-4,PI scores
+Body image,tt2,basic,0.0709,0.0265,0.1086,4e-4,PI scores
+Body image,tt2,percent,0.0709,0.0265,0.1086,4e-4,PI scores
+Body image,tt2,bca,0.0709,0.0265,0.1086,4e-4,PI scores
+Body image,tt3,normal,0.0952,0.0499,0.1376,5e-4,PI scores
+Body image,tt3,basic,0.0952,0.0499,0.1376,5e-4,PI scores
+Body image,tt3,percent,0.0952,0.0499,0.1376,5e-4,PI scores
+Body image,tt3,bca,0.0952,0.0499,0.1376,5e-4,PI scores
+Body image,tt4,normal,0.1882,0.113,0.2642,0.0015,PI scores
+Body image,tt4,basic,0.1882,0.113,0.2642,0.0015,PI scores
+Body image,tt4,percent,0.1882,0.113,0.2642,0.0015,PI scores
+Body image,tt4,bca,0.1882,0.113,0.2642,0.0015,PI scores
+Clinton-Trump,tt1,normal,0.0975,0.0744,0.1198,1e-4,PI scores
+Clinton-Trump,tt1,basic,0.0975,0.0744,0.1198,1e-4,PI scores
+Clinton-Trump,tt1,percent,0.0975,0.0744,0.1198,1e-4,PI scores
+Clinton-Trump,tt1,bca,0.0975,0.0744,0.1198,1e-4,PI scores
+Clinton-Trump,tt2,normal,0.0874,0.0623,0.1106,2e-4,PI scores
+Clinton-Trump,tt2,basic,0.0874,0.0623,0.1106,2e-4,PI scores
+Clinton-Trump,tt2,percent,0.0874,0.0623,0.1106,2e-4,PI scores
+Clinton-Trump,tt2,bca,0.0874,0.0623,0.1106,2e-4,PI scores
+Clinton-Trump,tt3,normal,0.1054,0.0799,0.1295,2e-4,PI scores
+Clinton-Trump,tt3,basic,0.1054,0.0799,0.1295,2e-4,PI scores
+Clinton-Trump,tt3,percent,0.1054,0.0799,0.1295,2e-4,PI scores
+Clinton-Trump,tt3,bca,0.1054,0.0799,0.1295,2e-4,PI scores
+Clinton-Trump,tt4,normal,0.0812,0.0612,0.1003,1e-4,PI scores
+Clinton-Trump,tt4,basic,0.0812,0.0612,0.1003,1e-4,PI scores
+Clinton-Trump,tt4,percent,0.0812,0.0612,0.1003,1e-4,PI scores
+Clinton-Trump,tt4,bca,0.0812,0.0612,0.1003,1e-4,PI scores
+Countries (1),tt1,normal,0.1122,0.0788,0.1432,3e-4,PI scores
+Countries (1),tt1,basic,0.1122,0.0788,0.1432,3e-4,PI scores
+Countries (1),tt1,percent,0.1122,0.0788,0.1432,3e-4,PI scores
+Countries (1),tt1,bca,0.1122,0.0788,0.1432,3e-4,PI scores
+Countries (1),tt2,normal,0.0572,0.0312,0.0809,2e-4,PI scores
+Countries (1),tt2,basic,0.0572,0.0312,0.0809,2e-4,PI scores
+Countries (1),tt2,percent,0.0572,0.0312,0.0809,2e-4,PI scores
+Countries (1),tt2,bca,0.0572,0.0312,0.0809,2e-4,PI scores
+Countries (1),tt3,normal,0.1242,0.0908,0.1572,3e-4,PI scores
+Countries (1),tt3,basic,0.1242,0.0908,0.1572,3e-4,PI scores
+Countries (1),tt3,percent,0.1242,0.0908,0.1572,3e-4,PI scores
+Countries (1),tt3,bca,0.1242,0.0908,0.1572,3e-4,PI scores
+Countries (1),tt4,normal,0.0302,0.0126,0.0453,1e-4,PI scores
+Countries (1),tt4,basic,0.0302,0.0126,0.0453,1e-4,PI scores
+Countries (1),tt4,percent,0.0302,0.0126,0.0453,1e-4,PI scores
+Countries (1),tt4,bca,0.0302,0.0126,0.0453,1e-4,PI scores
+Countries (2),tt1,normal,0.1183,0.0786,0.1578,4e-4,PI scores
+Countries (2),tt1,basic,0.1183,0.0786,0.1578,4e-4,PI scores
+Countries (2),tt1,percent,0.1183,0.0786,0.1578,4e-4,PI scores
+Countries (2),tt1,bca,0.1183,0.0786,0.1578,4e-4,PI scores
+Countries (2),tt2,normal,0.1419,0.1046,0.1785,4e-4,PI scores
+Countries (2),tt2,basic,0.1419,0.1046,0.1785,4e-4,PI scores
+Countries (2),tt2,percent,0.1419,0.1046,0.1785,4e-4,PI scores
+Countries (2),tt2,bca,0.1419,0.1046,0.1785,4e-4,PI scores
+Countries (2),tt3,normal,0.1292,0.0837,0.1743,5e-4,PI scores
+Countries (2),tt3,basic,0.1292,0.0837,0.1743,5e-4,PI scores
+Countries (2),tt3,percent,0.1292,0.0837,0.1743,5e-4,PI scores
+Countries (2),tt3,bca,0.1292,0.0837,0.1743,5e-4,PI scores
+Countries (2),tt4,normal,0.0767,0.046,0.1039,2e-4,PI scores
+Countries (2),tt4,basic,0.0767,0.046,0.1039,2e-4,PI scores
+Countries (2),tt4,percent,0.0767,0.046,0.1039,2e-4,PI scores
+Countries (2),tt4,bca,0.0767,0.046,0.1039,2e-4,PI scores
+Death (1),tt1,normal,0.0718,0.005,0.1278,0.001,PI scores
+Death (1),tt1,basic,0.0718,0.005,0.1278,0.001,PI scores
+Death (1),tt1,percent,0.0718,0.005,0.1278,0.001,PI scores
+Death (1),tt1,bca,0.0718,0.005,0.1278,0.001,PI scores
+Death (1),tt2,normal,0.1557,0.0906,0.2169,0.001,PI scores
+Death (1),tt2,basic,0.1557,0.0906,0.2169,0.001,PI scores
+Death (1),tt2,percent,0.1557,0.0906,0.2169,0.001,PI scores
+Death (1),tt2,bca,0.1557,0.0906,0.2169,0.001,PI scores
+Death (1),tt3,normal,0.1548,0.0893,0.2232,0.0012,PI scores
+Death (1),tt3,basic,0.1548,0.0893,0.2232,0.0012,PI scores
+Death (1),tt3,percent,0.1548,0.0893,0.2232,0.0012,PI scores
+Death (1),tt3,bca,0.1548,0.0893,0.2232,0.0012,PI scores
+Death (1),tt4,normal,0.1029,0.0249,0.1728,0.0014,PI scores
+Death (1),tt4,basic,0.1029,0.0249,0.1728,0.0014,PI scores
+Death (1),tt4,percent,0.1029,0.0249,0.1728,0.0014,PI scores
+Death (1),tt4,bca,0.1029,0.0249,0.1728,0.0014,PI scores
+Death (2),tt1,normal,0.08,0.0341,0.1222,5e-4,PI scores
+Death (2),tt1,basic,0.08,0.0341,0.1222,5e-4,PI scores
+Death (2),tt1,percent,0.08,0.0341,0.1222,5e-4,PI scores
+Death (2),tt1,bca,0.08,0.0341,0.1222,5e-4,PI scores
+Death (2),tt2,normal,0.1381,0.0644,0.2109,0.0014,PI scores
+Death (2),tt2,basic,0.1381,0.0644,0.2109,0.0014,PI scores
+Death (2),tt2,percent,0.1381,0.0644,0.2109,0.0014,PI scores
+Death (2),tt2,bca,0.1381,0.0644,0.2109,0.0014,PI scores
+Death (2),tt3,normal,0.0819,0.0381,0.1225,5e-4,PI scores
+Death (2),tt3,basic,0.0819,0.0381,0.1225,5e-4,PI scores
+Death (2),tt3,percent,0.0819,0.0381,0.1225,5e-4,PI scores
+Death (2),tt3,bca,0.0819,0.0381,0.1225,5e-4,PI scores
+Death (2),tt4,normal,0.2256,0.1434,0.318,0.002,PI scores
+Death (2),tt4,basic,0.2256,0.1434,0.318,0.002,PI scores
+Death (2),tt4,percent,0.2256,0.1434,0.318,0.002,PI scores
+Death (2),tt4,bca,0.2256,0.1434,0.318,0.002,PI scores
+Death (3),tt1,normal,0.098,0.052,0.1389,5e-4,PI scores
+Death (3),tt1,basic,0.098,0.052,0.1389,5e-4,PI scores
+Death (3),tt1,percent,0.098,0.052,0.1389,5e-4,PI scores
+Death (3),tt1,bca,0.098,0.052,0.1389,5e-4,PI scores
+Death (3),tt2,normal,0.1812,0.1241,0.2417,9e-4,PI scores
+Death (3),tt2,basic,0.1812,0.1241,0.2417,9e-4,PI scores
+Death (3),tt2,percent,0.1812,0.1241,0.2417,9e-4,PI scores
+Death (3),tt2,bca,0.1812,0.1241,0.2417,9e-4,PI scores
+Death (3),tt3,normal,0.1043,0.0595,0.1474,5e-4,PI scores
+Death (3),tt3,basic,0.1043,0.0595,0.1474,5e-4,PI scores
+Death (3),tt3,percent,0.1043,0.0595,0.1474,5e-4,PI scores
+Death (3),tt3,bca,0.1043,0.0595,0.1474,5e-4,PI scores
+Death (3),tt4,normal,0.2393,0.1733,0.312,0.0013,PI scores
+Death (3),tt4,basic,0.2393,0.1733,0.312,0.0013,PI scores
+Death (3),tt4,percent,0.2393,0.1733,0.312,0.0013,PI scores
+Death (3),tt4,bca,0.2393,0.1733,0.312,0.0013,PI scores
+Disgust (1),tt1,normal,0.1008,0.0634,0.1356,3e-4,PI scores
+Disgust (1),tt1,basic,0.1008,0.0634,0.1356,3e-4,PI scores
+Disgust (1),tt1,percent,0.1008,0.0634,0.1356,3e-4,PI scores
+Disgust (1),tt1,bca,0.1008,0.0634,0.1356,3e-4,PI scores
+Disgust (1),tt2,normal,0.1244,0.0788,0.1702,5e-4,PI scores
+Disgust (1),tt2,basic,0.1244,0.0788,0.1702,5e-4,PI scores
+Disgust (1),tt2,percent,0.1244,0.0788,0.1702,5e-4,PI scores
+Disgust (1),tt2,bca,0.1244,0.0788,0.1702,5e-4,PI scores
+Disgust (1),tt3,normal,0.2053,0.1535,0.2592,7e-4,PI scores
+Disgust (1),tt3,basic,0.2053,0.1535,0.2592,7e-4,PI scores
+Disgust (1),tt3,percent,0.2053,0.1535,0.2592,7e-4,PI scores
+Disgust (1),tt3,bca,0.2053,0.1535,0.2592,7e-4,PI scores
+Disgust (1),tt4,normal,0.1424,0.1009,0.1853,5e-4,PI scores
+Disgust (1),tt4,basic,0.1424,0.1009,0.1853,5e-4,PI scores
+Disgust (1),tt4,percent,0.1424,0.1009,0.1853,5e-4,PI scores
+Disgust (1),tt4,bca,0.1424,0.1009,0.1853,5e-4,PI scores
+Disgust (2),tt1,normal,0.122,0.0775,0.1644,5e-4,PI scores
+Disgust (2),tt1,basic,0.122,0.0775,0.1644,5e-4,PI scores
+Disgust (2),tt1,percent,0.122,0.0775,0.1644,5e-4,PI scores
+Disgust (2),tt1,bca,0.122,0.0775,0.1644,5e-4,PI scores
+Disgust (2),tt2,normal,0.1241,0.0876,0.1584,3e-4,PI scores
+Disgust (2),tt2,basic,0.1241,0.0876,0.1584,3e-4,PI scores
+Disgust (2),tt2,percent,0.1241,0.0876,0.1584,3e-4,PI scores
+Disgust (2),tt2,bca,0.1241,0.0876,0.1584,3e-4,PI scores
+Disgust (2),tt3,normal,0.1418,0.0887,0.1939,7e-4,PI scores
+Disgust (2),tt3,basic,0.1418,0.0887,0.1939,7e-4,PI scores
+Disgust (2),tt3,percent,0.1418,0.0887,0.1939,7e-4,PI scores
+Disgust (2),tt3,bca,0.1418,0.0887,0.1939,7e-4,PI scores
+Disgust (2),tt4,normal,0.1333,0.0897,0.1767,5e-4,PI scores
+Disgust (2),tt4,basic,0.1333,0.0897,0.1767,5e-4,PI scores
+Disgust (2),tt4,percent,0.1333,0.0897,0.1767,5e-4,PI scores
+Disgust (2),tt4,bca,0.1333,0.0897,0.1767,5e-4,PI scores
+Friend-Enemy,tt1,normal,0.1228,0.0917,0.1521,2e-4,PI scores
+Friend-Enemy,tt1,basic,0.1228,0.0917,0.1521,2e-4,PI scores
+Friend-Enemy,tt1,percent,0.1228,0.0917,0.1521,2e-4,PI scores
+Friend-Enemy,tt1,bca,0.1228,0.0917,0.1521,2e-4,PI scores
+Friend-Enemy,tt2,normal,0.0995,0.0765,0.1221,1e-4,PI scores
+Friend-Enemy,tt2,basic,0.0995,0.0765,0.1221,1e-4,PI scores
+Friend-Enemy,tt2,percent,0.0995,0.0765,0.1221,1e-4,PI scores
+Friend-Enemy,tt2,bca,0.0995,0.0765,0.1221,1e-4,PI scores
+Friend-Enemy,tt3,normal,0.0788,0.0585,0.098,1e-4,PI scores
+Friend-Enemy,tt3,basic,0.0788,0.0585,0.098,1e-4,PI scores
+Friend-Enemy,tt3,percent,0.0788,0.0585,0.098,1e-4,PI scores
+Friend-Enemy,tt3,bca,0.0788,0.0585,0.098,1e-4,PI scores
+Friend-Enemy,tt4,normal,0.1143,0.0894,0.1376,2e-4,PI scores
+Friend-Enemy,tt4,basic,0.1143,0.0894,0.1376,2e-4,PI scores
+Friend-Enemy,tt4,percent,0.1143,0.0894,0.1376,2e-4,PI scores
+Friend-Enemy,tt4,bca,0.1143,0.0894,0.1376,2e-4,PI scores
+Gender (1),tt1,normal,0.0973,0.0613,0.1316,3e-4,PI scores
+Gender (1),tt1,basic,0.0973,0.0613,0.1316,3e-4,PI scores
+Gender (1),tt1,percent,0.0973,0.0613,0.1316,3e-4,PI scores
+Gender (1),tt1,bca,0.0973,0.0613,0.1316,3e-4,PI scores
+Gender (1),tt2,normal,0.0581,0.0308,0.0832,2e-4,PI scores
+Gender (1),tt2,basic,0.0581,0.0308,0.0832,2e-4,PI scores
+Gender (1),tt2,percent,0.0581,0.0308,0.0832,2e-4,PI scores
+Gender (1),tt2,bca,0.0581,0.0308,0.0832,2e-4,PI scores
+Gender (1),tt3,normal,0.1044,0.0688,0.1398,3e-4,PI scores
+Gender (1),tt3,basic,0.1044,0.0688,0.1398,3e-4,PI scores
+Gender (1),tt3,percent,0.1044,0.0688,0.1398,3e-4,PI scores
+Gender (1),tt3,bca,0.1044,0.0688,0.1398,3e-4,PI scores
+Gender (1),tt4,normal,0.0815,0.0477,0.1138,3e-4,PI scores
+Gender (1),tt4,basic,0.0815,0.0477,0.1138,3e-4,PI scores
+Gender (1),tt4,percent,0.0815,0.0477,0.1138,3e-4,PI scores
+Gender (1),tt4,bca,0.0815,0.0477,0.1138,3e-4,PI scores
+Gender (2),tt1,normal,0.136,0.1107,0.1611,2e-4,PI scores
+Gender (2),tt1,basic,0.136,0.1107,0.1611,2e-4,PI scores
+Gender (2),tt1,percent,0.136,0.1107,0.1611,2e-4,PI scores
+Gender (2),tt1,bca,0.136,0.1107,0.1611,2e-4,PI scores
+Gender (2),tt2,normal,0.0467,0.0298,0.0622,1e-4,PI scores
+Gender (2),tt2,basic,0.0467,0.0298,0.0622,1e-4,PI scores
+Gender (2),tt2,percent,0.0467,0.0298,0.0622,1e-4,PI scores
+Gender (2),tt2,bca,0.0467,0.0298,0.0622,1e-4,PI scores
+Gender (2),tt3,normal,0.0776,0.058,0.0965,1e-4,PI scores
+Gender (2),tt3,basic,0.0776,0.058,0.0965,1e-4,PI scores
+Gender (2),tt3,percent,0.0776,0.058,0.0965,1e-4,PI scores
+Gender (2),tt3,bca,0.0776,0.058,0.0965,1e-4,PI scores
+Gender (2),tt4,normal,0.0557,0.0391,0.0715,1e-4,PI scores
+Gender (2),tt4,basic,0.0557,0.0391,0.0715,1e-4,PI scores
+Gender (2),tt4,percent,0.0557,0.0391,0.0715,1e-4,PI scores
+Gender (2),tt4,bca,0.0557,0.0391,0.0715,1e-4,PI scores
+Lincoln-Hitler,tt1,normal,0.1113,0.0882,0.1326,1e-4,PI scores
+Lincoln-Hitler,tt1,basic,0.1113,0.0882,0.1326,1e-4,PI scores
+Lincoln-Hitler,tt1,percent,0.1113,0.0882,0.1326,1e-4,PI scores
+Lincoln-Hitler,tt1,bca,0.1113,0.0882,0.1326,1e-4,PI scores
+Lincoln-Hitler,tt2,normal,0.0933,0.0736,0.1129,1e-4,PI scores
+Lincoln-Hitler,tt2,basic,0.0933,0.0736,0.1129,1e-4,PI scores
+Lincoln-Hitler,tt2,percent,0.0933,0.0736,0.1129,1e-4,PI scores
+Lincoln-Hitler,tt2,bca,0.0933,0.0736,0.1129,1e-4,PI scores
+Lincoln-Hitler,tt3,normal,0.1147,0.0895,0.1386,2e-4,PI scores
+Lincoln-Hitler,tt3,basic,0.1147,0.0895,0.1386,2e-4,PI scores
+Lincoln-Hitler,tt3,percent,0.1147,0.0895,0.1386,2e-4,PI scores
+Lincoln-Hitler,tt3,bca,0.1147,0.0895,0.1386,2e-4,PI scores
+Lincoln-Hitler,tt4,normal,0.1196,0.0953,0.1438,2e-4,PI scores
+Lincoln-Hitler,tt4,basic,0.1196,0.0953,0.1438,2e-4,PI scores
+Lincoln-Hitler,tt4,percent,0.1196,0.0953,0.1438,2e-4,PI scores
+Lincoln-Hitler,tt4,bca,0.1196,0.0953,0.1438,2e-4,PI scores
+Personality - Agreeableness,tt1,normal,0.1308,0.0883,0.1739,5e-4,PI scores
+Personality - Agreeableness,tt1,basic,0.1308,0.0883,0.1739,5e-4,PI scores
+Personality - Agreeableness,tt1,percent,0.1308,0.0883,0.1739,5e-4,PI scores
+Personality - Agreeableness,tt1,bca,0.1308,0.0883,0.1739,5e-4,PI scores
+Personality - Agreeableness,tt2,normal,0.1075,0.0694,0.1437,4e-4,PI scores
+Personality - Agreeableness,tt2,basic,0.1075,0.0694,0.1437,4e-4,PI scores
+Personality - Agreeableness,tt2,percent,0.1075,0.0694,0.1437,4e-4,PI scores
+Personality - Agreeableness,tt2,bca,0.1075,0.0694,0.1437,4e-4,PI scores
+Personality - Agreeableness,tt3,normal,0.1691,0.1114,0.2242,8e-4,PI scores
+Personality - Agreeableness,tt3,basic,0.1691,0.1114,0.2242,8e-4,PI scores
+Personality - Agreeableness,tt3,percent,0.1691,0.1114,0.2242,8e-4,PI scores
+Personality - Agreeableness,tt3,bca,0.1691,0.1114,0.2242,8e-4,PI scores
+Personality - Agreeableness,tt4,normal,0.1647,0.1158,0.2133,6e-4,PI scores
+Personality - Agreeableness,tt4,basic,0.1647,0.1158,0.2133,6e-4,PI scores
+Personality - Agreeableness,tt4,percent,0.1647,0.1158,0.2133,6e-4,PI scores
+Personality - Agreeableness,tt4,bca,0.1647,0.1158,0.2133,6e-4,PI scores
+Personality - Conscientiousness,tt1,normal,0.1543,0.1067,0.2014,6e-4,PI scores
+Personality - Conscientiousness,tt1,basic,0.1543,0.1067,0.2014,6e-4,PI scores
+Personality - Conscientiousness,tt1,percent,0.1543,0.1067,0.2014,6e-4,PI scores
+Personality - Conscientiousness,tt1,bca,0.1543,0.1067,0.2014,6e-4,PI scores
+Personality - Conscientiousness,tt2,normal,0.0182,-0,0.0324,1e-4,PI scores
+Personality - Conscientiousness,tt2,basic,0.0182,-0,0.0324,1e-4,PI scores
+Personality - Conscientiousness,tt2,percent,0.0182,-0,0.0324,1e-4,PI scores
+Personality - Conscientiousness,tt2,bca,0.0182,-0,0.0324,1e-4,PI scores
+Personality - Conscientiousness,tt3,normal,0.1381,0.0835,0.1872,7e-4,PI scores
+Personality - Conscientiousness,tt3,basic,0.1381,0.0835,0.1872,7e-4,PI scores
+Personality - Conscientiousness,tt3,percent,0.1381,0.0835,0.1872,7e-4,PI scores
+Personality - Conscientiousness,tt3,bca,0.1381,0.0835,0.1872,7e-4,PI scores
+Personality - Conscientiousness,tt4,normal,0.1741,0.1266,0.2212,6e-4,PI scores
+Personality - Conscientiousness,tt4,basic,0.1741,0.1266,0.2212,6e-4,PI scores
+Personality - Conscientiousness,tt4,percent,0.1741,0.1266,0.2212,6e-4,PI scores
+Personality - Conscientiousness,tt4,bca,0.1741,0.1266,0.2212,6e-4,PI scores
+Personality - Extraversion,tt1,normal,0.0999,0.0553,0.1404,5e-4,PI scores
+Personality - Extraversion,tt1,basic,0.0999,0.0553,0.1404,5e-4,PI scores
+Personality - Extraversion,tt1,percent,0.0999,0.0553,0.1404,5e-4,PI scores
+Personality - Extraversion,tt1,bca,0.0999,0.0553,0.1404,5e-4,PI scores
+Personality - Extraversion,tt2,normal,0.0705,0.0364,0.1019,3e-4,PI scores
+Personality - Extraversion,tt2,basic,0.0705,0.0364,0.1019,3e-4,PI scores
+Personality - Extraversion,tt2,percent,0.0705,0.0364,0.1019,3e-4,PI scores
+Personality - Extraversion,tt2,bca,0.0705,0.0364,0.1019,3e-4,PI scores
+Personality - Extraversion,tt3,normal,0.0966,0.0587,0.1329,4e-4,PI scores
+Personality - Extraversion,tt3,basic,0.0966,0.0587,0.1329,4e-4,PI scores
+Personality - Extraversion,tt3,percent,0.0966,0.0587,0.1329,4e-4,PI scores
+Personality - Extraversion,tt3,bca,0.0966,0.0587,0.1329,4e-4,PI scores
+Personality - Extraversion,tt4,normal,0.0358,0.0105,0.0566,1e-4,PI scores
+Personality - Extraversion,tt4,basic,0.0358,0.0105,0.0566,1e-4,PI scores
+Personality - Extraversion,tt4,percent,0.0358,0.0105,0.0566,1e-4,PI scores
+Personality - Extraversion,tt4,bca,0.0358,0.0105,0.0566,1e-4,PI scores
+Personality - Neuroticism,tt1,normal,0.1431,0.0969,0.189,6e-4,PI scores
+Personality - Neuroticism,tt1,basic,0.1431,0.0969,0.189,6e-4,PI scores
+Personality - Neuroticism,tt1,percent,0.1431,0.0969,0.189,6e-4,PI scores
+Personality - Neuroticism,tt1,bca,0.1431,0.0969,0.189,6e-4,PI scores
+Personality - Neuroticism,tt2,normal,0.115,0.072,0.1562,5e-4,PI scores
+Personality - Neuroticism,tt2,basic,0.115,0.072,0.1562,5e-4,PI scores
+Personality - Neuroticism,tt2,percent,0.115,0.072,0.1562,5e-4,PI scores
+Personality - Neuroticism,tt2,bca,0.115,0.072,0.1562,5e-4,PI scores
+Personality - Neuroticism,tt3,normal,0.1006,0.0623,0.1366,4e-4,PI scores
+Personality - Neuroticism,tt3,basic,0.1006,0.0623,0.1366,4e-4,PI scores
+Personality - Neuroticism,tt3,percent,0.1006,0.0623,0.1366,4e-4,PI scores
+Personality - Neuroticism,tt3,bca,0.1006,0.0623,0.1366,4e-4,PI scores
+Personality - Neuroticism,tt4,normal,0.134,0.0798,0.1879,8e-4,PI scores
+Personality - Neuroticism,tt4,basic,0.134,0.0798,0.1879,8e-4,PI scores
+Personality - Neuroticism,tt4,percent,0.134,0.0798,0.1879,8e-4,PI scores
+Personality - Neuroticism,tt4,bca,0.134,0.0798,0.1879,8e-4,PI scores
+Personality - Openness,tt1,normal,0.056,0.0273,0.0812,2e-4,PI scores
+Personality - Openness,tt1,basic,0.056,0.0273,0.0812,2e-4,PI scores
+Personality - Openness,tt1,percent,0.056,0.0273,0.0812,2e-4,PI scores
+Personality - Openness,tt1,bca,0.056,0.0273,0.0812,2e-4,PI scores
+Personality - Openness,tt2,normal,0.0813,0.0426,0.1179,4e-4,PI scores
+Personality - Openness,tt2,basic,0.0813,0.0426,0.1179,4e-4,PI scores
+Personality - Openness,tt2,percent,0.0813,0.0426,0.1179,4e-4,PI scores
+Personality - Openness,tt2,bca,0.0813,0.0426,0.1179,4e-4,PI scores
+Personality - Openness,tt3,normal,0.0737,0.0389,0.106,3e-4,PI scores
+Personality - Openness,tt3,basic,0.0737,0.0389,0.106,3e-4,PI scores
+Personality - Openness,tt3,percent,0.0737,0.0389,0.106,3e-4,PI scores
+Personality - Openness,tt3,bca,0.0737,0.0389,0.106,3e-4,PI scores
+Personality - Openness,tt4,normal,0.1428,0.0995,0.1866,5e-4,PI scores
+Personality - Openness,tt4,basic,0.1428,0.0995,0.1866,5e-4,PI scores
+Personality - Openness,tt4,percent,0.1428,0.0995,0.1866,5e-4,PI scores
+Personality - Openness,tt4,bca,0.1428,0.0995,0.1866,5e-4,PI scores
+Race (1),tt1,normal,0.2006,0.1536,0.2493,6e-4,PI scores
+Race (1),tt1,basic,0.2006,0.1536,0.2493,6e-4,PI scores
+Race (1),tt1,percent,0.2006,0.1536,0.2493,6e-4,PI scores
+Race (1),tt1,bca,0.2006,0.1536,0.2493,6e-4,PI scores
+Race (1),tt2,normal,0.0431,0.0147,0.0673,2e-4,PI scores
+Race (1),tt2,basic,0.0431,0.0147,0.0673,2e-4,PI scores
+Race (1),tt2,percent,0.0431,0.0147,0.0673,2e-4,PI scores
+Race (1),tt2,bca,0.0431,0.0147,0.0673,2e-4,PI scores
+Race (1),tt3,normal,0.0977,0.0621,0.1306,3e-4,PI scores
+Race (1),tt3,basic,0.0977,0.0621,0.1306,3e-4,PI scores
+Race (1),tt3,percent,0.0977,0.0621,0.1306,3e-4,PI scores
+Race (1),tt3,bca,0.0977,0.0621,0.1306,3e-4,PI scores
+Race (1),tt4,normal,0.072,0.0437,0.0973,2e-4,PI scores
+Race (1),tt4,basic,0.072,0.0437,0.0973,2e-4,PI scores
+Race (1),tt4,percent,0.072,0.0437,0.0973,2e-4,PI scores
+Race (1),tt4,bca,0.072,0.0437,0.0973,2e-4,PI scores
+Race (2),tt1,normal,0.1603,0.1104,0.2093,6e-4,PI scores
+Race (2),tt1,basic,0.1603,0.1104,0.2093,6e-4,PI scores
+Race (2),tt1,percent,0.1603,0.1104,0.2093,6e-4,PI scores
+Race (2),tt1,bca,0.1603,0.1104,0.2093,6e-4,PI scores
+Race (2),tt2,normal,0.1077,0.0751,0.1386,3e-4,PI scores
+Race (2),tt2,basic,0.1077,0.0751,0.1386,3e-4,PI scores
+Race (2),tt2,percent,0.1077,0.0751,0.1386,3e-4,PI scores
+Race (2),tt2,bca,0.1077,0.0751,0.1386,3e-4,PI scores
+Race (2),tt3,normal,0.1096,0.0748,0.1435,3e-4,PI scores
+Race (2),tt3,basic,0.1096,0.0748,0.1435,3e-4,PI scores
+Race (2),tt3,percent,0.1096,0.0748,0.1435,3e-4,PI scores
+Race (2),tt3,bca,0.1096,0.0748,0.1435,3e-4,PI scores
+Race (2),tt4,normal,0.0885,0.0573,0.1188,2e-4,PI scores
+Race (2),tt4,basic,0.0885,0.0573,0.1188,2e-4,PI scores
+Race (2),tt4,percent,0.0885,0.0573,0.1188,2e-4,PI scores
+Race (2),tt4,bca,0.0885,0.0573,0.1188,2e-4,PI scores
+Religion,tt1,normal,0.0747,0.0363,0.11,4e-4,PI scores
+Religion,tt1,basic,0.0747,0.0363,0.11,4e-4,PI scores
+Religion,tt1,percent,0.0747,0.0363,0.11,4e-4,PI scores
+Religion,tt1,bca,0.0747,0.0363,0.11,4e-4,PI scores
+Religion,tt2,normal,0.0594,0.0294,0.0865,2e-4,PI scores
+Religion,tt2,basic,0.0594,0.0294,0.0865,2e-4,PI scores
+Religion,tt2,percent,0.0594,0.0294,0.0865,2e-4,PI scores
+Religion,tt2,bca,0.0594,0.0294,0.0865,2e-4,PI scores
+Religion,tt3,normal,0.1319,0.0724,0.1867,8e-4,PI scores
+Religion,tt3,basic,0.1319,0.0724,0.1867,8e-4,PI scores
+Religion,tt3,percent,0.1319,0.0724,0.1867,8e-4,PI scores
+Religion,tt3,bca,0.1319,0.0724,0.1867,8e-4,PI scores
+Religion,tt4,normal,0.0911,0.0531,0.1269,4e-4,PI scores
+Religion,tt4,basic,0.0911,0.0531,0.1269,4e-4,PI scores
+Religion,tt4,percent,0.0911,0.0531,0.1269,4e-4,PI scores
+Religion,tt4,bca,0.0911,0.0531,0.1269,4e-4,PI scores
+Rich-Poor,tt1,normal,0.0612,0.0417,0.0795,1e-4,PI scores
+Rich-Poor,tt1,basic,0.0612,0.0417,0.0795,1e-4,PI scores
+Rich-Poor,tt1,percent,0.0612,0.0417,0.0795,1e-4,PI scores
+Rich-Poor,tt1,bca,0.0612,0.0417,0.0795,1e-4,PI scores
+Rich-Poor,tt2,normal,0.079,0.0561,0.1009,1e-4,PI scores
+Rich-Poor,tt2,basic,0.079,0.0561,0.1009,1e-4,PI scores
+Rich-Poor,tt2,percent,0.079,0.0561,0.1009,1e-4,PI scores
+Rich-Poor,tt2,bca,0.079,0.0561,0.1009,1e-4,PI scores
+Rich-Poor,tt3,normal,0.0795,0.0575,0.1008,1e-4,PI scores
+Rich-Poor,tt3,basic,0.0795,0.0575,0.1008,1e-4,PI scores
+Rich-Poor,tt3,percent,0.0795,0.0575,0.1008,1e-4,PI scores
+Rich-Poor,tt3,bca,0.0795,0.0575,0.1008,1e-4,PI scores
+Rich-Poor,tt4,normal,0.0931,0.0695,0.1159,1e-4,PI scores
+Rich-Poor,tt4,basic,0.0931,0.0695,0.1159,1e-4,PI scores
+Rich-Poor,tt4,percent,0.0931,0.0695,0.1159,1e-4,PI scores
+Rich-Poor,tt4,bca,0.0931,0.0695,0.1159,1e-4,PI scores
+Sexuality (1),tt1,normal,0.1971,0.1315,0.2667,0.0012,PI scores
+Sexuality (1),tt1,basic,0.1971,0.1315,0.2667,0.0012,PI scores
+Sexuality (1),tt1,percent,0.1971,0.1315,0.2667,0.0012,PI scores
+Sexuality (1),tt1,bca,0.1971,0.1315,0.2667,0.0012,PI scores
+Sexuality (1),tt2,normal,0.1439,0.0774,0.2077,0.0011,PI scores
+Sexuality (1),tt2,basic,0.1439,0.0774,0.2077,0.0011,PI scores
+Sexuality (1),tt2,percent,0.1439,0.0774,0.2077,0.0011,PI scores
+Sexuality (1),tt2,bca,0.1439,0.0774,0.2077,0.0011,PI scores
+Sexuality (1),tt3,normal,0.3003,0.2384,0.3743,0.0012,PI scores
+Sexuality (1),tt3,basic,0.3003,0.2384,0.3743,0.0012,PI scores
+Sexuality (1),tt3,percent,0.3003,0.2384,0.3743,0.0012,PI scores
+Sexuality (1),tt3,bca,0.3003,0.2384,0.3743,0.0012,PI scores
+Sexuality (1),tt4,normal,0.1468,0.0959,0.1966,7e-4,PI scores
+Sexuality (1),tt4,basic,0.1468,0.0959,0.1966,7e-4,PI scores
+Sexuality (1),tt4,percent,0.1468,0.0959,0.1966,7e-4,PI scores
+Sexuality (1),tt4,bca,0.1468,0.0959,0.1966,7e-4,PI scores
+Sexuality (2),tt1,normal,0.3864,0.3238,0.4683,0.0014,PI scores
+Sexuality (2),tt1,basic,0.3864,0.3238,0.4683,0.0014,PI scores
+Sexuality (2),tt1,percent,0.3864,0.3238,0.4683,0.0014,PI scores
+Sexuality (2),tt1,bca,0.3864,0.3238,0.4683,0.0014,PI scores
+Sexuality (2),tt2,normal,0.2639,0.1962,0.3431,0.0014,PI scores
+Sexuality (2),tt2,basic,0.2639,0.1962,0.3431,0.0014,PI scores
+Sexuality (2),tt2,percent,0.2639,0.1962,0.3431,0.0014,PI scores
+Sexuality (2),tt2,bca,0.2639,0.1962,0.3431,0.0014,PI scores
+Sexuality (2),tt3,normal,0.4688,0.4166,0.5433,0.001,PI scores
+Sexuality (2),tt3,basic,0.4688,0.4166,0.5433,0.001,PI scores
+Sexuality (2),tt3,percent,0.4688,0.4166,0.5433,0.001,PI scores
+Sexuality (2),tt3,bca,0.4688,0.4166,0.5433,0.001,PI scores
+Sexuality (2),tt4,normal,0.2943,0.2301,0.3731,0.0013,PI scores
+Sexuality (2),tt4,basic,0.2943,0.2301,0.3731,0.0013,PI scores
+Sexuality (2),tt4,percent,0.2943,0.2301,0.3731,0.0013,PI scores
+Sexuality (2),tt4,bca,0.2943,0.2301,0.3731,0.0013,PI scores
+Shapes & colors (1),tt1,normal,0.1736,0.0857,0.2639,0.0021,PI scores
+Shapes & colors (1),tt1,basic,0.1736,0.0857,0.2639,0.0021,PI scores
+Shapes & colors (1),tt1,percent,0.1736,0.0857,0.2639,0.0021,PI scores
+Shapes & colors (1),tt1,bca,0.1736,0.0857,0.2639,0.0021,PI scores
+Shapes & colors (1),tt2,normal,0.0888,0.0232,0.1446,0.001,PI scores
+Shapes & colors (1),tt2,basic,0.0888,0.0232,0.1446,0.001,PI scores
+Shapes & colors (1),tt2,percent,0.0888,0.0232,0.1446,0.001,PI scores
+Shapes & colors (1),tt2,bca,0.0888,0.0232,0.1446,0.001,PI scores
+Shapes & colors (1),tt3,normal,0.126,0.0418,0.202,0.0017,PI scores
+Shapes & colors (1),tt3,basic,0.126,0.0418,0.202,0.0017,PI scores
+Shapes & colors (1),tt3,percent,0.126,0.0418,0.202,0.0017,PI scores
+Shapes & colors (1),tt3,bca,0.126,0.0418,0.202,0.0017,PI scores
+Shapes & colors (1),tt4,normal,0.0331,-0.0067,0.061,3e-4,PI scores
+Shapes & colors (1),tt4,basic,0.0331,-0.0067,0.061,3e-4,PI scores
+Shapes & colors (1),tt4,percent,0.0331,-0.0067,0.061,3e-4,PI scores
+Shapes & colors (1),tt4,bca,0.0331,-0.0067,0.061,3e-4,PI scores
+Shapes & colors (2),tt1,normal,0.275,0.18,0.3938,0.003,PI scores
+Shapes & colors (2),tt1,basic,0.275,0.18,0.3938,0.003,PI scores
+Shapes & colors (2),tt1,percent,0.275,0.18,0.3938,0.003,PI scores
+Shapes & colors (2),tt1,bca,0.275,0.18,0.3938,0.003,PI scores
+Shapes & colors (2),tt2,normal,0.09,0.005,0.1619,0.0016,PI scores
+Shapes & colors (2),tt2,basic,0.09,0.005,0.1619,0.0016,PI scores
+Shapes & colors (2),tt2,percent,0.09,0.005,0.1619,0.0016,PI scores
+Shapes & colors (2),tt2,bca,0.09,0.005,0.1619,0.0016,PI scores
+Shapes & colors (2),tt3,normal,0,0,0,0,PI scores
+Shapes & colors (2),tt3,basic,0,0,0,0,PI scores
+Shapes & colors (2),tt3,percent,0,0,0,0,PI scores
+Shapes & colors (2),tt3,bca,0,0,0,0,PI scores
+Shapes & colors (2),tt4,normal,0.0975,0.0269,0.1625,0.0012,PI scores
+Shapes & colors (2),tt4,basic,0.0975,0.0269,0.1625,0.0012,PI scores
+Shapes & colors (2),tt4,percent,0.0975,0.0269,0.1625,0.0012,PI scores
+Shapes & colors (2),tt4,bca,0.0975,0.0269,0.1625,0.0012,PI scores
+Shapes & colors (3),tt1,normal,0.0075,-0.0069,0.015,0,PI scores
+Shapes & colors (3),tt1,basic,0.0075,-0.0069,0.015,0,PI scores
+Shapes & colors (3),tt1,percent,0.0075,-0.0069,0.015,0,PI scores
+Shapes & colors (3),tt1,bca,0.0075,-0.0069,0.015,0,PI scores
+Shapes & colors (3),tt2,normal,0.165,0.03,0.2869,0.0043,PI scores
+Shapes & colors (3),tt2,basic,0.165,0.03,0.2869,0.0043,PI scores
+Shapes & colors (3),tt2,percent,0.165,0.03,0.2869,0.0043,PI scores
+Shapes & colors (3),tt2,bca,0.165,0.03,0.2869,0.0043,PI scores
+Shapes & colors (3),tt3,normal,0.2575,0.1694,0.3619,0.0024,PI scores
+Shapes & colors (3),tt3,basic,0.2575,0.1694,0.3619,0.0024,PI scores
+Shapes & colors (3),tt3,percent,0.2575,0.1694,0.3619,0.0024,PI scores
+Shapes & colors (3),tt3,bca,0.2575,0.1694,0.3619,0.0024,PI scores
+Shapes & colors (3),tt4,normal,0.0875,0.0175,0.1456,0.0011,PI scores
+Shapes & colors (3),tt4,basic,0.0875,0.0175,0.1456,0.0011,PI scores
+Shapes & colors (3),tt4,percent,0.0875,0.0175,0.1456,0.0011,PI scores
+Shapes & colors (3),tt4,bca,0.0875,0.0175,0.1456,0.0011,PI scores
+Shapes & colors (4),tt1,normal,0.1484,0.0547,0.2363,0.0021,PI scores
+Shapes & colors (4),tt1,basic,0.1484,0.0547,0.2363,0.0021,PI scores
+Shapes & colors (4),tt1,percent,0.1484,0.0547,0.2363,0.0021,PI scores
+Shapes & colors (4),tt1,bca,0.1484,0.0547,0.2363,0.0021,PI scores
+Shapes & colors (4),tt2,normal,0.0273,-0.0156,0.0547,3e-4,PI scores
+Shapes & colors (4),tt2,basic,0.0273,-0.0156,0.0547,3e-4,PI scores
+Shapes & colors (4),tt2,percent,0.0273,-0.0156,0.0547,3e-4,PI scores
+Shapes & colors (4),tt2,bca,0.0273,-0.0156,0.0547,3e-4,PI scores
+Shapes & colors (4),tt3,normal,0.1016,0.0186,0.1758,0.0016,PI scores
+Shapes & colors (4),tt3,basic,0.1016,0.0186,0.1758,0.0016,PI scores
+Shapes & colors (4),tt3,percent,0.1016,0.0186,0.1758,0.0016,PI scores
+Shapes & colors (4),tt3,bca,0.1016,0.0186,0.1758,0.0016,PI scores
+Shapes & colors (4),tt4,normal,0.2148,0.0879,0.3613,0.0049,PI scores
+Shapes & colors (4),tt4,basic,0.2148,0.0879,0.3613,0.0049,PI scores
+Shapes & colors (4),tt4,percent,0.2148,0.0879,0.3613,0.0049,PI scores
+Shapes & colors (4),tt4,bca,0.2148,0.0879,0.3613,0.0049,PI scores
+Shapes & colors (5),tt1,normal,0.1431,0.092,0.1943,7e-4,PI scores
+Shapes & colors (5),tt1,basic,0.1431,0.092,0.1943,7e-4,PI scores
+Shapes & colors (5),tt1,percent,0.1431,0.092,0.1943,7e-4,PI scores
+Shapes & colors (5),tt1,bca,0.1431,0.092,0.1943,7e-4,PI scores
+Shapes & colors (5),tt2,normal,0.0749,0.0371,0.1103,3e-4,PI scores
+Shapes & colors (5),tt2,basic,0.0749,0.0371,0.1103,3e-4,PI scores
+Shapes & colors (5),tt2,percent,0.0749,0.0371,0.1103,3e-4,PI scores
+Shapes & colors (5),tt2,bca,0.0749,0.0371,0.1103,3e-4,PI scores
+Shapes & colors (5),tt3,normal,0.1467,0.0833,0.2098,0.001,PI scores
+Shapes & colors (5),tt3,basic,0.1467,0.0833,0.2098,0.001,PI scores
+Shapes & colors (5),tt3,percent,0.1467,0.0833,0.2098,0.001,PI scores
+Shapes & colors (5),tt3,bca,0.1467,0.0833,0.2098,0.001,PI scores
+Shapes & colors (5),tt4,normal,0.0532,0.0152,0.0846,3e-4,PI scores
+Shapes & colors (5),tt4,basic,0.0532,0.0152,0.0846,3e-4,PI scores
+Shapes & colors (5),tt4,percent,0.0532,0.0152,0.0846,3e-4,PI scores
+Shapes & colors (5),tt4,bca,0.0532,0.0152,0.0846,3e-4,PI scores
+Shapes & colors (6),tt1,normal,0.0703,0.0314,0.1054,4e-4,PI scores
+Shapes & colors (6),tt1,basic,0.0703,0.0314,0.1054,4e-4,PI scores
+Shapes & colors (6),tt1,percent,0.0703,0.0314,0.1054,4e-4,PI scores
+Shapes & colors (6),tt1,bca,0.0703,0.0314,0.1054,4e-4,PI scores
+Shapes & colors (6),tt2,normal,0.02,0.0049,0.0319,0,PI scores
+Shapes & colors (6),tt2,basic,0.02,0.0049,0.0319,0,PI scores
+Shapes & colors (6),tt2,percent,0.02,0.0049,0.0319,0,PI scores
+Shapes & colors (6),tt2,bca,0.02,0.0049,0.0319,0,PI scores
+Shapes & colors (6),tt3,normal,0.0625,0.0187,0.1013,4e-4,PI scores
+Shapes & colors (6),tt3,basic,0.0625,0.0187,0.1013,4e-4,PI scores
+Shapes & colors (6),tt3,percent,0.0625,0.0187,0.1013,4e-4,PI scores
+Shapes & colors (6),tt3,bca,0.0625,0.0187,0.1013,4e-4,PI scores
+Shapes & colors (6),tt4,normal,0.0669,0.0337,0.0966,3e-4,PI scores
+Shapes & colors (6),tt4,basic,0.0669,0.0337,0.0966,3e-4,PI scores
+Shapes & colors (6),tt4,percent,0.0669,0.0337,0.0966,3e-4,PI scores
+Shapes & colors (6),tt4,bca,0.0669,0.0337,0.0966,3e-4,PI scores
+Shapes & colors (7),tt1,normal,0.0102,-0.0029,0.0191,0,PI scores
+Shapes & colors (7),tt1,basic,0.0102,-0.0029,0.0191,0,PI scores
+Shapes & colors (7),tt1,percent,0.0102,-0.0029,0.0191,0,PI scores
+Shapes & colors (7),tt1,bca,0.0102,-0.0029,0.0191,0,PI scores
+Shapes & colors (7),tt2,normal,0.0077,-0.0026,0.0143,0,PI scores
+Shapes & colors (7),tt2,basic,0.0077,-0.0026,0.0143,0,PI scores
+Shapes & colors (7),tt2,percent,0.0077,-0.0026,0.0143,0,PI scores
+Shapes & colors (7),tt2,bca,0.0077,-0.0026,0.0143,0,PI scores
+Shapes & colors (7),tt3,normal,0.0064,-0.0038,0.0128,0,PI scores
+Shapes & colors (7),tt3,basic,0.0064,-0.0038,0.0128,0,PI scores
+Shapes & colors (7),tt3,percent,0.0064,-0.0038,0.0128,0,PI scores
+Shapes & colors (7),tt3,bca,0.0064,-0.0038,0.0128,0,PI scores
+Shapes & colors (7),tt4,normal,0.1786,0.1024,0.2561,0.0015,PI scores
+Shapes & colors (7),tt4,basic,0.1786,0.1024,0.2561,0.0015,PI scores
+Shapes & colors (7),tt4,percent,0.1786,0.1024,0.2561,0.0015,PI scores
+Shapes & colors (7),tt4,bca,0.1786,0.1024,0.2561,0.0015,PI scores
+Stigma - ADHD,tt1,normal,0.241,0.1984,0.2858,5e-4,PI scores
+Stigma - ADHD,tt1,basic,0.241,0.1984,0.2858,5e-4,PI scores
+Stigma - ADHD,tt1,percent,0.241,0.1984,0.2858,5e-4,PI scores
+Stigma - ADHD,tt1,bca,0.241,0.1984,0.2858,5e-4,PI scores
+Stigma - ADHD,tt2,normal,0.1099,0.0741,0.1442,3e-4,PI scores
+Stigma - ADHD,tt2,basic,0.1099,0.0741,0.1442,3e-4,PI scores
+Stigma - ADHD,tt2,percent,0.1099,0.0741,0.1442,3e-4,PI scores
+Stigma - ADHD,tt2,bca,0.1099,0.0741,0.1442,3e-4,PI scores
+Stigma - ADHD,tt3,normal,0.1036,0.0735,0.133,2e-4,PI scores
+Stigma - ADHD,tt3,basic,0.1036,0.0735,0.133,2e-4,PI scores
+Stigma - ADHD,tt3,percent,0.1036,0.0735,0.133,2e-4,PI scores
+Stigma - ADHD,tt3,bca,0.1036,0.0735,0.133,2e-4,PI scores
+Stigma - ADHD,tt4,normal,0.1837,0.1485,0.22,3e-4,PI scores
+Stigma - ADHD,tt4,basic,0.1837,0.1485,0.22,3e-4,PI scores
+Stigma - ADHD,tt4,percent,0.1837,0.1485,0.22,3e-4,PI scores
+Stigma - ADHD,tt4,bca,0.1837,0.1485,0.22,3e-4,PI scores
+Stigma - PTSD,tt1,normal,0.167,0.1278,0.207,4e-4,PI scores
+Stigma - PTSD,tt1,basic,0.167,0.1278,0.207,4e-4,PI scores
+Stigma - PTSD,tt1,percent,0.167,0.1278,0.207,4e-4,PI scores
+Stigma - PTSD,tt1,bca,0.167,0.1278,0.207,4e-4,PI scores
+Stigma - PTSD,tt2,normal,0.1349,0.0998,0.1693,3e-4,PI scores
+Stigma - PTSD,tt2,basic,0.1349,0.0998,0.1693,3e-4,PI scores
+Stigma - PTSD,tt2,percent,0.1349,0.0998,0.1693,3e-4,PI scores
+Stigma - PTSD,tt2,bca,0.1349,0.0998,0.1693,3e-4,PI scores
+Stigma - PTSD,tt3,normal,0.1176,0.0717,0.1609,5e-4,PI scores
+Stigma - PTSD,tt3,basic,0.1176,0.0717,0.1609,5e-4,PI scores
+Stigma - PTSD,tt3,percent,0.1176,0.0717,0.1609,5e-4,PI scores
+Stigma - PTSD,tt3,bca,0.1176,0.0717,0.1609,5e-4,PI scores
+Stigma - PTSD,tt4,normal,0.1031,0.0668,0.1385,3e-4,PI scores
+Stigma - PTSD,tt4,basic,0.1031,0.0668,0.1385,3e-4,PI scores
+Stigma - PTSD,tt4,percent,0.1031,0.0668,0.1385,3e-4,PI scores
+Stigma - PTSD,tt4,bca,0.1031,0.0668,0.1385,3e-4,PI scores
+Stigma - Schizophrenia,tt1,normal,0.0912,0.0606,0.1202,2e-4,PI scores
+Stigma - Schizophrenia,tt1,basic,0.0912,0.0606,0.1202,2e-4,PI scores
+Stigma - Schizophrenia,tt1,percent,0.0912,0.0606,0.1202,2e-4,PI scores
+Stigma - Schizophrenia,tt1,bca,0.0912,0.0606,0.1202,2e-4,PI scores
+Stigma - Schizophrenia,tt2,normal,0.1618,0.1235,0.201,4e-4,PI scores
+Stigma - Schizophrenia,tt2,basic,0.1618,0.1235,0.201,4e-4,PI scores
+Stigma - Schizophrenia,tt2,percent,0.1618,0.1235,0.201,4e-4,PI scores
+Stigma - Schizophrenia,tt2,bca,0.1618,0.1235,0.201,4e-4,PI scores
+Stigma - Schizophrenia,tt3,normal,0.2029,0.1557,0.2504,6e-4,PI scores
+Stigma - Schizophrenia,tt3,basic,0.2029,0.1557,0.2504,6e-4,PI scores
+Stigma - Schizophrenia,tt3,percent,0.2029,0.1557,0.2504,6e-4,PI scores
+Stigma - Schizophrenia,tt3,bca,0.2029,0.1557,0.2504,6e-4,PI scores
+Stigma - Schizophrenia,tt4,normal,0.151,0.1111,0.1915,4e-4,PI scores
+Stigma - Schizophrenia,tt4,basic,0.151,0.1111,0.1915,4e-4,PI scores
+Stigma - Schizophrenia,tt4,percent,0.151,0.1111,0.1915,4e-4,PI scores
+Stigma - Schizophrenia,tt4,bca,0.151,0.1111,0.1915,4e-4,PI scores
+Valenced words,tt1,normal,0.1574,0.0964,0.2143,9e-4,PI scores
+Valenced words,tt1,basic,0.1574,0.0964,0.2143,9e-4,PI scores
+Valenced words,tt1,percent,0.1574,0.0964,0.2143,9e-4,PI scores
+Valenced words,tt1,bca,0.1574,0.0964,0.2143,9e-4,PI scores
+Valenced words,tt2,normal,0.1735,0.1175,0.2316,8e-4,PI scores
+Valenced words,tt2,basic,0.1735,0.1175,0.2316,8e-4,PI scores
+Valenced words,tt2,percent,0.1735,0.1175,0.2316,8e-4,PI scores
+Valenced words,tt2,bca,0.1735,0.1175,0.2316,8e-4,PI scores
+Valenced words,tt3,normal,0.1596,0.0988,0.2187,9e-4,PI scores
+Valenced words,tt3,basic,0.1596,0.0988,0.2187,9e-4,PI scores
+Valenced words,tt3,percent,0.1596,0.0988,0.2187,9e-4,PI scores
+Valenced words,tt3,bca,0.1596,0.0988,0.2187,9e-4,PI scores
+Valenced words,tt4,normal,0.1552,0.0925,0.21560000000000001,0.001,PI scores
+Valenced words,tt4,basic,0.1552,0.0925,0.21560000000000001,0.001,PI scores
+Valenced words,tt4,percent,0.1552,0.0925,0.21560000000000001,0.001,PI scores
+Valenced words,tt4,bca,0.1552,0.0925,0.21560000000000001,0.001,PI scores
