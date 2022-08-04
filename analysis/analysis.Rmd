@@ -14,7 +14,6 @@ output:
 # TODOs
 
 - clean up text in this doc
-- look up metafor package on combining taus in three level models, check against here
 
 # Overview 
 
@@ -195,9 +194,9 @@ data_trimmed %>%
 
 data_eg_1 <- data_trimmed %>%
   filter(unique_id == "ian death emma_43" & trial_type == "tt1") 
-  #filter(unique_id == "ian death emma_15" & trial_type == "tt1") 
-  #filter(unique_id == "ian death june_57" & trial_type == "tt1") 
-  
+#filter(unique_id == "ian death emma_15" & trial_type == "tt1") 
+#filter(unique_id == "ian death june_57" & trial_type == "tt1") 
+
 
 #dat <- data_trimmed %>%
 data_eg_1 %>%  
@@ -280,7 +279,7 @@ if(file.exists("../data/processed/data_estimates_D.csv")) {
   
   # save to disk
   write_csv(data_estimates_D, "../data/processed/data_estimates_D.csv")
-
+  
 }
 
 ```
@@ -425,7 +424,7 @@ p_ci_widths <-
   labs(x = "Highest probability (MAP) 95% CI width",
        y = "") + 
   theme(legend.position = "top")
-  
+
 p_ci_widths
 
 ```
@@ -500,7 +499,7 @@ data_diff_zero <-
 
 ```{r fig.height=7, fig.width=8}
 
-p_diff_zero_scoring <- 
+p_diff_zero <- 
   data_diff_zero %>%
   mutate(domain = fct_rev(factor(domain))) %>%
   ggplot(aes(proportion_diff_zero, domain, color = DV_type, shape = DV_type)) +
@@ -518,7 +517,7 @@ p_diff_zero_scoring <-
        shape = "Scoring method") + 
   theme(legend.position = "top")
 
-p_diff_zero_scoring
+p_diff_zero
 
 ```
 
@@ -527,37 +526,32 @@ p_diff_zero_scoring
 ```{r}
 
 # fit model
-fit_diff_zero_scoring <- 
+fit_diff_zero <- 
   lmer(proportion_diff_zero_logit ~ 1 + DV_type + (1 | domain/trial_type),
        weights = 1/variance, 
        data = data_diff_zero)
 
-# results table
-tab_model(fit_diff_zero_scoring, 
-          #transform = "inv.logit",
-          ci.hyphen = ", ")
+# extract marginal means
+results_emm_diff_zero <- 
+  summary(emmeans(fit_diff_zero, ~ DV_type)) %>%
+  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # extract re Tau
-results_re_tau_diff_zero_scoring <- fit_diff_zero_scoring %>%
+results_re_tau_diff_zero <- fit_diff_zero %>%
   merTools::REsdExtract() %>%
   as_tibble(rownames = "trial_type") %>%
   rename(tau = value) 
 
-# extract marginal means
-results_emm_diff_zero_scoring <- 
-  summary(emmeans(fit_diff_zero_scoring, ~ DV_type)) %>%
-  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
-
 # combine
-results_diff_zero_scoring <- results_emm_diff_zero_scoring %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero_scoring$tau[2]^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
-         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_diff_zero_scoring$tau[2]^2))) |>
+results_diff_zero <- results_emm_diff_zero %>%
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[2]^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[2]^2))) |>
   select(-se) |>
   mutate_if(is.numeric, boot::inv.logit)
 
 # plot
-p_prop_nonzero_scoring <- 
-  ggplot(results_diff_zero_scoring, aes(DV_type, estimate, 
+p_prop_nonzero <- 
+  ggplot(results_diff_zero, aes(DV_type, estimate, 
                                         #color = DV_type, 
                                         #shape = DV_type, 
                                         #group = DV_type
@@ -574,10 +568,20 @@ p_prop_nonzero_scoring <-
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
-p_prop_nonzero_scoring
+p_prop_nonzero
 
-results_diff_zero_scoring %>%
+results_diff_zero %>%
   round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+# tests
+data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ DV_type), adjust = "holm") 
+
+summary(data_emms_diff_zero)$`pairwise differences of DV_type` %>%
+  as.data.frame() %>%
+  select(comparison = 1, p.value) %>%
+  mutate(p.value = ifelse(p.value < .00001, "< .00001", p.value)) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -743,7 +747,7 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 ```{r fig.height=7, fig.width=8}
 
 # combine
-data_discriminability_combined_scoring <- 
+data_discriminability_combined <- 
   bind_rows(data_discriminability_D,
             data_discriminability_PI) %>%
   mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
@@ -754,7 +758,7 @@ data_discriminability_combined_scoring <-
   mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
 
 p_discriminability <- 
-  data_discriminability_combined_scoring %>%
+  data_discriminability_combined %>%
   mutate(domain = fct_rev(factor(domain))) %>%
   ggplot(aes(proportion_discriminable, domain, color = DV_type, shape = DV_type)) +
   geom_linerangeh(aes(xmin = proportion_discriminable - sqrt(variance)*1.96,
@@ -780,37 +784,32 @@ p_discriminability
 ```{r}
 
 # fit meta analytic model
-fit_disciminability_scoring <- 
+fit_disciminability <- 
   lmer(proportion_discriminable_logit ~ 1 + DV_type + (1 | domain/trial_type), 
        weights = 1/variance, 
-       data = data_discriminability_combined_scoring)
+       data = data_discriminability_combined)
 
-# results table
-tab_model(fit_disciminability_scoring, 
-          #transform = "inv.logit",
-          ci.hyphen = ", ")
+# extract marginal means
+results_emm_disciminability <-
+  summary(emmeans(fit_disciminability, ~ DV_type)) %>%
+  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
 
 # extract re Tau
-results_re_tau_disciminability_scoring <- fit_disciminability_scoring %>%
+results_re_tau_disciminability <- fit_disciminability %>%
   merTools::REsdExtract() %>%
   as_tibble(rownames = "trial_type") %>%
   rename(tau = value) 
 
-# extract marginal means
-results_emm_disciminability_scoring <-
-  summary(emmeans(fit_disciminability_scoring, ~ DV_type)) %>%
-  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
-
 # combine
-results_disciminability_scoring <- results_emm_disciminability_scoring %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_disciminability_scoring$tau[2]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_disciminability_scoring$tau[2]^2))) |>
+results_disciminability <- results_emm_disciminability %>%
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_disciminability$tau[2]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_disciminability$tau[2]^2))) |>
   select(-se) |>
   mutate_if(is.numeric, boot::inv.logit)
 
 # plot
-p_prop_discriminable_scoring <-
-  ggplot(results_disciminability_scoring, aes(DV_type, estimate, 
+p_prop_discriminable <-
+  ggplot(results_disciminability, aes(DV_type, estimate, 
                                               #color = DV_type, 
                                               #shape = DV_type, 
                                               #group = DV_type
@@ -827,10 +826,19 @@ p_prop_discriminable_scoring <-
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
-p_prop_discriminable_scoring 
+p_prop_discriminable 
 
-results_disciminability_scoring %>%
+results_disciminability %>%
   round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+# tests
+data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ DV_type), adjust = "holm") 
+
+summary(data_emms_disciminability)$`pairwise differences of DV_type` %>%
+  as.data.frame() %>%
+  select(comparison = 1, p.value) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -895,36 +903,31 @@ data_ci_width_proportions_combined <-
 ```{r}
 
 # fit model
-fit_ci_width_proportions_scoring <- 
+fit_ci_width_proportions <- 
   lmer(ci_width_proportion_logit ~ 1 + DV_type + (1 | domain/trial_type), 
        data = data_ci_width_proportions_combined)
 
-# results table
-tab_model(fit_ci_width_proportions_scoring,
-          #transform = "inv.logit",
-          ci.hyphen = ", ")
+# extract marginal means
+results_emm_ci_width_proportions <-
+  summary(emmeans(fit_ci_width_proportions, ~ DV_type)) %>%
+  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
 
 # extract re Tau
-results_re_tau_ci_width_proportions_scoring <-
-  merTools::REsdExtract(fit_ci_width_proportions_scoring) %>%
+results_re_tau_ci_width_proportions <-
+  merTools::REsdExtract(fit_ci_width_proportions) %>%
   as_tibble(rownames = "trial_type") %>%
   rename(tau = value)
 
-# extract marginal means
-results_emm_ci_width_proportions_scoring <-
-  summary(emmeans(fit_ci_width_proportions_scoring, ~ DV_type)) %>%
-  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
-
 # combine
-results_ci_width_proportions_scoring <- results_emm_ci_width_proportions_scoring %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions_scoring$tau[2]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions_scoring$tau[2]^2))) %>%
+results_ci_width_proportions <- results_emm_ci_width_proportions %>%
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions$tau[2]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions$tau[2]^2))) %>%
   select(-se) %>%
   mutate_if(is.numeric, boot::inv.logit)
 
 # plot
-p_ci_width_proportion_observed_range_scoring <-
-  ggplot(results_ci_width_proportions_scoring, aes(DV_type, estimate, 
+p_ci_width_proportion_observed_range <-
+  ggplot(results_ci_width_proportions, aes(DV_type, estimate, 
                                                    #color = DV_type, 
                                                    #shape = DV_type, 
                                                    #group = DV_type
@@ -942,10 +945,20 @@ p_ci_width_proportion_observed_range_scoring <-
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
-p_ci_width_proportion_observed_range_scoring
+p_ci_width_proportion_observed_range
 
-results_ci_width_proportions_scoring %>%
+results_ci_width_proportions %>%
   round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+# tests
+data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwise ~ DV_type), adjust = "holm") 
+
+summary(data_emms_ci_width_proportions)$`pairwise differences of DV_type` %>%
+  as.data.frame() %>%
+  select(comparison = 1, p.value) %>%
+  mutate(p.value = ifelse(p.value < .00001, "< .00001", p.value)) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -1008,9 +1021,9 @@ Note that the theoretical max possible range of D scores is -2 to +2, but such e
 ```{r fig.height=5, fig.width=5}
 
 p_combined <- 
-  p_prop_nonzero_scoring + 
-  p_prop_discriminable_scoring + 
-  p_ci_width_proportion_observed_range_scoring +
+  p_prop_nonzero + 
+  p_prop_discriminable + 
+  p_ci_width_proportion_observed_range +
   plot_layout(ncol = 1) #, guides = "collect") & theme(legend.position = "top")
 
 p_combined
