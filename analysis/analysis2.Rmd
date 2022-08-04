@@ -431,30 +431,6 @@ p_ci_widths
 
 # Proportion different from zero
 
-## Calculate scores
-
-```{r}
-
-data_diff_zero <- 
-  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
-            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
-  mutate(domain = as.factor(domain),
-         trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
-                                trial_type == "tt2" ~ "Trial type 2",
-                                trial_type == "tt3" ~ "Trial type 3",
-                                trial_type == "tt4" ~ "Trial type 4"),
-         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
-  group_by(domain, trial_type, DV_type) %>%
-  summarize(proportion_diff_zero = mean(sig),
-            variance = plotrix::std.error(sig)^2,
-            .groups = "drop") %>%
-  mutate(variance = ifelse(variance == 0, 0.000001, variance))  # model cannot be run on zero variance, so offset by a minuscule amount
-
-# save to disk
-write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
-
-```
-
 ## Caterpillar plot
 
 By domain, using normal bootstrapping
@@ -485,6 +461,36 @@ p_cis_by_domain <-
   facet_wrap(~ domain, ncol = 4)
 
 p_cis_by_domain
+
+```
+
+## Calculate scores
+
+```{r}
+
+data_diff_zero <- 
+  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
+            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
+  mutate(domain = as.factor(domain),
+         trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
+                                trial_type == "tt2" ~ "Trial type 2",
+                                trial_type == "tt3" ~ "Trial type 3",
+                                trial_type == "tt4" ~ "Trial type 4"),
+         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
+  group_by(domain, trial_type, DV_type) %>%
+  summarize(proportion_diff_zero = mean(sig),
+            variance = plotrix::std.error(sig)^2,
+            .groups = "drop") %>%
+  # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
+  mutate(variance = ifelse(variance == 0, 0.0001, variance),
+         proportion_diff_zero_temp = case_when(proportion_diff_zero < 0.001 ~ 0.001, 
+                                               proportion_diff_zero > 0.999 ~ 0.999,
+                                               TRUE ~ proportion_diff_zero),
+         proportion_diff_zero_logit = boot::logit(proportion_diff_zero_temp)) %>%
+  select(-proportion_diff_zero_temp)
+
+# # save to disk
+# write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
 
 ```
 
@@ -520,12 +526,13 @@ p_diff_zero_scoring
 
 # fit model
 fit_diff_zero_scoring <- 
-  lmer(proportion_diff_zero ~ 1 + DV_type + (1 | domain/trial_type),
+  lmer(proportion_diff_zero_logit ~ 1 + DV_type + (1 | domain/trial_type),
        weights = 1/variance, 
        data = data_diff_zero)
 
 # results table
 tab_model(fit_diff_zero_scoring, 
+          transform = "inv.logit",
           ci.hyphen = ", ")
 
 # extract re Tau
@@ -541,8 +548,10 @@ results_emm_diff_zero_scoring <-
 
 # combine
 results_diff_zero_scoring <- results_emm_diff_zero_scoring %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
-         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_diff_zero_scoring$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero_scoring$tau[2]^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_diff_zero_scoring$tau[2]^2))) |>
+  select(-se) |>
+  mutate_if(is.numeric, boot::inv.logit)
 
 # plot
 p_prop_nonzero_scoring <- 
@@ -644,7 +653,8 @@ bootstrap_discriminability <- function(data){
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("../data/results/data_discriminability_D.csv")) {
   
-  data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv")
+  data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv") %>%
+    filter(method == "bca")
   
 } else {
   
@@ -664,8 +674,15 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            DV_type = "*D* scores") |>
+    # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
+    mutate(variance = ifelse(variance == 0, 0.0001, variance),
+           proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
+                                                     proportion_discriminable > 0.999 ~ 0.999,
+                                                     TRUE ~ proportion_discriminable),
+           proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)) %>%
+    select(-proportion_discriminable_temp) |>
     round_df(4)
-
+  
   # save to disk
   write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
   
@@ -701,6 +718,13 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            DV_type = "PI scores") |>
+    # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
+    mutate(variance = ifelse(variance == 0, 0.0001, variance),
+           proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
+                                                     proportion_discriminable > 0.999 ~ 0.999,
+                                                     TRUE ~ proportion_discriminable),
+           proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)) %>%
+    select(-proportion_discriminable_temp) |>
     round_df(4)
 
   # save to disk
@@ -710,9 +734,9 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 
 ```
 
-## Model
+## Plot
 
-```{r}
+```{r fig.height=7, fig.width=8}
 
 # combine
 data_discriminability_combined_scoring <- 
@@ -721,17 +745,43 @@ data_discriminability_combined_scoring <-
   mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
-                                trial_type == "tt4" ~ "Trial type 4"),
-         variance = ifelse(variance == 0, 0.0001, variance))
+                                trial_type == "tt4" ~ "Trial type 4"))
+
+p_discriminability <- 
+  data_discriminability_combined_scoring %>%
+  mutate(domain = fct_rev(factor(domain))) %>%
+  ggplot(aes(proportion_discriminable, domain, color = DV_type, shape = DV_type)) +
+  geom_linerangeh(aes(xmin = proportion_discriminable - sqrt(variance)*1.96,
+                      xmax = proportion_discriminable + sqrt(variance)*1.96),
+                  position = position_dodge(width = 0.75)) + 
+  geom_point(position = position_dodge(width = 0.75)) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4) +
+  labs(x =  "Proportion of participants who whose scores<br/>differ from one another<br/>",
+       y = "",
+       color = "Scoring method",
+       shape = "Scoring method") + 
+  theme(legend.position = "top")
+
+p_discriminability
+
+```
+
+## Model
+
+```{r}
 
 # fit meta analytic model
 fit_disciminability_scoring <- 
-  lmer(proportion_discriminable ~ 1 + DV_type + (1 | domain/trial_type), 
+  lmer(proportion_discriminable_logit ~ 1 + DV_type + (1 | domain/trial_type), 
        weights = 1/variance, 
        data = data_discriminability_combined_scoring)
 
 # results table
 tab_model(fit_disciminability_scoring, 
+          transform = "inv.logit",
           ci.hyphen = ", ")
 
 # extract re Tau
@@ -747,8 +797,10 @@ results_emm_disciminability_scoring <-
 
 # combine
 results_disciminability_scoring <- results_emm_disciminability_scoring %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_disciminability_scoring$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_disciminability_scoring$tau[2]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_disciminability_scoring$tau[2]^2))) |>
+  select(-se) |>
+  mutate_if(is.numeric, boot::inv.logit)
 
 # plot
 p_prop_discriminable_scoring <-
@@ -822,7 +874,13 @@ data_ci_width_proportions_combined <-
   bind_rows(data_ci_width_proportions_D,
             data_ci_width_proportions_PI) %>%
   mutate(domain = as.factor(domain),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"))
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  # logit transform
+  mutate(ci_width_proportion_temp = case_when(ci_width_proportion < 0.0001 ~ 0.0001,
+                                              ci_width_proportion > 0.9999 ~ 0.9999,
+                                              TRUE ~ ci_width_proportion),
+         ci_width_proportion_logit = boot::logit(ci_width_proportion_temp)) %>%
+  select(-ci_width_proportion_temp)
 
 ```
 
@@ -832,11 +890,12 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions_scoring <- 
-  lmer(ci_width_proportion ~ 1 + DV_type + (1 | domain/trial_type), 
+  lmer(ci_width_proportion_logit ~ 1 + DV_type + (1 | domain/trial_type), 
        data = data_ci_width_proportions_combined)
 
 # results table
 tab_model(fit_ci_width_proportions_scoring,
+          transform = "inv.logit",
           ci.hyphen = ", ")
 
 # extract re Tau
@@ -852,8 +911,10 @@ results_emm_ci_width_proportions_scoring <-
 
 # combine
 results_ci_width_proportions_scoring <- results_emm_ci_width_proportions_scoring %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         pi_upper = estimate + (1.96 * sqrt(se^2 + sum(results_re_tau_ci_width_proportions_scoring$tau)^2)))
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions_scoring$tau[2]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions_scoring$tau[2]^2))) %>%
+  select(-se) %>%
+  mutate_if(is.numeric, boot::inv.logit)
 
 # plot
 p_ci_width_proportion_observed_range_scoring <-
