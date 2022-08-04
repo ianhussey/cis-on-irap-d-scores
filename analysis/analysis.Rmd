@@ -483,12 +483,13 @@ data_diff_zero <-
             variance = plotrix::std.error(sig)^2,
             .groups = "drop") %>%
   # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
-  mutate(variance = ifelse(variance == 0, 0.0001, variance),
-         proportion_diff_zero_temp = case_when(proportion_diff_zero < 0.001 ~ 0.001, 
+  mutate(proportion_diff_zero_temp = case_when(proportion_diff_zero < 0.001 ~ 0.001, 
                                                proportion_diff_zero > 0.999 ~ 0.999,
                                                TRUE ~ proportion_diff_zero),
          proportion_diff_zero_logit = boot::logit(proportion_diff_zero_temp)) %>%
-  select(-proportion_diff_zero_temp)
+  select(-proportion_diff_zero_temp) %>%
+  filter(!(proportion_diff_zero == 0 & variance == 0)) %>%
+  mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
 
 # # save to disk
 # write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
@@ -533,7 +534,7 @@ fit_diff_zero_scoring <-
 
 # results table
 tab_model(fit_diff_zero_scoring, 
-          transform = "inv.logit",
+          #transform = "inv.logit",
           ci.hyphen = ", ")
 
 # extract re Tau
@@ -560,7 +561,7 @@ p_prop_nonzero_scoring <-
                                         #color = DV_type, 
                                         #shape = DV_type, 
                                         #group = DV_type
-                                        )) +
+  )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
@@ -602,7 +603,7 @@ discriminability <- function(data, i) {
   estimate <- data_with_indexes$estimate
   di_lower <- data_with_indexes$di_lower 
   di_upper <- data_with_indexes$di_upper
-
+  
   n_estimate <- length(estimate)
   n_di_lower <- length(di_lower)
   n_di_upper <- length(di_upper)
@@ -627,19 +628,19 @@ bootstrap_discriminability <- function(data){
   fit <- 
     boot::boot(data      = data, 
                statistic = discriminability, 
-               R         = 2000,
+               R         = 5000,
                sim       = "ordinary", 
                stype     = "i",
                parallel  = "multicore", 
                ncpus     = parallel::detectCores())
   
-  results <- boot::boot.ci(fit, conf = 0.95, type = "norm")
-
+  results <- boot::boot.ci(fit, conf = 0.95, type = "percent") # bca bootstraps throw an error, so use next best
+  
   output <-
     tibble(
       estimate = fit$t0,
-      ci_lower = results$normal[2],
-      ci_upper = results$normal[3]
+      ci_lower = results$percent[4],
+      ci_upper = results$percent[5]
     )
   
   return(output)
@@ -676,11 +677,12 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            DV_type = "*D* scores") |>
     # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
-    mutate(variance = ifelse(variance == 0, 0.0001, variance),
-           proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
-                                                     proportion_discriminable > 0.999 ~ 0.999,
-                                                     TRUE ~ proportion_discriminable),
-           proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)) %>%
+    mutate(
+      proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
+                                                proportion_discriminable > 0.999 ~ 0.999,
+                                                TRUE ~ proportion_discriminable),
+      proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)
+    ) %>%
     select(-proportion_discriminable_temp) |>
     round_df(4)
   
@@ -720,14 +722,15 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            DV_type = "PI scores") |>
     # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
-    mutate(variance = ifelse(variance == 0, 0.0001, variance),
-           proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
-                                                     proportion_discriminable > 0.999 ~ 0.999,
-                                                     TRUE ~ proportion_discriminable),
-           proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)) %>%
+    mutate(
+      proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
+                                                proportion_discriminable > 0.999 ~ 0.999,
+                                                TRUE ~ proportion_discriminable),
+      proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)
+    ) |>
     select(-proportion_discriminable_temp) |>
     round_df(4)
-
+  
   # save to disk
   write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
   
@@ -746,7 +749,9 @@ data_discriminability_combined_scoring <-
   mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
-                                trial_type == "tt4" ~ "Trial type 4"))
+                                trial_type == "tt4" ~ "Trial type 4")) %>%
+  filter(!(proportion_discriminable == 0 & variance == 0)) %>%
+  mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
 
 p_discriminability <- 
   data_discriminability_combined_scoring %>%
@@ -782,7 +787,7 @@ fit_disciminability_scoring <-
 
 # results table
 tab_model(fit_disciminability_scoring, 
-          transform = "inv.logit",
+          #transform = "inv.logit",
           ci.hyphen = ", ")
 
 # extract re Tau
@@ -809,7 +814,7 @@ p_prop_discriminable_scoring <-
                                               #color = DV_type, 
                                               #shape = DV_type, 
                                               #group = DV_type
-                                              )) +
+  )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
@@ -896,7 +901,7 @@ fit_ci_width_proportions_scoring <-
 
 # results table
 tab_model(fit_ci_width_proportions_scoring,
-          transform = "inv.logit",
+          #transform = "inv.logit",
           ci.hyphen = ", ")
 
 # extract re Tau
@@ -923,7 +928,7 @@ p_ci_width_proportion_observed_range_scoring <-
                                                    #color = DV_type, 
                                                    #shape = DV_type, 
                                                    #group = DV_type
-                                                   )) +
+  )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +

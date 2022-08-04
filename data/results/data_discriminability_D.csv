@@ -180,7 +180,7 @@ Gender (2),tt1,bca,0.1028,0.0589,0.1484,5e-4,*D* scores,-2.1665
 Gender (2),tt1,normal,0.1525,0.0996,0.2071,8e-4,*D* scores,-1.7151
 Gender (2),tt1,percent,0.1412,0.0901,0.1958,7e-4,*D* scores,-1.8054
 Gender (2),tt2,basic,0.0781,0.0371,0.1197,4e-4,*D* scores,-2.4684
-Gender (2),tt2,bca,0.0209,0.0011,0.0414,1e-4,*D* scores,-3.8469
+Gender (2),tt2,bca,0.0209,0.0011,0.0414,0,*D* scores,-3.8469
 Gender (2),tt2,normal,0.0546,0.0211,0.0887,3e-4,*D* scores,-2.8516
 Gender (2),tt2,percent,0.0362,0.0081,0.0649,2e-4,*D* scores,-3.2818
 Gender (2),tt3,basic,0.1386,0.0887,0.1917,7e-4,*D* scores,-1.827
@@ -228,7 +228,7 @@ Personality - Conscientiousness,tt1,bca,0.1558,0.071,0.2481,0.002,*D* scores,-1.
 Personality - Conscientiousness,tt1,normal,0.2038,0.1187,0.2997,0.0021,*D* scores,-1.3627
 Personality - Conscientiousness,tt1,percent,0.1986,0.1088,0.2928,0.0022,*D* scores,-1.3951
 Personality - Conscientiousness,tt2,basic,0.0579,0.0087,0.1089,7e-4,*D* scores,-2.7894
-Personality - Conscientiousness,tt2,bca,0.0105,-0.005,0.0265,1e-4,*D* scores,-4.5458
+Personality - Conscientiousness,tt2,bca,0.0105,-0.005,0.0265,0,*D* scores,-4.5458
 Personality - Conscientiousness,tt2,normal,0.0342,6e-4,0.0709,3e-4,*D* scores,-3.3407
 Personality - Conscientiousness,tt2,percent,0.021,-0.0044,0.0474,2e-4,*D* scores,-3.842
 Personality - Conscientiousness,tt3,basic,0.1887,0.0949,0.2931,0.0026,*D* scores,-1.4585
@@ -408,9 +408,9 @@ Shapes & colors (2),tt2,bca,0.06,-0.0344,0.1652,0.0026,*D* scores,-2.7515
 Shapes & colors (2),tt2,normal,0.1,-0.0296,0.2457,0.0049,*D* scores,-2.1972
 Shapes & colors (2),tt2,percent,0.07,-0.0393,0.1941,0.0035,*D* scores,-2.5867
 Shapes & colors (2),tt3,basic,0.01,-0.0189,0.04,2e-4,*D* scores,-4.5951
-Shapes & colors (2),tt3,bca,0,0,0,1e-4,*D* scores,-6.9068
-Shapes & colors (2),tt3,normal,0,0,0,1e-4,*D* scores,-6.9068
-Shapes & colors (2),tt3,percent,0,0,0,1e-4,*D* scores,-6.9068
+Shapes & colors (2),tt3,bca,0,0,0,0,*D* scores,-6.9068
+Shapes & colors (2),tt3,normal,0,0,0,0,*D* scores,-6.9068
+Shapes & colors (2),tt3,percent,0,0,0,0,*D* scores,-6.9068
 Shapes & colors (2),tt4,basic,0.04,-0.0408,0.1269,0.0018,*D* scores,-3.1781
 Shapes & colors (2),tt4,bca,0.01,-0.0176,0.0389,2e-4,*D* scores,-4.5951
 Shapes & colors (2),tt4,normal,0.02,-0.0209,0.0655,5e-4,*D* scores,-3.8918
@@ -440,9 +440,9 @@ Shapes & colors (4),tt2,bca,0.0313,-0.0469,0.1172,0.0018,*D* scores,-3.4323
 Shapes & colors (4),tt2,normal,0.0625,-0.0395,0.1848,0.0033,*D* scores,-2.7081
 Shapes & colors (4),tt2,percent,0.0313,-0.0471,0.1178,0.0018,*D* scores,-3.4323
 Shapes & colors (4),tt3,basic,0.0469,-0.0505,0.1511,0.0026,*D* scores,-3.0117
-Shapes & colors (4),tt3,bca,0,0,0,1e-4,*D* scores,-6.9068
+Shapes & colors (4),tt3,bca,0,0,0,0,*D* scores,-6.9068
 Shapes & colors (4),tt3,normal,0.0313,-0.0303,0.0991,0.0011,*D* scores,-3.4323
-Shapes & colors (4),tt3,percent,0,0,0,1e-4,*D* scores,-6.9068
+Shapes & colors (4),tt3,percent,0,0,0,0,*D* scores,-6.9068
 Shapes & colors (4),tt4,basic,0.1719,-0.0587,0.4404,0.0162,*D* scores,-1.5722
 Shapes & colors (4),tt4,bca,0.1563,-0.0446,0.3962,0.0126,*D* scores,-1.686
 Shapes & colors (4),tt4,normal,0.1563,-0.0522,0.4018,0.0134,*D* scores,-1.686
@@ -460,9 +460,9 @@ Shapes & colors (5),tt3,bca,0.0269,-0.0107,0.0657,4e-4,*D* scores,-3.5884
 Shapes & colors (5),tt3,normal,0.0764,0.0044,0.155,0.0015,*D* scores,-2.4923
 Shapes & colors (5),tt3,percent,0.0661,-0.0058,0.1411,0.0014,*D* scores,-2.6482
 Shapes & colors (5),tt4,basic,0.0558,-0.0063,0.1203,0.001,*D* scores,-2.8286
-Shapes & colors (5),tt4,bca,0.0062,-0.0065,0.0194,1e-4,*D* scores,-5.077
+Shapes & colors (5),tt4,bca,0.0062,-0.0065,0.0194,0,*D* scores,-5.077
 Shapes & colors (5),tt4,normal,0.031,-0.0116,0.076,5e-4,*D* scores,-3.4423
-Shapes & colors (5),tt4,percent,0.0083,-0.0078,0.0247,1e-4,*D* scores,-4.7832
+Shapes & colors (5),tt4,percent,0.0083,-0.0078,0.0247,0,*D* scores,-4.7832
 Shapes & colors (6),tt1,basic,0.0947,0.024,0.1711,0.0014,*D* scores,-2.2576
 Shapes & colors (6),tt1,bca,0.0355,-0.0071,0.082,5e-4,*D* scores,-3.3021
 Shapes & colors (6),tt1,normal,0.0695,0.0072,0.1359,0.0011,*D* scores,-2.5944
@@ -483,10 +483,10 @@ Shapes & colors (7),tt1,basic,0.0306,-0.0243,0.0886,8e-4,*D* scores,-3.4557
 Shapes & colors (7),tt1,bca,0.0153,-0.0228,0.053900000000000003,4e-4,*D* scores,-4.1645
 Shapes & colors (7),tt1,normal,0.0204,-0.0191,0.0621,4e-4,*D* scores,-3.8716
 Shapes & colors (7),tt1,percent,0.0357,-0.0141,0.0902,7e-4,*D* scores,-3.2963
-Shapes & colors (7),tt2,basic,0.0102,-0.0126,0.0343,1e-4,*D* scores,-4.5751
-Shapes & colors (7),tt2,bca,0,0,0,1e-4,*D* scores,-6.9068
-Shapes & colors (7),tt2,normal,0.0051,-0.009,0.0202,1e-4,*D* scores,-5.2734
-Shapes & colors (7),tt2,percent,0,0,0,1e-4,*D* scores,-6.9068
+Shapes & colors (7),tt2,basic,0.0102,-0.0126,0.0343,0,*D* scores,-4.5751
+Shapes & colors (7),tt2,bca,0,0,0,0,*D* scores,-6.9068
+Shapes & colors (7),tt2,normal,0.0051,-0.009,0.0202,0,*D* scores,-5.2734
+Shapes & colors (7),tt2,percent,0,0,0,0,*D* scores,-6.9068
 Shapes & colors (7),tt3,basic,0.0408,-0.0212,0.1081,0.0011,*D* scores,-3.1574
 Shapes & colors (7),tt3,bca,0.0153,-0.0243,0.055,4e-4,*D* scores,-4.1645
 Shapes & colors (7),tt3,normal,0.0408,-0.0205,0.1081,0.0011,*D* scores,-3.1574
