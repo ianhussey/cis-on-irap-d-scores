@@ -13,8 +13,8 @@ output:
 
 # TODOs
 
-- add stud boots to all
 - clean up text in this doc
+- pick boot method and standardize. some %in%
 
 # Overview 
 
@@ -962,22 +962,6 @@ results_disciminability_scoring %>%
 
 # CI widths as a proportion of observed range
 
-## Observed range
-
-```{r}
-
-data_estimates_D %>%
-  mutate(method = fct_relevel(method, "bca", "basic", "normal", "percent")) %>%
-  summarize(min_observed_Dscore = min(estimate),
-            max_observed_Dscore = max(estimate)) %>%
-  mutate(observed_range_Dscore = max_observed_Dscore - min_observed_Dscore) %>% 
-  round_df(2) %>%
-  gather() %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-```
-
 ## Calculate scores
 
 ```{r}
@@ -1090,8 +1074,7 @@ results_ci_width_proportions_method %>%
 # fit model
 fit_ci_width_proportions_scoring <- 
   data_ci_width_proportions_combined %>%
-  filter(method == "basic" & 
-           DV_type %in% c("*D* scores", "PI scores")) %>%
+  filter(method == "basic") %>%
   lmer(ci_width_proportion ~ 1 + DV_type + (1 | domain/trial_type), 
        data = .)
 
