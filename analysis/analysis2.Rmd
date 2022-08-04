@@ -68,7 +68,7 @@ dir.create("../data/results")
 #dir.create("models")
 
 
-# get data from evaluative IRAPs
+# get data 
 data_trial_level <- read_csv("../data/raw/data_trial_level.csv") %>%
   filter(timepoint == "baseline" & (age >= 18 | is.na(age)))
 
@@ -119,17 +119,18 @@ data_descriptives %>%
   summarize(total_n = sum(n),
             min_n_per_domain = min(n),
             max_n_per_domain = max(n),
-            mean_n_per_domain = round(mean(n, na.rm = TRUE), 2),
-            sd_n_per_domain = round(sd(n, na.rm = TRUE), 2)) %>%
+            mean_n_per_domain = round_half_up(mean(n, na.rm = TRUE), 2),
+            median_n_per_domain = round_half_up(median(n, na.rm = TRUE), 2),
+            sd_n_per_domain = round_half_up(sd(n, na.rm = TRUE), 2)) %>%
   gather() %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 data_descriptives %>%
-  summarize(min_age  = round(min(age, na.rm = TRUE), 2),
-            max_age  = round(max(age, na.rm = TRUE), 2),
-            mean_age = round(mean(age, na.rm = TRUE), 2),
-            sd_age   = round(sd(age, na.rm = TRUE), 2)) %>%
+  summarize(min_age  = round_half_up(min(age, na.rm = TRUE), 2),
+            max_age  = round_half_up(max(age, na.rm = TRUE), 2),
+            mean_age = round_half_up(mean(age, na.rm = TRUE), 2),
+            sd_age   = round_half_up(sd(age, na.rm = TRUE), 2)) %>%
   gather() %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
@@ -561,7 +562,7 @@ p_prop_nonzero_scoring <-
                                         #group = DV_type
                                         )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.0, position = position_dodge(width = 0.8)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
@@ -810,7 +811,7 @@ p_prop_discriminable_scoring <-
                                               #group = DV_type
                                               )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.0, position = position_dodge(width = 0.8)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
@@ -924,7 +925,7 @@ p_ci_width_proportion_observed_range_scoring <-
                                                    #group = DV_type
                                                    )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.0, position = position_dodge(width = 0.8)) +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
