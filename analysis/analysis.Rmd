@@ -53,19 +53,16 @@ options(knitr.table.format = "html") # necessary configuration of tables
 # disable scientific notation
 options(scipen = 999) 
 
-
 # function to round all numeric vars in a data frame
 round_df <- function(df, n_digits = 3) {
   require(janitor)
   df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
 }
 
-
 # create necessary directories
 dir.create("../data/processed")
 dir.create("../data/results")
 #dir.create("models")
-
 
 # get data 
 data_trial_level <- read_csv("../data/raw/data_trial_level.csv") %>%
@@ -196,7 +193,6 @@ data_eg_1 <- data_trimmed %>%
   filter(unique_id == "ian death emma_43" & trial_type == "tt1") 
 #filter(unique_id == "ian death emma_15" & trial_type == "tt1") 
 #filter(unique_id == "ian death june_57" & trial_type == "tt1") 
-
 
 #dat <- data_trimmed %>%
 data_eg_1 %>%  
@@ -581,7 +577,7 @@ data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ DV_type), adjust =
 summary(data_emms_diff_zero)$`pairwise differences of DV_type` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
-  mutate(p.value = ifelse(p.value < .00001, "< .00001", p.value)) %>%
+  mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -676,19 +672,9 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
     filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
-           variance = ifelse(variance == 0, 0.0001, variance),
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "*D* scores") |>
-    # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
-    mutate(
-      proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
-                                                proportion_discriminable > 0.999 ~ 0.999,
-                                                TRUE ~ proportion_discriminable),
-      proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)
-    ) %>%
-    select(-proportion_discriminable_temp) |>
-    round_df(4)
+           DV_type = "*D* scores") 
   
   # save to disk
   write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
@@ -721,19 +707,9 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
     filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
-           variance = ifelse(variance == 0, 0.0001, variance),
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "PI scores") |>
-    # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
-    mutate(
-      proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
-                                                proportion_discriminable > 0.999 ~ 0.999,
-                                                TRUE ~ proportion_discriminable),
-      proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)
-    ) |>
-    select(-proportion_discriminable_temp) |>
-    round_df(4)
+           DV_type = "PI scores") 
   
   # save to disk
   write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
@@ -755,7 +731,15 @@ data_discriminability_combined <-
                                 trial_type == "tt3" ~ "Trial type 3",	
                                 trial_type == "tt4" ~ "Trial type 4")) %>%
   filter(!(proportion_discriminable == 0 & variance == 0)) %>%
-  mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
+  mutate(variance = ifelse(variance == 0, 0.0001, variance)) |>
+  # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
+  mutate(
+    proportion_discriminable_temp = case_when(proportion_discriminable < 0.001 ~ 0.001, 
+                                              proportion_discriminable > 0.999 ~ 0.999,
+                                              TRUE ~ proportion_discriminable),
+    proportion_discriminable_logit = boot::logit(proportion_discriminable_temp)
+  ) %>%
+  select(-proportion_discriminable_temp)
 
 p_discriminability <- 
   data_discriminability_combined %>%
@@ -839,6 +823,7 @@ data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ DV_typ
 summary(data_emms_disciminability)$`pairwise differences of DV_type` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
+  mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -958,7 +943,7 @@ data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwis
 summary(data_emms_ci_width_proportions)$`pairwise differences of DV_type` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
-  mutate(p.value = ifelse(p.value < .00001, "< .00001", p.value)) %>%
+  mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
