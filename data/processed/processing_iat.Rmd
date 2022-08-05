@@ -56,7 +56,7 @@ if(file.exists("data_iat_trimmed.rds")){
     group_by(domain, block_order) |>
     slice_sample(n = 50) |> 
     ungroup() |>
-    select(session_id, age, sex, domain, block_order, D, A)
+    select(session_id, age, sex, domain, score_rectification, block_order, D, A)
   
   data_iat_trimmed <- data_iat_raw_trial_level |>
     semi_join(data_participant_level_subset, 
@@ -71,7 +71,9 @@ if(file.exists("data_iat_trimmed.rds")){
     # select and rename variables of interest
     select(unique_id = session_id,
            age, sex, 
-           domain, block_order, 
+           domain, 
+           score_rectification,
+           block_order, 
            block_type, 
            rt = trial_latency, 
            #correct = trial_error,  
@@ -124,11 +126,6 @@ if(file.exists("data_estimates_iat_D.csv")) {
     
     results <- boot::boot.ci(fit, conf = 0.95, type = "bca")
     
-    # output <- 
-    #   tibble(estimate = rep(fit$t0, 4),
-    #          ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
-    #          ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
-    
     output <- 
       tibble(estimate = fit$t0,
              ci_lower = results$bca[4],
@@ -137,6 +134,10 @@ if(file.exists("data_estimates_iat_D.csv")) {
     return(output)
   }
   
+  data_conditions <- data_iat_trimmed |>
+    select(unique_id, block_order, score_rectification) |>
+    distinct(unique_id, .keep_all = TRUE)
+  
   # bootstrap D scores 
   data_estimates_iat_D <- data_iat_trimmed |>
     select(unique_id, domain, rt, block_type) |>
@@ -144,6 +145,19 @@ if(file.exists("data_estimates_iat_D.csv")) {
     group_by(unique_id, domain) |>
     do(bootstrap_D_score(data = .)) |>
     ungroup() |>
+    anti_join(data_conditions, by = "unique_id") |>
+    mutate(estimate = case_when(block_order == "a" ~ estimate,
+                                block_order == "b" ~ estimate*-1),
+           ci_lower = case_when(block_order == "a" ~ ci_lower,
+                                block_order == "b" ~ ci_lower*-1),
+           ci_upper = case_when(block_order == "a" ~ ci_upper,
+                                block_order == "b" ~ ci_upper*-1)) |>
+    mutate(estimate = case_when(score_rectification == FALSE ~ estimate,
+                                score_rectification == TRUE ~ estimate*-1),
+           ci_lower = case_when(score_rectification == FALSE ~ ci_lower,
+                                score_rectification == TRUE ~ ci_lower*-1),
+           ci_upper = case_when(score_rectification == FALSE ~ ci_upper,
+                                score_rectification == TRUE ~ ci_upper*-1)) |>
     mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
            ci_width = ci_upper - ci_lower) |>
     round_df(3)
