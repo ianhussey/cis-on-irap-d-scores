@@ -158,11 +158,19 @@ if(file.exists("data_estimates_iat_D.csv")) {
     mutate(estimate = case_when(score_rectification == FALSE ~ estimate,
                                 score_rectification == TRUE ~ estimate*-1),
            ci_lower = case_when(score_rectification == FALSE ~ ci_lower,
-                                score_rectification == TRUE ~ ci_lower*-1),
+                                score_rectification == TRUE ~ ci_upper*-1),
            ci_upper = case_when(score_rectification == FALSE ~ ci_upper,
-                                score_rectification == TRUE ~ ci_upper*-1)) |>
+                                score_rectification == TRUE ~ ci_lower*-1)) |>
     mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
            ci_width = ci_upper - ci_lower) |>
+    mutate(temp_ci_lower = ci_lower,
+           temp_ci_upper = ci_upper,
+           ci_lower = case_when(temp_ci_lower < temp_ci_upper ~ temp_ci_lower,
+                                temp_ci_lower > temp_ci_upper ~ temp_ci_upper),
+           ci_upper = case_when(temp_ci_lower < temp_ci_upper ~ temp_ci_upper,
+                                temp_ci_lower > temp_ci_upper ~ temp_ci_lower)) |>
+    mutate(ci_width = ci_upper - ci_lower) |>
+    select(-temp_ci_lower, -temp_ci_upper) |>
     round_df(3)
   
   # save to disk
