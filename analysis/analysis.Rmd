@@ -89,10 +89,10 @@ data_trimmed <- data_outliers %>%
 
 # data with confidence intervals
 data_estimates_D <- read_csv("../data/processed/data_estimates_D.csv") %>%
-    filter(method == "bca")
+  filter(method == "bca")
 
 data_estimates_PI <- read_csv("../data/processed/data_estimates_PI.csv") %>%
-    filter(method == "bca")
+  filter(method == "bca")
 
 ```
 
@@ -299,7 +299,7 @@ p_ci_widths
 
 ## Caterpillar plot
 
-By domain, using normal bootstrapping
+By domain
 
 ```{r fig.height=12, fig.width=8}
 
@@ -335,15 +335,15 @@ p_cis_by_domain
 ```{r}
 
 data_diff_zero <- 
-  bind_rows(mutate(data_estimates_D, DV_type = "*D* scores"),
-            mutate(data_estimates_PI, DV_type = "PI scores")) %>%
+  bind_rows(mutate(data_estimates_D, scoring_method = "*D* scores"),
+            mutate(data_estimates_PI, scoring_method = "PI scores")) %>%
   mutate(domain = as.factor(domain),
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
                                 trial_type == "tt3" ~ "Trial type 3",
                                 trial_type == "tt4" ~ "Trial type 4"),
          trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
-  group_by(domain, trial_type, DV_type) %>%
+  group_by(domain, trial_type, scoring_method) %>%
   summarize(proportion_diff_zero = mean(sig),
             variance = plotrix::std.error(sig)^2,
             .groups = "drop") %>%
@@ -368,7 +368,7 @@ data_diff_zero <-
 p_diff_zero <- 
   data_diff_zero %>%
   mutate(domain = fct_rev(factor(domain))) %>%
-  ggplot(aes(proportion_diff_zero, domain, color = DV_type, shape = DV_type)) +
+  ggplot(aes(proportion_diff_zero, domain, color = scoring_method, shape = scoring_method)) +
   geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
                       xmax = proportion_diff_zero + sqrt(variance)*1.96),
                   position = position_dodge(width = 0.75)) + 
@@ -393,14 +393,14 @@ p_diff_zero
 
 # fit model
 fit_diff_zero <- 
-  lmer(proportion_diff_zero_logit ~ 1 + DV_type + (1 | domain/trial_type),
+  lmer(proportion_diff_zero_logit ~ 1 + scoring_method + (1 | domain/trial_type),
        weights = 1/variance, 
        data = data_diff_zero)
 
 # extract marginal means
 results_emm_diff_zero <- 
-  summary(emmeans(fit_diff_zero, ~ DV_type)) %>%
-  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
+  summary(emmeans(fit_diff_zero, ~ scoring_method)) %>%
+  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # extract re Tau
 results_re_tau_diff_zero <- fit_diff_zero %>%
@@ -417,10 +417,10 @@ results_diff_zero <- results_emm_diff_zero %>%
 
 # plot
 p_prop_nonzero <- 
-  ggplot(results_diff_zero, aes(DV_type, estimate, 
-                                        #color = DV_type, 
-                                        #shape = DV_type, 
-                                        #group = DV_type
+  ggplot(results_diff_zero, aes(scoring_method, estimate, 
+                                #color = scoring_method, 
+                                #shape = scoring_method, 
+                                #group = scoring_method
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
@@ -442,9 +442,9 @@ results_diff_zero %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ DV_type), adjust = "holm") 
+data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ scoring_method), adjust = "holm") 
 
-summary(data_emms_diff_zero)$`pairwise differences of DV_type` %>%
+summary(data_emms_diff_zero)$`pairwise differences of scoring_method` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
   mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
@@ -544,7 +544,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "*D* scores") 
+           scoring_method = "*D* scores") 
   
   # save to disk
   write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
@@ -579,7 +579,7 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           DV_type = "PI scores") 
+           scoring_method = "PI scores") 
   
   # save to disk
   write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
@@ -614,7 +614,7 @@ data_discriminability_combined <-
 p_discriminability <- 
   data_discriminability_combined %>%
   mutate(domain = fct_rev(factor(domain))) %>%
-  ggplot(aes(proportion_discriminable, domain, color = DV_type, shape = DV_type)) +
+  ggplot(aes(proportion_discriminable, domain, color = scoring_method, shape = scoring_method)) +
   geom_linerangeh(aes(xmin = proportion_discriminable - sqrt(variance)*1.96,
                       xmax = proportion_discriminable + sqrt(variance)*1.96),
                   position = position_dodge(width = 0.75)) + 
@@ -639,14 +639,14 @@ p_discriminability
 
 # fit meta analytic model
 fit_disciminability <- 
-  lmer(proportion_discriminable_logit ~ 1 + DV_type + (1 | domain/trial_type), 
+  lmer(proportion_discriminable_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
        weights = 1/variance, 
        data = data_discriminability_combined)
 
 # extract marginal means
 results_emm_disciminability <-
-  summary(emmeans(fit_disciminability, ~ DV_type)) %>%
-  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
+  summary(emmeans(fit_disciminability, ~ scoring_method)) %>%
+  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
 
 # extract re Tau
 results_re_tau_disciminability <- fit_disciminability %>%
@@ -663,10 +663,10 @@ results_disciminability <- results_emm_disciminability %>%
 
 # plot
 p_prop_discriminable <-
-  ggplot(results_disciminability, aes(DV_type, estimate, 
-                                              #color = DV_type, 
-                                              #shape = DV_type, 
-                                              #group = DV_type
+  ggplot(results_disciminability, aes(scoring_method, estimate, 
+                                      #color = scoring_method, 
+                                      #shape = scoring_method, 
+                                      #group = scoring_method
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
@@ -688,9 +688,9 @@ results_disciminability %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ DV_type), adjust = "holm") 
+data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ scoring_method), adjust = "holm") 
 
-summary(data_emms_disciminability)$`pairwise differences of DV_type` %>%
+summary(data_emms_disciminability)$`pairwise differences of scoring_method` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
   mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
@@ -729,14 +729,14 @@ data_ci_width_proportions_D <- data_estimates_D %>%
   full_join(observed_range_estimates_D, by = c("domain", "trial_type")) %>%
   # calculate ci width as a proportion of observed range
   mutate(ci_width_proportion = ci_width / range) %>%
-  mutate(DV_type = "*D* scores") 
+  mutate(scoring_method = "*D* scores") 
 
 data_ci_width_proportions_PI <- data_estimates_PI %>%
   # join this data into the original data
   full_join(observed_range_estimates_PI, by = c("domain", "trial_type")) %>%
   # calculate ci width as a proportion of observed range
   mutate(ci_width_proportion = ci_width / range) %>%
-  mutate(DV_type = "PI scores")
+  mutate(scoring_method = "PI scores")
 
 # combine
 data_ci_width_proportions_combined <- 
@@ -759,13 +759,13 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_logit ~ 1 + DV_type + (1 | domain/trial_type), 
+  lmer(ci_width_proportion_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
        data = data_ci_width_proportions_combined)
 
 # extract marginal means
 results_emm_ci_width_proportions <-
-  summary(emmeans(fit_ci_width_proportions, ~ DV_type)) %>%
-  dplyr::select(DV_type, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
+  summary(emmeans(fit_ci_width_proportions, ~ scoring_method)) %>%
+  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
 
 # extract re Tau
 results_re_tau_ci_width_proportions <-
@@ -782,10 +782,10 @@ results_ci_width_proportions <- results_emm_ci_width_proportions %>%
 
 # plot
 p_ci_width_proportion_observed_range <-
-  ggplot(results_ci_width_proportions, aes(DV_type, estimate, 
-                                                   #color = DV_type, 
-                                                   #shape = DV_type, 
-                                                   #group = DV_type
+  ggplot(results_ci_width_proportions, aes(scoring_method, estimate, 
+                                           #color = scoring_method, 
+                                           #shape = scoring_method, 
+                                           #group = scoring_method
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
@@ -808,9 +808,9 @@ results_ci_width_proportions %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwise ~ DV_type), adjust = "holm") 
+data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwise ~ scoring_method), adjust = "holm") 
 
-summary(data_emms_ci_width_proportions)$`pairwise differences of DV_type` %>%
+summary(data_emms_ci_width_proportions)$`pairwise differences of scoring_method` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
   mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
