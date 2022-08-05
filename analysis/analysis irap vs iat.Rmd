@@ -467,7 +467,7 @@ p_discriminability <-
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
-  labs(x =  "Proportion of participants who whose scores<br/>differ from one another<br/>",
+  labs(x =  "Proportion of participants<br/>whose scores differ from one another<br/>",
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
@@ -640,7 +640,7 @@ p_ci_width_proportion_observed_range <-
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
-       y = "Proportion of observed range covered <br/>by individual participants' 95% CIs") +
+       y = "Proportion of observed range covered<br/>by individual participants' 95% CIs") +
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
