@@ -82,13 +82,8 @@ data_outliers <- data_trial_level %>%
   full_join(data_trial_level, by = "unique_id") %>%
   mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
 
-data_outliers_removed <- data_outliers %>%
+data_trimmed <- data_outliers %>%
   filter(rt_outlier == FALSE)
-
-# trim RTs>10000 ms, as part of D scoring
-data_trimmed <- data_outliers_removed %>%
-  select(unique_id, domain, trial_type, rt, block_type) %>%
-  filter(rt <= 10000)
 
 ```
 
@@ -266,6 +261,7 @@ if(file.exists("../data/processed/data_estimates_D.csv")) {
   # bootstrap D scores 
   data_estimates_D <- data_trimmed %>%
     select(unique_id, domain, trial_type, rt, block_type) %>%
+    filter(rt <= 10000) %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_D_score(data = .)) %>%
     ungroup() %>%
@@ -331,7 +327,7 @@ if(file.exists("../data/processed/data_estimates_PI.csv")) {
   }
   
   # bootstrap PI scores 
-  data_estimates_PI <- data_outliers_removed %>%
+  data_estimates_PI <- data_trimmed %>%
     group_by(unique_id, domain, trial_type) %>%
     do(bootstrap_PI_score(data = .)) %>%
     ungroup() %>%
