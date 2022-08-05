@@ -23,18 +23,6 @@ round_df <- function(df, n_digits = 3) {
   df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
 }
 
-# load("../../../AIID-study-public/data/subsets/AIID_subset_confirmatory.RData")
-# load("../../../AIID-study-public/data/subsets/AIID_subset_confirmatory_iat_trial_data.RData")
-# 
-# data_iat_processed_participant_level <- AIID_subset_confirmatory
-# data_iat_raw_trial_level <- AIID_subset_confirmatory_iat_trial_data
-
-# write_rds(data_iat_processed_participant_level, "../processed/data_iat_processed_participant_level.rds", compress = "gz")
-# write_rds(data_iat_raw_trial_level, "../raw/data_iat_raw_trial_level.rds", compress = "xz")
-
-data_iat_processed_participant_level <- read_rds("../processed/data_iat_processed_participant_level.rds")
-data_iat_raw_trial_level <- read_rds("../raw/data_iat_raw_trial_level.rds")
-
 ```
 
 # Do exclusions and tidying
@@ -43,9 +31,21 @@ data_iat_raw_trial_level <- read_rds("../raw/data_iat_raw_trial_level.rds")
 
 if(file.exists("data_iat_trimmed.rds")){
   
-  data_iat_trimmed <- write_rds("data_iat_trimmed.rds")
+  data_iat_trimmed <- read_rds("data_iat_trimmed.rds")
 
 } else {
+  
+  # load("../../../AIID-study-public/data/subsets/AIID_subset_confirmatory.RData")
+  # load("../../../AIID-study-public/data/subsets/AIID_subset_confirmatory_iat_trial_data.RData")
+  # 
+  # data_iat_processed_participant_level <- AIID_subset_confirmatory
+  # data_iat_raw_trial_level <- AIID_subset_confirmatory_iat_trial_data
+  
+  # write_rds(data_iat_processed_participant_level, "../processed/data_iat_processed_participant_level.rds", compress = "gz")
+  # write_rds(data_iat_raw_trial_level, "../raw/data_iat_raw_trial_level.rds", compress = "xz")
+  
+  data_iat_processed_participant_level <- read_rds("../processed/data_iat_processed_participant_level.rds")
+  data_iat_raw_trial_level <- read_rds("../raw/data_iat_raw_trial_level.rds")
   
   data_participant_level_subset <- data_iat_processed_participant_level |>
     filter(iat_type == "Evaluation" &
