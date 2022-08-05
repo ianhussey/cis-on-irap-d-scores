@@ -81,6 +81,9 @@ data_trimmed <- data_outliers %>%
   filter(rt_outlier == FALSE)
 
 # data with confidence intervals
+data_estimates_D <- read_csv("../data/processed/data_estimates_D.csv") %>%
+  filter(method == "bca")
+
 data_estimates_iat_D <- read_csv("../data/processed/data_estimates_iat_D.csv") %>%
   mutate(trial_type = "iat",
          unique_id = as.factor(unique_id))
@@ -132,7 +135,6 @@ data_map_ci_widths %>%
 
 data_ci_width_map_D <- data_estimates_iat_D %>%
   group_by(domain, trial_type) %>%
-  #summarize(median = median(ci_width), .groups = "drop") %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   ungroup() %>%
   mutate(MAP = round_half_up(MAP, 3),
@@ -142,8 +144,6 @@ data_ci_width_map_D <- data_estimates_iat_D %>%
                                 trial_type == "tt4" ~ "Trial type 4",
                                 trial_type == "iat" ~ "IAT"),
          trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4", "IAT")) %>%
-  #mutate(domain = fct_reorder(domain, MAP, .fun = min)) %>%
-  #arrange(domain) %>%
   mutate(domain = fct_rev(domain))
 
 # # save to disk
@@ -200,10 +200,11 @@ p_cis_by_domain
 
 data_diff_zero <- 
   bind_rows(
-    #mutate(data_estimates_D, measure = "IRAP"),
+    mutate(data_estimates_D, measure = "IRAP"),
     mutate(data_estimates_iat_D, measure = "IAT")
   ) %>%
-  mutate(domain = as.factor(domain),
+  mutate(measure = fct_relevel(measure, "IRAP", "IAT"),
+         domain = as.factor(domain),
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
                                 trial_type == "tt3" ~ "Trial type 3",
@@ -236,6 +237,7 @@ data_diff_zero
 
 p_diff_zero <- 
   data_diff_zero %>%
+  filter(measure == "IAT") %>%
   mutate(domain = fct_rev(factor(domain))) %>%
   ggplot(aes(proportion_diff_zero, domain)) +
   geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
@@ -259,7 +261,7 @@ p_diff_zero
 
 # fit model
 fit_diff_zero <- 
-  lmer(proportion_diff_zero_logit ~ 1 + (1 | domain),
+  lmer(proportion_diff_zero_logit ~ 1 + measure + (1 | domain/trial_type),
        weights = 1/variance, 
        data = data_diff_zero,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
@@ -268,8 +270,8 @@ fit_diff_zero <-
 
 # extract marginal means
 results_emm_diff_zero <- 
-  summary(emmeans(fit_diff_zero, ~ 1)) %>%
-  dplyr::select(estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
+  summary(emmeans(fit_diff_zero, ~ measure)) %>%
+  dplyr::select(measure, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # extract re Tau
 results_re_tau_diff_zero <- fit_diff_zero %>%
@@ -286,8 +288,7 @@ results_diff_zero <- results_emm_diff_zero %>%
 
 # plot
 p_prop_nonzero <- 
-  ggplot(results_diff_zero, aes("IAT D score", estimate, 
-  )) +
+  ggplot(results_diff_zero, aes(measure, estimate)) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
@@ -304,6 +305,16 @@ p_prop_nonzero
 
 results_diff_zero %>%
   round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+# tests
+data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ measure), adjust = "holm") 
+
+summary(data_emms_diff_zero)$`pairwise differences of measure` %>%
+  as.data.frame() %>%
+  select(comparison = 1, p.value) %>%
+  mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -370,6 +381,10 @@ bootstrap_discriminability <- function(data){
   return(output)
 }
 
+# irap data
+data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv") %>%
+    filter(method == "bca")
+
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
 if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
   
@@ -405,9 +420,12 @@ if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
 
 # combine
 data_discriminability_combined <- 
-  bind_rows(data_discriminability_D,
-            data_discriminability_iat_D) %>%
-  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
+  bind_rows(
+    mutate(data_discriminability_D, measure = "IRAP"),
+    mutate(data_discriminability_iat_D, measure = "IAT")
+  ) %>%
+  mutate(measure = fct_relevel(measure, "IRAP", "IAT"),
+         trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
                                 trial_type == "tt4" ~ "Trial type 4",
@@ -426,14 +444,15 @@ data_discriminability_combined <-
 
 p_discriminability <- 
   data_discriminability_combined %>%
+  filter(measure == "IAT") %>%
   mutate(domain = fct_rev(factor(domain))) %>%
-  ggplot(aes(proportion_discriminable, domain, color = measure, shape = measure)) +
+  ggplot(aes(proportion_discriminable, domain)) +
   geom_linerangeh(aes(xmin = proportion_discriminable - sqrt(variance)*1.96,
                       xmax = proportion_discriminable + sqrt(variance)*1.96),
                   position = position_dodge(width = 0.75)) + 
   geom_point(position = position_dodge(width = 0.75)) +
-  scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
-  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
+  #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
+  #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
   labs(x =  "Proportion of participants<br/>whose scores differ from one another<br/>",
@@ -452,7 +471,7 @@ p_discriminability
 
 # fit meta analytic model
 fit_disciminability <- 
-  lmer(proportion_discriminable_logit ~ 1 + (1 | domain), 
+  lmer(proportion_discriminable_logit ~ 1 + measure + (1 | domain/trial_type), 
        weights = 1/variance, 
        data = data_discriminability_combined,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
@@ -461,7 +480,7 @@ fit_disciminability <-
 
 # extract marginal means
 results_emm_disciminability <-
-  summary(emmeans(fit_disciminability, ~ 1)) %>%
+  summary(emmeans(fit_disciminability, ~ measure)) %>%
   dplyr::select(measure, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
 
 # extract re Tau
@@ -479,8 +498,7 @@ results_disciminability <- results_emm_disciminability %>%
 
 # plot
 p_prop_discriminable <-
-  ggplot(results_disciminability, aes("IAT D score", estimate, 
-  )) +
+  ggplot(results_disciminability, aes(measure, estimate)) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
@@ -501,7 +519,7 @@ results_disciminability %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ measure), adjust = "holm") 
+data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ measure), adjust = "holm")
 
 summary(data_emms_disciminability)$`pairwise differences of measure` %>%
   as.data.frame() %>%
@@ -521,6 +539,13 @@ NB observed range of confidence intervals
 ```{r}
 
 ## calculate observed ranges 
+observed_range_estimates_D <- data_estimates_D %>%
+  group_by(domain, trial_type) %>%
+  dplyr::summarize(min = min(ci_lower, na.rm = TRUE),
+                   max = max(ci_upper, na.rm = TRUE),
+                   .groups = "drop") %>%
+  mutate(range = max - min) 
+
 observed_range_estimates_iat_D <- data_estimates_iat_D %>%
   group_by(domain) %>%
   dplyr::summarize(min = min(ci_lower, na.rm = TRUE),
@@ -529,6 +554,13 @@ observed_range_estimates_iat_D <- data_estimates_iat_D %>%
   mutate(range = max - min) 
 
 # calculate CI / range 
+data_ci_width_proportions_D <- data_estimates_D %>%
+  # join this data into the original data
+  full_join(observed_range_estimates_D, by = c("domain", "trial_type")) %>%
+  # calculate ci width as a proportion of observed range
+  mutate(ci_width_proportion = ci_width / range) %>%
+  mutate(measure = "IRAP") 
+
 data_ci_width_proportions_iat_D <- data_estimates_iat_D %>%
   # join this data into the original data
   full_join(observed_range_estimates_iat_D, by = "domain") %>%
@@ -539,10 +571,11 @@ data_ci_width_proportions_iat_D <- data_estimates_iat_D %>%
 # combine
 data_ci_width_proportions_combined <- 
   bind_rows(
-    #data_ci_width_proportions_D,
+    data_ci_width_proportions_D,
     data_ci_width_proportions_iat_D
   ) %>%
-  mutate(domain = as.factor(domain),
+  mutate(measure = fct_relevel(measure, "IRAP", "IAT"),
+         domain = as.factor(domain),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "iat")) %>%
   # logit transform
   mutate(ci_width_proportion_temp = case_when(ci_width_proportion < 0.0001 ~ 0.0001,
@@ -559,7 +592,7 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_logit ~ 1 + (1 | domain), 
+  lmer(ci_width_proportion_logit ~ 1 + measure + (1 | domain/trial_type), 
        data = data_ci_width_proportions_combined,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
        control = lmerControl(check.nobs.vs.nlev = "ignore",  
@@ -567,8 +600,8 @@ fit_ci_width_proportions <-
 
 # extract marginal means
 results_emm_ci_width_proportions <-
-  summary(emmeans(fit_ci_width_proportions, ~ 1)) %>%
-  dplyr::select(estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
+  summary(emmeans(fit_ci_width_proportions, ~ measure)) %>%
+  dplyr::select(measure, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
 
 # extract re Tau
 results_re_tau_ci_width_proportions <-
@@ -585,7 +618,7 @@ results_ci_width_proportions <- results_emm_ci_width_proportions %>%
 
 # plot
 p_ci_width_proportion_observed_range <-
-  ggplot(results_ci_width_proportions, aes("IAT D score", estimate, 
+  ggplot(results_ci_width_proportions, aes(measure, estimate, 
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
@@ -604,6 +637,16 @@ p_ci_width_proportion_observed_range
 
 results_ci_width_proportions %>%
   round_df(2) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+# tests
+data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwise ~ measure), adjust = "holm") 
+
+summary(data_emms_ci_width_proportions)$`pairwise differences of measure` %>%
+  as.data.frame() %>%
+  select(comparison = 1, p.value) %>%
+  mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
@@ -678,3 +721,5 @@ ggsave(filename  = "plots/figure_3_metaanalyses_iat.pdf",
 sessionInfo()
 
 ```
+
+

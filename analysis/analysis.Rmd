@@ -15,6 +15,7 @@ output:
 # TODOs
 
 - clean up text in this doc
+- tau[1]?
 
 # Overview 
 
