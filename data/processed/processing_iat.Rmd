@@ -44,8 +44,11 @@ if(file.exists("data_iat_trimmed.rds")){
   # write_rds(data_iat_processed_participant_level, "../processed/data_iat_processed_participant_level.rds", compress = "gz")
   # write_rds(data_iat_raw_trial_level, "../raw/data_iat_raw_trial_level.rds", compress = "xz")
   
-  data_iat_processed_participant_level <- read_rds("../processed/data_iat_processed_participant_level.rds")
-  data_iat_raw_trial_level <- read_rds("../raw/data_iat_raw_trial_level.rds")
+  data_iat_processed_participant_level <- 
+    read_rds("../processed/data_iat_processed_participant_level.rds")
+  
+  data_iat_raw_trial_level <- 
+    read_rds("../raw/data_iat_raw_trial_level.rds")
   
   data_participant_level_subset <- data_iat_processed_participant_level |>
     filter(iat_type == "Evaluation" &
@@ -98,7 +101,7 @@ Calculated by domain. 8+ hour runtime on a good PC.
 if(file.exists("data_estimates_iat_D.csv")) {
   
   data_estimates_iat_D <- read_csv("data_estimates_iat_D.csv")
-  
+
 } else {
   
   D_score <- function(data, i) {
@@ -145,7 +148,7 @@ if(file.exists("data_estimates_iat_D.csv")) {
     group_by(unique_id, domain) |>
     do(bootstrap_D_score(data = .)) |>
     ungroup() |>
-    anti_join(data_conditions, by = "unique_id") |>
+    left_join(data_conditions, by = "unique_id") |>
     mutate(estimate = case_when(block_order == "a" ~ estimate,
                                 block_order == "b" ~ estimate*-1),
            ci_lower = case_when(block_order == "a" ~ ci_lower,
