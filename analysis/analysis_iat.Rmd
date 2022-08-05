@@ -386,7 +386,6 @@ if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
     group_by(domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
-    filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
