@@ -1,0 +1,239 @@
+---
+title: "Data processing for the IAT"
+author: "Ian Hussey"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r}
+
+library(tidyverse)
+library(parallel)
+library(boot)
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  require(janitor)
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
+}
+
+# load("../../../AIID-study-public/data/subsets/AIID_subset_confirmatory.RData")
+# load("../../../AIID-study-public/data/subsets/AIID_subset_confirmatory_iat_trial_data.RData")
+# 
+# data_iat_processed_participant_level <- AIID_subset_confirmatory
+# data_iat_raw_trial_level <- AIID_subset_confirmatory_iat_trial_data
+
+# write_rds(data_iat_processed_participant_level, "../processed/data_iat_processed_participant_level.rds", compress = "gz")
+# write_rds(data_iat_raw_trial_level, "../raw/data_iat_raw_trial_level.rds", compress = "xz")
+
+data_iat_processed_participant_level <- read_rds("../processed/data_iat_processed_participant_level.rds")
+data_iat_raw_trial_level <- read_rds("../raw/data_iat_raw_trial_level.rds")
+
+```
+
+# Do exclusions and tidying
+
+```{r}
+
+if(file.exists("data_iat_trimmed.rds")){
+  
+  data_iat_trimmed <- write_rds("data_iat_trimmed.rds")
+
+} else {
+  
+  data_participant_level_subset <- data_iat_processed_participant_level |>
+    filter(iat_type == "Evaluation" &
+             complete_iat_data == TRUE &
+             complete_iat_trial_data == "complete" &
+             english_fluency == "English is my primary language" &
+             exclude_iat_stricter == FALSE) |> # rely on the IAT performance exclusions already implemented in the AIID dataset
+    group_by(domain, block_order) |>
+    slice_sample(n = 50) |> 
+    ungroup() |>
+    select(session_id, age, sex, domain, block_order, D, A)
+  
+  data_iat_trimmed <- data_iat_raw_trial_level |>
+    semi_join(data_participant_level_subset, 
+              by = "session_id") |>
+    left_join(data_participant_level_subset, 
+              by = "session_id") |>
+    # filter blocks
+    mutate(block_number = as.numeric(as.character(block_number))) |>
+    filter(block_number %in% c(2, 3, 5, 6)) |>
+    mutate(block_type = ifelse(block_number %in% c(2, 3), "a",
+                               ifelse(block_number %in% c(5, 6), "b", NA))) |>
+    # select and rename variables of interest
+    select(unique_id = session_id,
+           age, sex, 
+           domain, block_order, 
+           block_type, 
+           rt = trial_latency, 
+           #correct = trial_error,  
+           #D, A,
+           subset_condition)
+  
+  write_rds(data_iat_trimmed, "data_iat_trimmed.rds", compress = "gz")
+  
+}
+
+```
+
+# bootstrap 95% CIs
+
+## *D* scores
+
+Calculated by domain. 8+ hour runtime on a good PC.
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("data_estimates_iat_D.csv")) {
+  
+  data_estimates_iat_D <- read_csv("data_estimates_iat_D.csv")
+  
+} else {
+  
+  D_score <- function(data, i) {
+    data_with_indexes <- data[i,] # boot function requires data and index
+    mean_con          <- mean(data_with_indexes$rt[data_with_indexes$block_type == "a"], na.rm = TRUE)
+    mean_incon        <- mean(data_with_indexes$rt[data_with_indexes$block_type == "b"], na.rm = TRUE)
+    sd                <- sd(data_with_indexes$rt, na.rm = TRUE)
+    D                 <- (mean_incon - mean_con) / sd
+    return(D)
+  }
+  
+  bootstrap_D_score <- function(data){
+    
+    require(dplyr)
+    require(boot)
+    
+    fit <- 
+      boot::boot(data      = data, 
+                 statistic = D_score, 
+                 R         = 5000, 
+                 sim       = "ordinary", 
+                 stype     = "i",
+                 parallel  = "multicore", 
+                 ncpus     = parallel::detectCores()-1)
+    
+    results <- boot::boot.ci(fit, conf = 0.95, type = "bca")
+    
+    # output <- 
+    #   tibble(estimate = rep(fit$t0, 4),
+    #          ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+    #          ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    
+    output <- 
+      tibble(estimate = fit$t0,
+             ci_lower = results$bca[4],
+             ci_upper = results$bca[5])
+    
+    return(output)
+  }
+  
+  # bootstrap D scores 
+  data_estimates_iat_D <- data_iat_trimmed |>
+    select(unique_id, domain, rt, block_type) |>
+    filter(rt < 10000) |>
+    group_by(unique_id, domain) |>
+    do(bootstrap_D_score(data = .)) |>
+    ungroup() |>
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) |>
+    round_df(3)
+  
+  # save to disk
+  write_csv(data_estimates_iat_D, "data_estimates_iat_D.csv")
+  
+}
+
+```
+
+## PI scores 
+
+Calculated by domain. 8+ hour runtime on a good PC.
+
+Currently not run because the IRAP D score vs IAT D score comparison is most meaningful. Don't think I need the full 2X2 of IRAP/IAT D/PI.
+
+```{r}
+
+# # bootstrapping has a long execution time, so load saved values if they've already been calculated
+# if(file.exists("data_estimates_iat_PI.csv")) {
+#   
+#   data_estimates_iat_PI <- read_csv("data_estimates_iat_PI.csv")
+#   
+# } else {
+#   
+#   # Fast calculation of the A statistic - code from Ruscio (2008) supplementary materials
+#   PI_score <- function(data, i) {
+#     data_with_indexes <- data[i,] # boot function requires data and index
+#     x  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "b"])
+#     y  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "a"])
+#     nx <- length(x)
+#     ny <- length(y)
+#     rx <- sum(rank(c(x, y))[1:nx])
+#     PI <- (rx / nx - (nx + 1) / 2) / ny
+#     return(PI)
+#   }
+#   
+#   bootstrap_PI_score <- function(data){
+#     
+#     require(dplyr)
+#     require(boot)
+#     
+#     fit <- 
+#       boot::boot(data      = data, 
+#                  statistic = PI_score, 
+#                  R         = 5000, 
+#                  sim       = "ordinary", 
+#                  stype     = "i",
+#                  parallel  = "multicore", 
+#                  ncpus     = parallel::detectCores()-1)
+#     
+#     results <- boot::boot.ci(fit, conf = 0.95, type = "bca")
+#     
+#     # output <- 
+#     #   tibble(estimate = rep(fit$t0, 4),
+#     #          ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+#     #          ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+#     
+#     output <- 
+#       tibble(estimate = fit$t0,
+#              ci_lower = results$bca[4],
+#              ci_upper = results$bca[5])
+#     
+#     return(output)
+#   }
+#   
+#   # bootstrap PI scores 
+#   data_estimates_iat_PI <- data_iat_trimmed |>
+#     select(unique_id, domain, rt, block_type) |>
+#     group_by(unique_id, domain) |>
+#     do(bootstrap_PI_score(data = .)) |>
+#     ungroup() |>
+#     mutate(sig = ifelse((ci_lower < 0.50 & ci_upper < 0.50) | (ci_lower > 0.50 & ci_upper > 0.50), TRUE, FALSE),
+#            ci_width = ci_upper - ci_lower) |>
+#     round_df(3)
+#   
+#   # save to disk
+#   write_csv(data_estimates_iat_PI, "data_estimates_iat_PI.csv")
+#   
+# }
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+
+

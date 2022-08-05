@@ -1,1 +1,5 @@
-data taken from github.com/ianhussey/irap-reliaiblity-meta-analysis; all raw data and data processing there.
+data_trial_level.csv
+- IRAP data taken from github.com/ianhussey/irap-reliaiblity-meta-analysis; all raw data and data processing there.
+
+data_iat_raw_trial_level.rdsdata_iat_raw_participant_level.rds
+- IAT data taken from the AIID confirmatory dataset, available on OSF
