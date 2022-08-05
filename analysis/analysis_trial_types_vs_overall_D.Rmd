@@ -1,6 +1,6 @@
 ---
 title: "Bootstrapped estimation of D scores for individual participants"
-subtitle: "Assessing IRAP *D* scoring and comparing with PI scoring"
+subtitle: "Comparing IRAP *D* scoring by trial type vs sigle overall score"
 author: "Ian Hussey"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -12,13 +12,7 @@ output:
     toc_float: yes
 ---
 
-# TODOs
-
-- clean up text in this doc
-
 # Overview 
-
-IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,
@@ -92,136 +86,12 @@ data_trimmed <- data_outliers %>%
 data_estimates_D <- read_csv("../data/processed/data_estimates_D.csv") %>%
   filter(method == "bca")
 
-data_estimates_PI <- read_csv("../data/processed/data_estimates_PI.csv") %>%
-  filter(method == "bca")
-
-```
-
-# Sample descriptives
-
-```{r}
-
-data_outliers %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  count(rt_outlier) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_descriptives <- data_outliers %>%
-  distinct(unique_id, .keep_all = TRUE)
-
-data_descriptives %>%
-  count(domain) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_descriptives %>%
-  count(domain) %>%
-  summarize(total_n = sum(n),
-            min_n_per_domain = min(n),
-            max_n_per_domain = max(n),
-            mean_n_per_domain = round_half_up(mean(n, na.rm = TRUE), 2),
-            median_n_per_domain = round_half_up(median(n, na.rm = TRUE), 2),
-            sd_n_per_domain = round_half_up(sd(n, na.rm = TRUE), 2)) %>%
-  gather() %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_descriptives %>%
-  summarize(min_age  = round_half_up(min(age, na.rm = TRUE), 2),
-            max_age  = round_half_up(max(age, na.rm = TRUE), 2),
-            mean_age = round_half_up(mean(age, na.rm = TRUE), 2),
-            sd_age   = round_half_up(sd(age, na.rm = TRUE), 2)) %>%
-  gather() %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-data_descriptives %>%
-  count(gender) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-```
-
-# Distribution of RTs
-
-In order to convey how small these effects are and what they're estimated from for a given participant.
-
-## All RTs
-
-```{r}
-
-data_trimmed %>%
-  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
-                                trial_type == "tt2" ~ "Trial type 2",
-                                trial_type == "tt3" ~ "Trial type 3",
-                                trial_type == "tt4" ~ "Trial type 4")) %>%
-  ggplot(aes(rt, fill = block_type)) +
-  geom_density(alpha = 0.3) +
-  facet_wrap(~ trial_type, ncol = 1) +
-  mdthemes::md_theme_linedraw() +
-  scale_fill_viridis_d(begin = 0.3, end = 0.7) +
-  ylab("Frequency") +
-  xlab("Reaction time (ms)") +
-  labs(fill = "Block type")
-
-# data_trimmed %>%
-#   group_by(unique_id, trial_type) %>%
-#   summarize(mean_rt_con = mean(rt[block_type == "con"], na.rm = TRUE),
-#             mean_rt_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-#             sd_rt_con = sd(rt[block_type == "con"], na.rm = TRUE),
-#             sd_rt_incon = sd(rt[block_type == "con"], na.rm = TRUE),
-#             sd_rt = sd(rt, na.rm = TRUE),
-#             .groups = "drop") %>%
-#   mutate(diff_mean_rt = mean_rt_incon - mean_rt_con) %>%
-#   select(-unique_id) %>%
-#   group_by(trial_type) %>%
-#   summarize_all(median) %>%
-#   round_df(0) %>%
-#   select(trial_type, 
-#          median_mean_rt_con = mean_rt_con, 
-#          median_mean_rt_incon = mean_rt_incon, 
-#          median_diff_mean_rt = diff_mean_rt, 
-#          median_sd_rt_con = sd_rt_con, 
-#          median_sd_rt_incon = sd_rt_incon, 
-#          median_sd_rt = sd_rt) %>%
-#   kable() %>%
-#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
-
-```
-
-## Single participant with median D score (D = 0.10)
-
-```{r}
-
-data_eg_1 <- data_trimmed %>%
-  filter(unique_id == "ian death emma_43" & trial_type == "tt1") 
-#filter(unique_id == "ian death emma_15" & trial_type == "tt1") 
-#filter(unique_id == "ian death june_57" & trial_type == "tt1") 
-
-#dat <- data_trimmed %>%
-data_eg_1 %>%  
-  group_by(unique_id, trial_type) %>%
-  summarize(mean_rt_con = mean(rt[block_type == "con"], na.rm = TRUE),
-            mean_rt_incon = mean(rt[block_type == "incon"], na.rm = TRUE),
-            sd_rt = sd(rt, na.rm = TRUE)) %>%
-  mutate(D = (mean_rt_incon - mean_rt_con)/sd_rt)
-
-ggplot(data_eg_1, aes(rt, block_type)) +
-  geom_point(alpha = 0.5, position = position_jitter(height = 0.2, 
-                                                     width = 0,
-                                                     seed = 43)) +
-  mdthemes::md_theme_linedraw() +
-  labs(x = "Reaction time (ms)",
-       y = "Block type") 
+data_estimates_overall_D <- read_csv("../data/processed/data_estimates_overall_D.csv") %>%
+  mutate(trial_type = "overall")
 
 ```
 
 # CI widths
-
-Widths cant be directly compared between *D* and PI as they have different ranges, so *D* scores only.
-
-Not meta analyzed as extreme skew in data means that residuals are very non-normal, violating assumptions and underestimating MAP estimates. Instead I simply present MAP estimates. 
 
 ## MAP-MAP width
 
@@ -229,7 +99,7 @@ Most probable estimate among the most probable estimates
 
 ```{r}
 
-data_map_ci_widths <- data_estimates_D %>%
+data_map_ci_widths <- data_estimates_overall_D %>%
   group_by(domain, trial_type) %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   ungroup()
@@ -264,7 +134,7 @@ data_map_ci_widths %>%
 
 ```{r fig.height=10, fig.width=8}
 
-data_ci_width_map_D <- data_estimates_D %>%
+data_ci_width_map_D <- data_estimates_overall_D %>%
   group_by(domain, trial_type) %>%
   #summarize(median = median(ci_width), .groups = "drop") %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
@@ -273,8 +143,9 @@ data_ci_width_map_D <- data_estimates_D %>%
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
                                 trial_type == "tt3" ~ "Trial type 3",
-                                trial_type == "tt4" ~ "Trial type 4"),
-         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
+                                trial_type == "tt4" ~ "Trial type 4",
+                                trial_type == "overall" ~ "Overall"),
+         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4", "Overall")) %>%
   #mutate(domain = fct_reorder(domain, MAP, .fun = min)) %>%
   #arrange(domain) %>%
   mutate(domain = fct_rev(domain))
@@ -300,14 +171,12 @@ p_ci_widths
 
 ## Caterpillar plot
 
-By domain
-
 ```{r fig.height=12, fig.width=8}
 
 p_cis_by_domain <- 
-  data_estimates_D %>%
-  mutate(domain = str_replace(domain, "Personality - ", "Big5: "),
-         domain = str_replace(domain, "Stigma - ", "Stigma: ")) %>%
+  data_estimates_overall_D %>%
+  # mutate(domain = str_replace(domain, "Personality - ", "Big5: "),
+  #        domain = str_replace(domain, "Stigma - ", "Stigma: ")) %>%
   arrange(estimate) %>%
   group_by(domain) %>%
   mutate(ordered_id = row_number()/n()) %>%
@@ -336,15 +205,16 @@ p_cis_by_domain
 ```{r}
 
 data_diff_zero <- 
-  bind_rows(mutate(data_estimates_D, scoring_method = "*D* scores"),
-            mutate(data_estimates_PI, scoring_method = "PI scores")) %>%
+  bind_rows(mutate(data_estimates_D, splitting_method = "Trial types"),
+            mutate(data_estimates_overall_D, splitting_method = "Overall")) %>%
   mutate(domain = as.factor(domain),
          trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",
                                 trial_type == "tt3" ~ "Trial type 3",
-                                trial_type == "tt4" ~ "Trial type 4"),
-         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4")) %>%
-  group_by(domain, trial_type, scoring_method) %>%
+                                trial_type == "tt4" ~ "Trial type 4",
+                                trial_type == "overall" ~ "Overall"),
+         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4", "Overall")) %>%
+  group_by(domain, trial_type, splitting_method) %>%
   summarize(proportion_diff_zero = mean(sig),
             variance = plotrix::std.error(sig)^2,
             .groups = "drop") %>%
@@ -369,13 +239,13 @@ data_diff_zero <-
 p_diff_zero <- 
   data_diff_zero %>%
   mutate(domain = fct_rev(factor(domain))) %>%
-  ggplot(aes(proportion_diff_zero, domain, color = scoring_method, shape = scoring_method)) +
+  ggplot(aes(proportion_diff_zero, domain, color = splitting_method, shape = splitting_method)) +
   geom_linerangeh(aes(xmin = proportion_diff_zero - sqrt(variance)*1.96,
                       xmax = proportion_diff_zero + sqrt(variance)*1.96),
                   position = position_dodge(width = 0.75)) + 
   geom_point(position = position_dodge(width = 0.75)) +
-  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
-  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  scale_shape_manual(labels = c("Trial types", "Overall"), values = c(15, 16)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("Trial types", "Overall")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
   labs(x = "Proportion of scores different from zero point",
@@ -394,14 +264,14 @@ p_diff_zero
 
 # fit model
 fit_diff_zero <- 
-  lmer(proportion_diff_zero_logit ~ 1 + scoring_method + (1 | domain/trial_type),
+  lmer(proportion_diff_zero_logit ~ 1 + splitting_method + (1 | domain/trial_type),
        weights = 1/variance, 
        data = data_diff_zero)
 
 # extract marginal means
 results_emm_diff_zero <- 
-  summary(emmeans(fit_diff_zero, ~ scoring_method)) %>%
-  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
+  summary(emmeans(fit_diff_zero, ~ splitting_method)) %>%
+  dplyr::select(splitting_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # extract re Tau
 results_re_tau_diff_zero <- fit_diff_zero %>%
@@ -418,18 +288,18 @@ results_diff_zero <- results_emm_diff_zero %>%
 
 # plot
 p_prop_nonzero <- 
-  ggplot(results_diff_zero, aes(scoring_method, estimate, 
-                                #color = scoring_method, 
-                                #shape = scoring_method, 
-                                #group = scoring_method
+  ggplot(results_diff_zero, aes(splitting_method, estimate, 
+                                #color = splitting_method, 
+                                #shape = splitting_method, 
+                                #group = splitting_method
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   mdthemes::md_theme_linedraw() +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  #scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
-  #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  #scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("Trial types", "Overall")) +
+  #scale_shape_manual(labels = c("Trial types", "Overall"), values = c(15, 16)) +
   labs(x = "",
        y = "Proportion of participants with non-zero scores<br/>") + 
   theme(legend.position = "none") +
@@ -443,9 +313,9 @@ results_diff_zero %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ scoring_method), adjust = "holm") 
+data_emms_diff_zero <- emmeans(fit_diff_zero, list(pairwise ~ splitting_method), adjust = "holm") 
 
-summary(data_emms_diff_zero)$`pairwise differences of scoring_method` %>%
+summary(data_emms_diff_zero)$`pairwise differences of splitting_method` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
   mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
@@ -458,11 +328,9 @@ summary(data_emms_diff_zero)$`pairwise differences of scoring_method` %>%
 
 Within domain and trial type.
 
-Note: Discriminability between a score and zero can be determined using the CI, because zero is a known value and only the score is measured with uncertainty. However, discriminability between two scores must take into account the uncertainty in the estimation of both scores. Weir (2005) argues that such an interval can be estimated by expanding the CIs by sqrt(2). Here I refer to these intervals as Discriminability Intervals (DIs).
+Note: Discriminability between a score and zero can be determined using the CI, because zero is a known value and only the score is splitting_methodd with uncertainty. However, discriminability between two scores must take into account the uncertainty in the estimation of both scores. Weir (2005) argues that such an interval can be estimated by expanding the CIs by sqrt(2). Here I refer to these intervals as Discriminability Intervals (DIs).
 
 ## Calculate discriminability
-
-Many have argued that the zero point is arbitrary and not a useful reference point. Instead of asking "what proportion of *D*/PI scores are different from zero?", we could also ask "what proportion of *D*/PI scores are different from one another?"
 
 ```{r}
 
@@ -519,55 +387,29 @@ bootstrap_discriminability <- function(data){
 
 ```
 
-### *D* scores
+### Trial types
 
 ```{r}
 
-# bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("../data/results/data_discriminability_D.csv")) {
-  
-  data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv") %>%
-    filter(method == "bca")
-  
-} else {
-  
-  # bootstrap D scores 
-  data_discriminability_D <- data_estimates_D |>
-    # expand CIs by sqrt(2) to form discriminability intervals
-    mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
-           di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
-    select(unique_id, domain, trial_type, estimate, di_upper, di_lower) |>
-    group_by(domain, trial_type) |>
-    do(bootstrap_discriminability(data = .)) |>
-    ungroup() |>
-    filter(method == "bca") |>
-    rename(proportion_discriminable = estimate) |>
-    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
-           domain = as.factor(domain),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           scoring_method = "*D* scores") 
-  
-  # save to disk
-  write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
-  
-}
+data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv") %>%
+  filter(method == "bca")
 
 ```
 
-### PI scores
+### Overall
 
 ```{r}
 
 # bootstrapping has a long execution time, so load saved values if they've already been calculated
-if(file.exists("../data/results/data_discriminability_PI.csv")) {
+if(file.exists("../data/results/data_discriminability_overall_D.csv")) {
   
-  data_discriminability_PI <- read_csv("../data/results/data_discriminability_PI.csv") %>%
+  data_discriminability_overall_D <- read_csv("../data/results/data_discriminability_overall_D.csv") %>%
     filter(method == "bca")
   
 } else {
   
   # bootstrap D scores 
-  data_discriminability_PI <- data_estimates_PI |>
+  data_discriminability_overall_D <- data_estimates_overall_D |>
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
@@ -579,11 +421,11 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
-           scoring_method = "PI scores") 
+           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "overall"),
+           splitting_method = "Overall") 
   
   # save to disk
-  write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
+  write_csv(data_discriminability_overall_D, "../data/results/data_discriminability_overall_D.csv")
   
 }
 
@@ -596,11 +438,13 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 # combine
 data_discriminability_combined <- 
   bind_rows(data_discriminability_D,
-            data_discriminability_PI) %>%
+            data_discriminability_overall_D) %>%
   mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
-                                trial_type == "tt4" ~ "Trial type 4")) %>%
+                                trial_type == "tt4" ~ "Trial type 4",
+                                trial_type == "overall" ~ "Overall"),
+         trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4", "Overall")) %>%
   filter(!(proportion_discriminable == 0 & variance == 0)) %>%
   mutate(variance = ifelse(variance == 0, 0.0001, variance)) |>
   # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
@@ -615,13 +459,13 @@ data_discriminability_combined <-
 p_discriminability <- 
   data_discriminability_combined %>%
   mutate(domain = fct_rev(factor(domain))) %>%
-  ggplot(aes(proportion_discriminable, domain, color = scoring_method, shape = scoring_method)) +
+  ggplot(aes(proportion_discriminable, domain, color = splitting_method, shape = splitting_method)) +
   geom_linerangeh(aes(xmin = proportion_discriminable - sqrt(variance)*1.96,
                       xmax = proportion_discriminable + sqrt(variance)*1.96),
                   position = position_dodge(width = 0.75)) + 
   geom_point(position = position_dodge(width = 0.75)) +
-  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
-  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  scale_shape_manual(labels = c("Trial types", "Overall"), values = c(15, 16)) +
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("Trial types", "Overall")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
   labs(x =  "Proportion of participants<br/>whose scores differ from one another<br/>",
@@ -640,14 +484,14 @@ p_discriminability
 
 # fit meta analytic model
 fit_disciminability <- 
-  lmer(proportion_discriminable_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
+  lmer(proportion_discriminable_logit ~ 1 + splitting_method + (1 | domain/trial_type), 
        weights = 1/variance, 
        data = data_discriminability_combined)
 
 # extract marginal means
 results_emm_disciminability <-
-  summary(emmeans(fit_disciminability, ~ scoring_method)) %>%
-  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
+  summary(emmeans(fit_disciminability, ~ splitting_method)) %>%
+  dplyr::select(splitting_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL) 
 
 # extract re Tau
 results_re_tau_disciminability <- fit_disciminability %>%
@@ -664,17 +508,17 @@ results_disciminability <- results_emm_disciminability %>%
 
 # plot
 p_prop_discriminable <-
-  ggplot(results_disciminability, aes(scoring_method, estimate, 
-                                      #color = scoring_method, 
-                                      #shape = scoring_method, 
-                                      #group = scoring_method
+  ggplot(results_disciminability, aes(splitting_method, estimate, 
+                                      #color = splitting_method, 
+                                      #shape = splitting_method, 
+                                      #group = splitting_method
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
-  #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
-  #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  #scale_shape_manual(labels = c("Trial types", "Overall"), values = c(15, 16)) +
+  #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("Trial types", "Overall")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of participants who whose scores<br/>differ from one another<br/>") +
@@ -689,9 +533,9 @@ results_disciminability %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ scoring_method), adjust = "holm") 
+data_emms_disciminability <- emmeans(fit_disciminability, list(pairwise ~ splitting_method), adjust = "holm") 
 
-summary(data_emms_disciminability)$`pairwise differences of scoring_method` %>%
+summary(data_emms_disciminability)$`pairwise differences of splitting_method` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
   mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
@@ -716,7 +560,7 @@ observed_range_estimates_D <- data_estimates_D %>%
                    .groups = "drop") %>%
   mutate(range = max - min) 
 
-observed_range_estimates_PI <- data_estimates_PI %>%
+observed_range_estimates_overall_D <- data_estimates_overall_D %>%
   group_by(domain, trial_type) %>%
   dplyr::summarize(min = min(ci_lower, na.rm = TRUE),
                    max = max(ci_upper, na.rm = TRUE),
@@ -730,21 +574,21 @@ data_ci_width_proportions_D <- data_estimates_D %>%
   full_join(observed_range_estimates_D, by = c("domain", "trial_type")) %>%
   # calculate ci width as a proportion of observed range
   mutate(ci_width_proportion = ci_width / range) %>%
-  mutate(scoring_method = "*D* scores") 
+  mutate(splitting_method = "Trial types") 
 
-data_ci_width_proportions_PI <- data_estimates_PI %>%
+data_ci_width_proportions_overall_D <- data_estimates_overall_D %>%
   # join this data into the original data
-  full_join(observed_range_estimates_PI, by = c("domain", "trial_type")) %>%
+  full_join(observed_range_estimates_overall_D, by = c("domain", "trial_type")) %>%
   # calculate ci width as a proportion of observed range
   mutate(ci_width_proportion = ci_width / range) %>%
-  mutate(scoring_method = "PI scores")
+  mutate(splitting_method = "Overall")
 
 # combine
 data_ci_width_proportions_combined <- 
   bind_rows(data_ci_width_proportions_D,
-            data_ci_width_proportions_PI) %>%
+            data_ci_width_proportions_overall_D) %>%
   mutate(domain = as.factor(domain),
-         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+         trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "overall")) %>%
   # logit transform
   mutate(ci_width_proportion_temp = case_when(ci_width_proportion < 0.0001 ~ 0.0001,
                                               ci_width_proportion > 0.9999 ~ 0.9999,
@@ -760,13 +604,13 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
+  lmer(ci_width_proportion_logit ~ 1 + splitting_method + (1 | domain/trial_type), 
        data = data_ci_width_proportions_combined)
 
 # extract marginal means
 results_emm_ci_width_proportions <-
-  summary(emmeans(fit_ci_width_proportions, ~ scoring_method)) %>%
-  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
+  summary(emmeans(fit_ci_width_proportions, ~ splitting_method)) %>%
+  dplyr::select(splitting_method, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
 
 # extract re Tau
 results_re_tau_ci_width_proportions <-
@@ -783,18 +627,18 @@ results_ci_width_proportions <- results_emm_ci_width_proportions %>%
 
 # plot
 p_ci_width_proportion_observed_range <-
-  ggplot(results_ci_width_proportions, aes(scoring_method, estimate, 
-                                           #color = scoring_method, 
-                                           #shape = scoring_method, 
-                                           #group = scoring_method
+  ggplot(results_ci_width_proportions, aes(splitting_method, estimate, 
+                                           #color = splitting_method, 
+                                           #shape = splitting_method, 
+                                           #group = splitting_method
   )) +
   geom_linerange(aes(ymin = pi_lower, ymax = pi_upper), size = 0.5, position = position_dodge(width = 0.8), linetype = "dotted") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), size = 1.25, position = position_dodge(width = 0.8)) +
   geom_point(position = position_dodge(width = 0.8), size = 2.5) +
-  scale_shape_discrete(labels = c("*D* scores", "PI scores")) +
+  scale_shape_discrete(labels = c("Trial types", "Overall")) +
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
-  #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
-  #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  #scale_shape_manual(labels = c("Trial types", "Overall"), values = c(15, 16)) +
+  #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("Trial types", "Overall")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of observed range covered<br/>by individual participants' 95% CIs") +
@@ -809,9 +653,9 @@ results_ci_width_proportions %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 # tests
-data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwise ~ scoring_method), adjust = "holm") 
+data_emms_ci_width_proportions <- emmeans(fit_ci_width_proportions, list(pairwise ~ splitting_method), adjust = "holm") 
 
-summary(data_emms_ci_width_proportions)$`pairwise differences of scoring_method` %>%
+summary(data_emms_ci_width_proportions)$`pairwise differences of splitting_method` %>%
   as.data.frame() %>%
   select(comparison = 1, p.value) %>%
   mutate(p.value = ifelse(p.value < .001, "< .001", round_half_up(p.value, 3))) %>%
@@ -824,13 +668,11 @@ summary(data_emms_ci_width_proportions)$`pairwise differences of scoring_method`
 
 ## Plot 1
 
-Plot 1 is merely illustrative. It shows the bootstrapped CIs for all participants, split by domain, but not splitting by trial type. 
-
 ```{r fig.height=12, fig.width=8}
 
 p_cis_by_domain
 
-ggsave(filename  = "plots/figure_1_cis_by_domain.pdf",
+ggsave(filename  = "plots/figure_1_cis_by_domain_irap_overall.pdf",
        plot      = p_cis_by_domain,
        device    = "pdf",
        # path      = NULL,
@@ -844,15 +686,11 @@ ggsave(filename  = "plots/figure_1_cis_by_domain.pdf",
 
 ## Plot 2
 
-Most probable CI width for *D* scores when bootstrapped using four different methods. Very similar results are found across methods. Overall Maximum A-Posteroi width (MAP, i.e., the mode of a continuous variable) was *D* = 1.31. Some domains and trial types did demonstrate smaller most probable widths. 
-
-NB I elected not to meta-analyze these widths as they demonstrate very large skew at the individual level, which violate the assumptions of linear meta-analysis and underestimate the typical width (ie estimated mean widths << MAP observed widths). Rather than meta analyze, I simply report the domain and trial type level MAP values. More informative and valid analyses are presented below - ones which can directly compare the *D* and PI as an alternative. That could not be accomplished with a direct comparison with *D*/PI scores' 95% CIs as they are on different scales and follow different distributions. 
-
 ```{r fig.height=6, fig.width=6}
 
 p_ci_widths
 
-ggsave(filename  = "plots/figure_2_ci_widths.pdf",
+ggsave(filename  = "plots/figure_2_ci_widths_irap_overall.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
@@ -866,14 +704,6 @@ ggsave(filename  = "plots/figure_2_ci_widths.pdf",
 
 ## Plot 3
 
-The results of three hierarchical/meta analytic models are presented below, all of which provide information via different methods regarding how informative an individual participants' *D* (or PI) score is in terms of being able to state that they demonstrated evidence of a bias/IRAP effect/implicit attitude, whether that individual can be discriminated from other individuals in the same domain using the same trial type, and how much of the range of observed scores an individuals score's CI spans.  
-
-(1) a meta-analysis of the proportion of participants that show non-zero scores (i.e., whose *D* or PI scores' 95% CIs exclude zero), (2) the proportion of scores that are discriminable from one another. Pairwise comparisons are made between all participants' scores within a domain and trial type, and the proportion that lie outside one another's CIs can be inferred to be different from one another (i.e., are discriminable as different from one another). This analysis is useful because it avoids the issue or debate around how meaningful a score's zero point is (i.e., *D* = 0, PI = 0.50) or whether it is a meaningful reference point. That is, previous research has argued that *D* = 0 cannot be inferred to represent no bias. Discriminability is agnostic to any individual comparison point and avoids this issue. (3) A meta analysis of the ratio between each participants' score and the maximium observed range of scores for that domain and trial type. I.e., given the observed range of scores across participants, what proportion of that range did each individual participant's score's Confidence Interval span. If each individual's CIs are compatible with a large proportion of the total range of all observed socres, then each score is so poorly estimated as to tell us very little about where on the spectrum each participant lies. 
-
-All meta analyses compare *D* and PI scores to assess whether the results are dependent on the *D* algorithm which has been argued to be suboptimal. That is, I assess whether this issue can be trivially resolved by scoring the data a different way.
-
-Note that the theoretical max possible range of D scores is -2 to +2, but such extreme scores are practically impossible. As such, in order to understand the CI width in terms of realistic data - and also in order to compare *D* and PI which are on different scales and distributions - I standardize CI widths by the observed range of scores for each domain and trial type. 
-
 ```{r fig.height=5, fig.width=5}
 
 p_combined <- 
@@ -884,7 +714,7 @@ p_combined <-
 
 p_combined
 
-ggsave(filename  = "plots/figure_3_metaanalyses.pdf",
+ggsave(filename  = "plots/figure_3_metaanalyses_irap_overall.pdf",
        plot      = p_combined,
        device    = "pdf",
        # path      = NULL,
