@@ -296,6 +296,7 @@ p_prop_nonzero <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   #scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
+  scale_x_discrete(labels = c("IRAP D scores", "IAT D scores")) +
   labs(x = "",
        y = "Proportion of participants with non-zero scores<br/>") + 
   theme(legend.position = "none") +
@@ -505,6 +506,7 @@ p_prop_discriminable <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
+  scale_x_discrete(labels = c("IRAP D scores", "IAT D scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of participants<br/>whose scores differ from one another<br/>") +
@@ -627,6 +629,7 @@ p_ci_width_proportion_observed_range <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
   #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
+  scale_x_discrete(labels = c("IRAP D scores", "IAT D scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of observed range covered<br/>by individual participants' 95% CIs") +
@@ -654,13 +657,13 @@ summary(data_emms_ci_width_proportions)$`pairwise differences of measure` %>%
 
 # Combined plots
 
-## Plot 1
+## Plot 4
 
 ```{r fig.height=16, fig.width=8}
 
 p_cis_by_domain
 
-ggsave(filename  = "plots/figure_1_cis_by_domain_iat.pdf",
+ggsave(filename  = "plots/figure_4_cis_by_domain_irap_vs_iat.pdf",
        plot      = p_cis_by_domain,
        device    = "pdf",
        # path      = NULL,
@@ -672,13 +675,13 @@ ggsave(filename  = "plots/figure_1_cis_by_domain_iat.pdf",
 
 ```
 
-## Plot 2
+## Plot 5
 
 ```{r fig.height=12, fig.width=6}
 
 p_ci_widths
 
-ggsave(filename  = "plots/figure_2_ci_widths_iat.pdf",
+ggsave(filename  = "plots/figure_5_ci_widths_irap_vs_iat.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
@@ -690,7 +693,7 @@ ggsave(filename  = "plots/figure_2_ci_widths_iat.pdf",
 
 ```
 
-## Plot 3
+## Plot 6
 
 ```{r fig.height=5, fig.width=5}
 
@@ -702,7 +705,7 @@ p_combined <-
 
 p_combined
 
-ggsave(filename  = "plots/figure_3_metaanalyses_iat.pdf",
+ggsave(filename  = "plots/figure_6_metaanalyses_irap_vs_iat.pdf",
        plot      = p_combined,
        device    = "pdf",
        # path      = NULL,

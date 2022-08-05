@@ -431,6 +431,7 @@ p_prop_nonzero <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   #scale_color_viridis_d(alpha = 1, begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
   labs(x = "",
        y = "Proportion of participants with non-zero scores<br/>") + 
   theme(legend.position = "none") +
@@ -596,8 +597,10 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
 
 # combine
 data_discriminability_combined <- 
-  bind_rows(data_discriminability_D,
-            data_discriminability_PI) %>%
+  bind_rows(
+    mutate(data_discriminability_D, scoring_method = "*D* scores"),
+    mutate(data_discriminability_PI, scoring_method = "PI scores")
+  ) %>%
   mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
@@ -676,6 +679,7 @@ p_prop_discriminable <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of participants<br/>whose scores differ from one another<br/>") +
@@ -796,6 +800,7 @@ p_ci_width_proportion_observed_range <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Better)", "0.25", "0.50", "0.75", "1.00<br/>(Worse)")) +
   #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of observed range covered<br/>by individual participants' 95% CIs") +
@@ -831,7 +836,7 @@ Plot 1 is merely illustrative. It shows the bootstrapped CIs for all participant
 
 p_cis_by_domain
 
-ggsave(filename  = "plots/figure_1_cis_by_domain.pdf",
+ggsave(filename  = "plots/figure_1_cis_by_domain_d_vs_pi.pdf",
        plot      = p_cis_by_domain,
        device    = "pdf",
        # path      = NULL,
@@ -853,7 +858,7 @@ NB I elected not to meta-analyze these widths as they demonstrate very large ske
 
 p_ci_widths
 
-ggsave(filename  = "plots/figure_2_ci_widths.pdf",
+ggsave(filename  = "plots/figure_2_ci_widths_d_vs_pi.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
@@ -885,7 +890,7 @@ p_combined <-
 
 p_combined
 
-ggsave(filename  = "plots/figure_3_metaanalyses.pdf",
+ggsave(filename  = "plots/figure_3_metaanalyses_d_vs_pi.pdf",
        plot      = p_combined,
        device    = "pdf",
        # path      = NULL,
