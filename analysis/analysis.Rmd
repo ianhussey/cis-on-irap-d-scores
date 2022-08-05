@@ -1,5 +1,6 @@
 ---
 title: "Bootstrapped estimation of D scores for individual participants"
+subtitle: "Assessing IRAP *D* scoring and comparing with PI scoring"
 author: "Ian Hussey"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
