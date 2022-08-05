@@ -1,0 +1,196 @@
+---
+title: "Data processing for the IRAP"
+author: "Ian Hussey"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r}
+
+library(tidyverse)
+library(parallel)
+library(boot)
+
+# function to round all numeric vars in a data frame
+round_df <- function(df, n_digits = 3) {
+  require(janitor)
+  df %>% mutate_if(is.numeric, janitor::round_half_up, digits = n_digits)
+}
+
+```
+
+# trim data
+
+```{r}
+
+# get data 
+data_trial_level <- read_csv("../data/raw/data_trial_level.csv") %>%
+  filter(timepoint == "baseline" & (age >= 18 | is.na(age)))
+
+# outliers
+data_outliers <- data_trial_level %>%
+  distinct(unique_id, .keep_all = TRUE) %>%
+  select(unique_id, domain, mean_rt) %>%
+  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
+         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
+  # exclude median +- 2MAD
+  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
+                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
+  filter(rt_outlier == FALSE) %>%
+  select(unique_id, rt_outlier) %>%
+  full_join(data_trial_level, by = "unique_id") %>%
+  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
+
+data_trimmed <- data_outliers %>%
+  filter(rt_outlier == FALSE)
+
+```
+
+# Bootstrap confidence intervals
+
+## *D* scores
+
+Calculated by domain and trial-type. 1+ hour runtime on a good PC.
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("data_estimates_D.csv")) {
+  
+  data_estimates_D <- read_csv("data_estimates_D.csv") %>%
+    filter(method == "bca")
+  
+} else {
+  
+  D_score <- function(data, i) {
+    data_with_indexes <- data[i,] # boot function requires data and index
+    mean_con <- mean(data_with_indexes$rt[data_with_indexes$block_type == "con"], na.rm = TRUE)
+    mean_incon <- mean(data_with_indexes$rt[data_with_indexes$block_type == "incon"], na.rm = TRUE)
+    sd <- sd(data_with_indexes$rt, na.rm = TRUE)
+    D <- (mean_incon - mean_con) / sd
+    return(D)
+  }
+  
+  bootstrap_D_score <- function(data){
+    
+    require(dplyr)
+    require(boot)
+    
+    fit <- 
+      boot::boot(data      = data, 
+                 statistic = D_score, 
+                 R         = 5000, 
+                 sim       = "ordinary", 
+                 stype     = "i",
+                 parallel  = "multicore", 
+                 ncpus     = parallel::detectCores())
+    
+    results <- boot::boot.ci(fit, conf = 0.95, type = "bca")
+    
+    output <- 
+      tibble(estimate = rep(fit$t0, 4),
+             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    
+    return(output)
+  }
+  
+  # bootstrap D scores 
+  data_estimates_D <- data_trimmed %>%
+    select(unique_id, domain, trial_type, rt, block_type) %>%
+    filter(rt <= 10000) %>%
+    group_by(unique_id, domain, trial_type) %>%
+    do(bootstrap_D_score(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0 & ci_upper < 0) | (ci_lower > 0 & ci_upper > 0), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
+    round_df(3)
+  
+  # save to disk
+  write_csv(data_estimates_D, "data_estimates_D.csv")
+  
+}
+
+```
+
+## PI scores 
+
+Calculated by domain and trial-type. 1+ hour runtime on a good PC.
+
+```{r}
+
+# bootstrapping has a long execution time, so load saved values if they've already been calculated
+if(file.exists("data_estimates_PI.csv")) {
+  
+  data_estimates_PI <- read_csv("data_estimates_PI.csv") %>%
+    filter(method == "bca")
+  
+} else {
+  
+  # Fast calculation of the A statistic - code from Ruscio (2008) supplementary materials
+  PI_score <- function(data, i) {
+    data_with_indexes <- data[i,] # boot function requires data and index
+    x  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "incon"])
+    y  <- na.omit(data_with_indexes$rt[data_with_indexes$block_type == "con"])
+    nx <- length(x)
+    ny <- length(y)
+    rx <- sum(rank(c(x, y))[1:nx])
+    PI <- (rx / nx - (nx + 1) / 2) / ny
+    return(PI)
+  }
+  
+  bootstrap_PI_score <- function(data){
+    
+    require(dplyr)
+    require(boot)
+    
+    fit <- 
+      boot::boot(data      = data, 
+                 statistic = PI_score, 
+                 R         = 5000, 
+                 sim       = "ordinary", 
+                 stype     = "i",
+                 parallel  = "multicore", 
+                 ncpus     = parallel::detectCores())
+    
+    results <- boot::boot.ci(fit, conf = 0.95, type = "bca")
+    
+    output <- 
+      tibble(estimate = rep(fit$t0, 4),
+             ci_lower = c(results$normal[2], results$basic[4], results$percent[4], results$bca[4]),
+             ci_upper = c(results$normal[3], results$basic[5], results$percent[5], results$bca[5]))
+    
+    return(output)
+  }
+  
+  # bootstrap PI scores 
+  data_estimates_PI <- data_trimmed %>%
+    group_by(unique_id, domain, trial_type) %>%
+    do(bootstrap_PI_score(data = .)) %>%
+    ungroup() %>%
+    mutate(sig = ifelse((ci_lower < 0.50 & ci_upper < 0.50) | (ci_lower > 0.50 & ci_upper > 0.50), TRUE, FALSE),
+           ci_width = ci_upper - ci_lower) %>%
+    round_df(3)
+  
+  # save to disk
+  write_csv(data_estimates_PI, "data_estimates_PI.csv")
+  
+}
+
+```
+
+# Session info
+
+```{r}
+
+sessionInfo()
+
+```
+
+
