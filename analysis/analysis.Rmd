@@ -412,7 +412,8 @@ results_re_tau_diff_zero <- fit_diff_zero %>%
 
 # combine
 results_diff_zero <- results_emm_diff_zero %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[2]^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[2]^2)),   # [2] is variance for domain
          pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[2]^2))) |>
   select(-se) |>
   mutate_if(is.numeric, boot::inv.logit)

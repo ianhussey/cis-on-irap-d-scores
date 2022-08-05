@@ -257,11 +257,13 @@ p_diff_zero
 
 ## Model
 
+NB model is slightly different to the one used to compare IRAP D and PI scores: that one has (1) no random slope for measure and (2) a random intercept for trial type too. Including (1) seemed important given that the two IRAP and IAT demonstrated very different heterogeneity between domains. Not including it greatly and inappropriately expands the prediction intervals on the IRAP (i.e., variation in the IAT is modeled as variation in both, in appropriately). In contrast, the effects were very similar between IRAP D and IRAP PI, so this wasn't necessary in the other analysis. Including (2) gave convergence issues, likely because the IAT only has a single trial type, so it was dropped. 
+
 ```{r}
 
 # fit model
 fit_diff_zero <- 
-  lmer(proportion_diff_zero_logit ~ 1 + measure + (1 | domain/trial_type),
+  lmer(proportion_diff_zero_logit ~ 1 + measure + (measure | domain),
        weights = 1/variance, 
        data = data_diff_zero,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
@@ -281,8 +283,8 @@ results_re_tau_diff_zero <- fit_diff_zero %>%
 
 # combine
 results_diff_zero <- results_emm_diff_zero %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[1]^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
-         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau[1]^2))) |>
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau^2)),  # as in metafor package's implementation of prediction intervals, see metafor::predict.rma.R 
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_diff_zero$tau^2))) |>
   select(-se) |>
   mutate_if(is.numeric, boot::inv.logit)
 
@@ -472,7 +474,7 @@ p_discriminability
 
 # fit meta analytic model
 fit_disciminability <- 
-  lmer(proportion_discriminable_logit ~ 1 + measure + (1 | domain/trial_type), 
+  lmer(proportion_discriminable_logit ~ 1 + measure + (measure | domain), 
        weights = 1/variance, 
        data = data_discriminability_combined,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
@@ -492,8 +494,8 @@ results_re_tau_disciminability <- fit_disciminability %>%
 
 # combine
 results_disciminability <- results_emm_disciminability %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_disciminability$tau[1]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_disciminability$tau[1]^2))) |>
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_disciminability$tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_disciminability$tau^2))) |>
   select(-se) |>
   mutate_if(is.numeric, boot::inv.logit)
 
@@ -594,7 +596,7 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_logit ~ 1 + measure + (1 | domain/trial_type), 
+  lmer(ci_width_proportion_logit ~ 1 + measure + (measure | domain), 
        data = data_ci_width_proportions_combined,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
        control = lmerControl(check.nobs.vs.nlev = "ignore",  
@@ -613,8 +615,8 @@ results_re_tau_ci_width_proportions <-
 
 # combine
 results_ci_width_proportions <- results_emm_ci_width_proportions %>%
-  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions$tau[1]^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
-         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions$tau[1]^2))) %>%
+  mutate(pi_lower = estimate - (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions$tau^2)),  # as in metafor package's implementation of credibility intervals, see metafor::predict.rma.R
+         pi_upper = estimate + (1.96 * sqrt(se^2 + results_re_tau_ci_width_proportions$tau^2))) %>%
   select(-se) %>%
   mutate_if(is.numeric, boot::inv.logit)
 
