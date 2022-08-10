@@ -355,7 +355,7 @@ data_diff_zero <-
                                                TRUE ~ proportion_diff_zero),
          proportion_diff_zero_logit = boot::logit(proportion_diff_zero_temp)) %>%
   select(-proportion_diff_zero_temp) %>%
-  filter(!(proportion_diff_zero == 0 & variance == 0)) %>%
+  #filter(!(proportion_diff_zero == 0 & variance == 0)) %>%
   mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
 
 # # save to disk
@@ -384,7 +384,8 @@ p_diff_zero <-
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
-  theme(legend.position = "top") +
+  theme(legend.position = "top",
+        panel.spacing = unit(1.5, "lines")) +
   coord_cartesian(xlim = c(0,1))
 
 p_diff_zero
@@ -611,7 +612,7 @@ data_discriminability_combined <-
                                 trial_type == "tt2" ~ "Trial type 2",	
                                 trial_type == "tt3" ~ "Trial type 3",	
                                 trial_type == "tt4" ~ "Trial type 4")) %>%
-  filter(!(proportion_discriminable == 0 & variance == 0)) %>%
+  #filter(!(proportion_discriminable == 0 & variance == 0)) %>%
   mutate(variance = ifelse(variance == 0, 0.0001, variance)) |>
   # model cannot be run on zero variance or 0 or 1 logit, so offset by a minuscule amount
   mutate(
@@ -638,7 +639,8 @@ p_discriminability <-
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
-  theme(legend.position = "top") +
+  theme(legend.position = "top",
+        panel.spacing = unit(1.5, "lines")) +
   coord_cartesian(xlim = c(0,1))
 
 p_discriminability
@@ -801,8 +803,9 @@ p_coverage <-
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
-  theme(legend.position = "top") +
-  xlim(0,1)
+  theme(legend.position = "top",
+        panel.spacing = unit(1.5, "lines")) +
+  coord_cartesian(xlim = c(0,1))
 
 p_coverage
 
