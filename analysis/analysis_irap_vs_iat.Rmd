@@ -582,12 +582,43 @@ data_ci_width_proportions_combined <-
   mutate(measure = fct_relevel(measure, "IRAP", "IAT"),
          domain = as.factor(domain),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "iat")) %>%
+  group_by(scoring_method, domain, trial_type) %>%
+  summarize(ci_width_proportion_mean = mean(ci_width_proportion),
+            variance = plotrix::std.error(ci_width_proportion)^2) %>%
+  ungroup() %>%
   # logit transform
-  mutate(ci_width_proportion_temp = case_when(ci_width_proportion < 0.0001 ~ 0.0001,
-                                              ci_width_proportion > 0.9999 ~ 0.9999,
-                                              TRUE ~ ci_width_proportion),
-         ci_width_proportion_logit = boot::logit(ci_width_proportion_temp)) %>%
-  select(-ci_width_proportion_temp)
+  mutate(ci_width_proportion_mean_temp = case_when(ci_width_proportion_mean < 0.0001 ~ 0.0001,
+                                                   ci_width_proportion_mean > 0.9999 ~ 0.9999,
+                                                   TRUE ~ ci_width_proportion_mean),
+         ci_width_proportion_mean_logit = boot::logit(ci_width_proportion_mean_temp)) %>%
+  select(-ci_width_proportion_mean_temp)
+
+```
+
+## Plot
+
+```{r fig.height=7, fig.width=8}
+
+p_coverage <- 
+  data_ci_width_proportions_combined %>%
+  mutate(domain = fct_rev(factor(domain))) %>%
+  ggplot(aes(ci_width_proportion_mean, domain, color = scoring_method, shape = scoring_method)) +
+  geom_point(position = position_dodge(width = 0.75)) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  geom_linerangeh(aes(xmin = ci_width_proportion_mean - sqrt(variance)*1.96,
+                      xmax = ci_width_proportion_mean + sqrt(variance)*1.96),
+                  position = position_dodge(width = 0.75)) + 
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4) +
+  labs(x = "Proportion of observed range covered<br/>by individual participants' 95% CIs",
+       y = "",
+       color = "Scoring method",
+       shape = "Scoring method") + 
+  theme(legend.position = "top") +
+  xlim(0,1)
+
+p_coverage
 
 ```
 
@@ -597,7 +628,8 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_logit ~ 1 + measure + (measure | domain), 
+  lmer(ci_width_proportion_mean_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
+       weights = 1/variance,
        data = data_ci_width_proportions_combined,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
        control = lmerControl(check.nobs.vs.nlev = "ignore",  
@@ -660,13 +692,13 @@ summary(data_emms_ci_width_proportions)$`pairwise differences of measure` %>%
 
 # Combined plots
 
-## Figure 2
+## Supplementary Figure 2S
 
 ```{r fig.height=12, fig.width=12}
 
 p_cis_by_domain
 
-ggsave(filename  = "plots/supplementary_figure_2_cis_by_domain_iat_d.pdf",
+ggsave(filename  = "plots/supplementary_figure_2S_cis_by_domain_iat_d.pdf",
        plot      = p_cis_by_domain,
        device    = "pdf",
        # path      = NULL,
@@ -678,13 +710,13 @@ ggsave(filename  = "plots/supplementary_figure_2_cis_by_domain_iat_d.pdf",
 
 ```
 
-## Supplementary figure
+## Supplementary Figure 3S
 
 ```{r fig.height=12, fig.width=6}
 
 p_ci_widths
 
-ggsave(filename  = "plots/supplementary_figure_ci_widths_iat_d.pdf",
+ggsave(filename  = "plots/supplementary_figure_3S_ci_widths_iat_d.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
@@ -696,13 +728,13 @@ ggsave(filename  = "plots/supplementary_figure_ci_widths_iat_d.pdf",
 
 ```
 
-## Supplementary figure
+## Supplementary Figure 4S
 
 ```{r fig.height=7, fig.width=8}
 
 p_diff_zero
 
-ggsave(filename  = "plots/supplementary_figure_proportion_excluding_zero_point_iat.pdf",
+ggsave(filename  = "plots/supplementary_figure_4S_proportion_excluding_zero_point_iat.pdf",
        plot      = p_diff_zero,
        device    = "pdf",
        # path      = NULL,
@@ -714,7 +746,43 @@ ggsave(filename  = "plots/supplementary_figure_proportion_excluding_zero_point_i
 
 ```
 
-## Supplementary figure
+## Supplementary Figure 5S
+
+```{r fig.height=7, fig.width=8}
+
+p_discriminability
+
+ggsave(filename  = "plots/supplementary_figure_5S_proportion_discriminable_iat.pdf",
+       plot      = p_discriminability,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 7,
+       limitsize = TRUE)
+
+```
+
+## Supplementary Figure 6S
+
+```{r}
+
+p_coverage
+
+ggsave(filename  = "plots/supplementary_figure_6S_proportion_coverage_iat.pdf",
+       plot      = p_coverage,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 7,
+       limitsize = TRUE)
+
+```
+
+## Figure 6
 
 ```{r fig.height=5, fig.width=5}
 
@@ -726,7 +794,7 @@ p_combined <-
 
 p_combined
 
-ggsave(filename  = "plots/figure_3_metaanalyses_irap_d_vs_iat_d.pdf",
+ggsave(filename  = "plots/figure_6_metaanalyses_irap_d_vs_iat_d.pdf",
        plot      = p_combined,
        device    = "pdf",
        # path      = NULL,

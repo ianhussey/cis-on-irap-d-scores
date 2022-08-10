@@ -399,7 +399,10 @@ p_diff_zero
 fit_diff_zero <- 
   lmer(proportion_diff_zero_logit ~ 1 + scoring_method + (1 | domain/trial_type),
        weights = 1/variance, 
-       data = data_diff_zero)
+       data = data_diff_zero,
+       # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
+       control = lmerControl(check.nobs.vs.nlev = "ignore",  
+                             check.nobs.vs.nRE = "ignore"))
 
 # extract marginal means
 results_emm_diff_zero <- 
@@ -650,7 +653,10 @@ p_discriminability
 fit_disciminability <- 
   lmer(proportion_discriminable_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
        weights = 1/variance, 
-       data = data_discriminability_combined)
+       data = data_discriminability_combined,
+       # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
+       control = lmerControl(check.nobs.vs.nlev = "ignore",  
+                             check.nobs.vs.nRE = "ignore"))
 
 # extract marginal means
 results_emm_disciminability <-
@@ -810,7 +816,10 @@ p_coverage
 fit_ci_width_proportions <- 
   lmer(ci_width_proportion_mean_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
        weights = 1/variance,
-       data = data_ci_width_proportions_combined)
+       data = data_ci_width_proportions_combined,
+       # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
+       control = lmerControl(check.nobs.vs.nlev = "ignore",  
+                             check.nobs.vs.nRE = "ignore"))
 
 # extract marginal means
 results_emm_ci_width_proportions <-
@@ -892,7 +901,7 @@ ggsave(filename  = "plots/figure_1_cis_by_domain_irap_d.pdf",
 
 ```
 
-## Supplementary figure
+## Supplementary Figure 1S 
 
 Most probable CI width for *D* scores when bootstrapped using four different methods. Very similar results are found across methods. Overall Maximum A-Posteroi width (MAP, i.e., the mode of a continuous variable) was *D* = 1.31. Some domains and trial types did demonstrate smaller most probable widths. 
 
@@ -902,7 +911,7 @@ NB I elected not to meta-analyze these widths as they demonstrate very large ske
 
 p_ci_widths
 
-ggsave(filename  = "plots/supplementary_figure_ci_widths_irap_d.pdf",
+ggsave(filename  = "plots/supplementary_figure_1S_ci_widths_irap_d.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
