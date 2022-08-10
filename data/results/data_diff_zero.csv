@@ -1,1121 +1,267 @@
-domain,trial_type,method,DV_type,proportion_diff_zero,variance
-Body image,Trial type 1,percent,*D* scores,0.23809523809523808,0.009070294784580497
-Body image,Trial type 1,percent,PI scores,0.23809523809523808,0.009070294784580497
-Body image,Trial type 1,normal,*D* scores,0.2857142857142857,0.01020408163265306
-Body image,Trial type 1,normal,PI scores,0.2857142857142857,0.01020408163265306
-Body image,Trial type 1,basic,*D* scores,0.3333333333333333,0.011111111111111112
-Body image,Trial type 1,basic,PI scores,0.2857142857142857,0.01020408163265306
-Body image,Trial type 1,bca,*D* scores,0.19047619047619047,0.007709750566893425
-Body image,Trial type 1,bca,PI scores,0.19047619047619047,0.007709750566893425
-Body image,Trial type 2,percent,*D* scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 2,percent,PI scores,0.09523809523809523,0.004308390022675737
-Body image,Trial type 2,normal,*D* scores,0.19047619047619047,0.007709750566893425
-Body image,Trial type 2,normal,PI scores,0.09523809523809523,0.004308390022675737
-Body image,Trial type 2,basic,*D* scores,0.2857142857142857,0.01020408163265306
-Body image,Trial type 2,basic,PI scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 2,bca,*D* scores,0.09523809523809523,0.004308390022675737
-Body image,Trial type 2,bca,PI scores,0.09523809523809523,0.004308390022675737
-Body image,Trial type 3,percent,*D* scores,0.047619047619047616,0.0022675736961451243
-Body image,Trial type 3,percent,PI scores,0.19047619047619047,0.007709750566893425
-Body image,Trial type 3,normal,*D* scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 3,normal,PI scores,0.23809523809523808,0.009070294784580497
-Body image,Trial type 3,basic,*D* scores,0.23809523809523808,0.009070294784580497
-Body image,Trial type 3,basic,PI scores,0.23809523809523808,0.009070294784580497
-Body image,Trial type 3,bca,*D* scores,0.047619047619047616,0.0022675736961451243
-Body image,Trial type 3,bca,PI scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 4,percent,*D* scores,0.19047619047619047,0.007709750566893425
-Body image,Trial type 4,percent,PI scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 4,normal,*D* scores,0.23809523809523808,0.009070294784580497
-Body image,Trial type 4,normal,PI scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 4,basic,*D* scores,0.3333333333333333,0.011111111111111112
-Body image,Trial type 4,basic,PI scores,0.14285714285714285,0.006122448979591836
-Body image,Trial type 4,bca,*D* scores,0.19047619047619047,0.007709750566893425
-Body image,Trial type 4,bca,PI scores,0.09523809523809523,0.004308390022675737
-Clinton-Trump,Trial type 1,percent,*D* scores,0.27835051546391754,0.0020924115208842604
-Clinton-Trump,Trial type 1,percent,PI scores,0.29896907216494845,0.0021831933963935243
-Clinton-Trump,Trial type 1,normal,*D* scores,0.3402061855670103,0.002338186842384951
-Clinton-Trump,Trial type 1,normal,PI scores,0.3402061855670103,0.002338186842384951
-Clinton-Trump,Trial type 1,basic,*D* scores,0.36082474226804123,0.0024023984128671134
-Clinton-Trump,Trial type 1,basic,PI scores,0.36082474226804123,0.0024023984128671134
-Clinton-Trump,Trial type 1,bca,*D* scores,0.20618556701030927,0.0017049279059056937
-Clinton-Trump,Trial type 1,bca,PI scores,0.25773195876288657,0.0019927728770326287
-Clinton-Trump,Trial type 2,percent,*D* scores,0.10309278350515463,9.631735572324373e-4
-Clinton-Trump,Trial type 2,percent,PI scores,0.10309278350515463,9.631735572324373e-4
-Clinton-Trump,Trial type 2,normal,*D* scores,0.13402061855670103,0.001208948878733128
-Clinton-Trump,Trial type 2,normal,PI scores,0.12371134020618557,0.0011292379636518228
-Clinton-Trump,Trial type 2,basic,*D* scores,0.17525773195876287,0.0015056506182024305
-Clinton-Trump,Trial type 2,basic,PI scores,0.14432989690721648,0.0012864456017288414
-Clinton-Trump,Trial type 2,bca,*D* scores,0.08247422680412371,7.882523824706844e-4
-Clinton-Trump,Trial type 2,bca,PI scores,0.07216494845360824,6.974705069614201e-4
-Clinton-Trump,Trial type 3,percent,*D* scores,0.25773195876288657,0.0019927728770326287
-Clinton-Trump,Trial type 3,percent,PI scores,0.2268041237113402,0.0018267084706132433
-Clinton-Trump,Trial type 3,normal,*D* scores,0.30927835051546393,0.002225263046019768
-Clinton-Trump,Trial type 3,normal,PI scores,0.24742268041237114,0.001939632266978425
-Clinton-Trump,Trial type 3,basic,*D* scores,0.35051546391752575,0.0023713997236688277
-Clinton-Trump,Trial type 3,basic,PI scores,0.26804123711340205,0.00204369929500124
-Clinton-Trump,Trial type 3,bca,*D* scores,0.18556701030927836,0.001574290572855777
-Clinton-Trump,Trial type 3,bca,PI scores,0.17525773195876287,0.0015056506182024305
-Clinton-Trump,Trial type 4,percent,*D* scores,0.12371134020618557,0.0011292379636518228
-Clinton-Trump,Trial type 4,percent,PI scores,0.08247422680412371,7.882523824706844e-4
-Clinton-Trump,Trial type 4,normal,*D* scores,0.13402061855670103,0.001208948878733128
-Clinton-Trump,Trial type 4,normal,PI scores,0.10309278350515463,9.631735572324373e-4
-Clinton-Trump,Trial type 4,basic,*D* scores,0.18556701030927836,0.001574290572855777
-Clinton-Trump,Trial type 4,basic,PI scores,0.13402061855670103,0.001208948878733128
-Clinton-Trump,Trial type 4,bca,*D* scores,0.09278350515463918,8.768200658943566e-4
-Clinton-Trump,Trial type 4,bca,PI scores,0.041237113402061855,4.1183972792007654e-4
-Countries (1),Trial type 1,percent,*D* scores,0.32075471698113206,0.004189829394528576
-Countries (1),Trial type 1,percent,PI scores,0.39622641509433965,0.004600596982227456
-Countries (1),Trial type 1,normal,*D* scores,0.33962264150943394,0.004313059670838239
-Countries (1),Trial type 1,normal,PI scores,0.4528301886792453,0.004764904017307009
-Countries (1),Trial type 1,basic,*D* scores,0.37735849056603776,0.00451844346468768
-Countries (1),Trial type 1,basic,PI scores,0.4528301886792453,0.004764904017307009
-Countries (1),Trial type 1,bca,*D* scores,0.20754716981132076,0.0031629104252813753
-Countries (1),Trial type 1,bca,PI scores,0.33962264150943394,0.004313059670838239
-Countries (1),Trial type 2,percent,*D* scores,0.20754716981132076,0.0031629104252813753
-Countries (1),Trial type 2,percent,PI scores,0.22641509433962265,0.003368294219130816
-Countries (1),Trial type 2,normal,*D* scores,0.2641509433962264,0.0037379850480598075
-Countries (1),Trial type 2,normal,PI scores,0.2830188679245283,0.0039022920831393595
-Countries (1),Trial type 2,basic,*D* scores,0.2830188679245283,0.0039022920831393595
-Countries (1),Trial type 2,basic,PI scores,0.3018867924528302,0.004052906865295616
-Countries (1),Trial type 2,bca,*D* scores,0.1509433962264151,0.0024646055261932803
-Countries (1),Trial type 2,bca,PI scores,0.18867924528301888,0.0029438343785086404
-Countries (1),Trial type 3,percent,*D* scores,0.20754716981132076,0.0031629104252813753
-Countries (1),Trial type 3,percent,PI scores,0.09433962264150944,0.0016430703507955197
-Countries (1),Trial type 3,normal,*D* scores,0.22641509433962265,0.003368294219130816
-Countries (1),Trial type 3,normal,PI scores,0.09433962264150944,0.0016430703507955197
-Countries (1),Trial type 3,basic,*D* scores,0.2830188679245283,0.0039022920831393595
-Countries (1),Trial type 3,basic,PI scores,0.1509433962264151,0.0024646055261932803
-Countries (1),Trial type 3,bca,*D* scores,0.09433962264150944,0.0016430703507955197
-Countries (1),Trial type 3,bca,PI scores,0.07547169811320754,0.001341840786483008
-Countries (1),Trial type 4,percent,*D* scores,0.03773584905660377,6.98304899088096e-4
-Countries (1),Trial type 4,percent,PI scores,0.018867924528301886,3.559985760056961e-4
-Countries (1),Trial type 4,normal,*D* scores,0.11320754716981132,0.0019306076621847358
-Countries (1),Trial type 4,normal,PI scores,0.018867924528301886,3.559985760056961e-4
-Countries (1),Trial type 4,basic,*D* scores,0.16981132075471697,0.0027110660788126086
-Countries (1),Trial type 4,basic,PI scores,0.018867924528301886,3.559985760056961e-4
-Countries (1),Trial type 4,bca,*D* scores,0.018867924528301886,3.559985760056961e-4
-Countries (1),Trial type 4,bca,PI scores,0.018867924528301886,3.559985760056961e-4
-Countries (2),Trial type 1,percent,*D* scores,0.12,0.0021551020408163268
-Countries (2),Trial type 1,percent,PI scores,0.18,0.0030122448979591834
-Countries (2),Trial type 1,normal,*D* scores,0.16,0.0027428571428571424
-Countries (2),Trial type 1,normal,PI scores,0.18,0.0030122448979591834
-Countries (2),Trial type 1,basic,*D* scores,0.18,0.0030122448979591834
-Countries (2),Trial type 1,basic,PI scores,0.2,0.0032653061224489784
-Countries (2),Trial type 1,bca,*D* scores,0.08,0.0015020408163265305
-Countries (2),Trial type 1,bca,PI scores,0.14,0.0024571428571428574
-Countries (2),Trial type 2,percent,*D* scores,0.22,0.0035020408163265303
-Countries (2),Trial type 2,percent,PI scores,0.2,0.0032653061224489784
-Countries (2),Trial type 2,normal,*D* scores,0.28,0.0041142857142857136
-Countries (2),Trial type 2,normal,PI scores,0.24,0.0037224489795918375
-Countries (2),Trial type 2,basic,*D* scores,0.36,0.004702040816326531
-Countries (2),Trial type 2,basic,PI scores,0.24,0.0037224489795918375
-Countries (2),Trial type 2,bca,*D* scores,0.12,0.0021551020408163268
-Countries (2),Trial type 2,bca,PI scores,0.2,0.0032653061224489784
-Countries (2),Trial type 3,percent,*D* scores,0.16,0.0027428571428571424
-Countries (2),Trial type 3,percent,PI scores,0.14,0.0024571428571428574
-Countries (2),Trial type 3,normal,*D* scores,0.2,0.0032653061224489784
-Countries (2),Trial type 3,normal,PI scores,0.16,0.0027428571428571424
-Countries (2),Trial type 3,basic,*D* scores,0.28,0.0041142857142857136
-Countries (2),Trial type 3,basic,PI scores,0.2,0.0032653061224489784
-Countries (2),Trial type 3,bca,*D* scores,0.1,0.0018367346938775511
-Countries (2),Trial type 3,bca,PI scores,0.1,0.0018367346938775511
-Countries (2),Trial type 4,percent,*D* scores,0.1,0.0018367346938775511
-Countries (2),Trial type 4,percent,PI scores,0.08,0.0015020408163265305
-Countries (2),Trial type 4,normal,*D* scores,0.12,0.0021551020408163268
-Countries (2),Trial type 4,normal,PI scores,0.14,0.0024571428571428574
-Countries (2),Trial type 4,basic,*D* scores,0.16,0.0027428571428571424
-Countries (2),Trial type 4,basic,PI scores,0.14,0.0024571428571428574
-Countries (2),Trial type 4,bca,*D* scores,0.06,0.0011510204081632656
-Countries (2),Trial type 4,bca,PI scores,0.08,0.0015020408163265305
-Death (1),Trial type 1,percent,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 1,percent,PI scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 1,normal,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 1,normal,PI scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 1,basic,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 1,basic,PI scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 1,bca,*D* scores,0.058823529411764705,0.0034602076124567475
-Death (1),Trial type 1,bca,PI scores,0.058823529411764705,0.0034602076124567475
-Death (1),Trial type 2,percent,*D* scores,0.17647058823529413,0.009083044982698962
-Death (1),Trial type 2,percent,PI scores,0.17647058823529413,0.009083044982698962
-Death (1),Trial type 2,normal,*D* scores,0.17647058823529413,0.009083044982698962
-Death (1),Trial type 2,normal,PI scores,0.35294117647058826,0.014273356401384085
-Death (1),Trial type 2,basic,*D* scores,0.23529411764705882,0.011245674740484428
-Death (1),Trial type 2,basic,PI scores,0.35294117647058826,0.014273356401384085
-Death (1),Trial type 2,bca,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 2,bca,PI scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 3,percent,*D* scores,0.4117647058823529,0.015138408304498268
-Death (1),Trial type 3,percent,PI scores,0.17647058823529413,0.009083044982698962
-Death (1),Trial type 3,normal,*D* scores,0.47058823529411764,0.015570934256055366
-Death (1),Trial type 3,normal,PI scores,0.23529411764705882,0.011245674740484428
-Death (1),Trial type 3,basic,*D* scores,0.5882352941176471,0.015138408304498268
-Death (1),Trial type 3,basic,PI scores,0.29411764705882354,0.012975778546712804
-Death (1),Trial type 3,bca,*D* scores,0.35294117647058826,0.014273356401384085
-Death (1),Trial type 3,bca,PI scores,0.17647058823529413,0.009083044982698962
-Death (1),Trial type 4,percent,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 4,percent,PI scores,0.058823529411764705,0.0034602076124567475
-Death (1),Trial type 4,normal,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 4,normal,PI scores,0.058823529411764705,0.0034602076124567475
-Death (1),Trial type 4,basic,*D* scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 4,basic,PI scores,0.11764705882352941,0.006487889273356401
-Death (1),Trial type 4,bca,*D* scores,0.058823529411764705,0.0034602076124567475
-Death (1),Trial type 4,bca,PI scores,0.058823529411764705,0.0034602076124567475
-Death (2),Trial type 1,percent,*D* scores,0.1,0.004736842105263157
-Death (2),Trial type 1,percent,PI scores,0.25,0.009868421052631578
-Death (2),Trial type 1,normal,*D* scores,0.1,0.004736842105263157
-Death (2),Trial type 1,normal,PI scores,0.2,0.008421052631578945
-Death (2),Trial type 1,basic,*D* scores,0.1,0.004736842105263157
-Death (2),Trial type 1,basic,PI scores,0.25,0.009868421052631578
-Death (2),Trial type 1,bca,*D* scores,0.1,0.004736842105263157
-Death (2),Trial type 1,bca,PI scores,0.1,0.004736842105263157
-Death (2),Trial type 2,percent,*D* scores,0.15,0.006710526315789474
-Death (2),Trial type 2,percent,PI scores,0.15,0.006710526315789474
-Death (2),Trial type 2,normal,*D* scores,0.15,0.006710526315789474
-Death (2),Trial type 2,normal,PI scores,0.15,0.006710526315789474
-Death (2),Trial type 2,basic,*D* scores,0.25,0.009868421052631578
-Death (2),Trial type 2,basic,PI scores,0.15,0.006710526315789474
-Death (2),Trial type 2,bca,*D* scores,0.15,0.006710526315789474
-Death (2),Trial type 2,bca,PI scores,0.1,0.004736842105263157
-Death (2),Trial type 3,percent,*D* scores,0.15,0.006710526315789474
-Death (2),Trial type 3,percent,PI scores,0.15,0.006710526315789474
-Death (2),Trial type 3,normal,*D* scores,0.15,0.006710526315789474
-Death (2),Trial type 3,normal,PI scores,0.2,0.008421052631578945
-Death (2),Trial type 3,basic,*D* scores,0.2,0.008421052631578945
-Death (2),Trial type 3,basic,PI scores,0.25,0.009868421052631578
-Death (2),Trial type 3,bca,*D* scores,0.1,0.004736842105263157
-Death (2),Trial type 3,bca,PI scores,0.15,0.006710526315789474
-Death (2),Trial type 4,percent,*D* scores,0.25,0.009868421052631578
-Death (2),Trial type 4,percent,PI scores,0.25,0.009868421052631578
-Death (2),Trial type 4,normal,*D* scores,0.25,0.009868421052631578
-Death (2),Trial type 4,normal,PI scores,0.3,0.011052631578947368
-Death (2),Trial type 4,basic,*D* scores,0.25,0.009868421052631578
-Death (2),Trial type 4,basic,PI scores,0.3,0.011052631578947368
-Death (2),Trial type 4,bca,*D* scores,0.1,0.004736842105263157
-Death (2),Trial type 4,bca,PI scores,0.25,0.009868421052631578
-Death (3),Trial type 1,percent,*D* scores,0.46153846153846156,0.009940828402366864
-Death (3),Trial type 1,percent,PI scores,0.46153846153846156,0.009940828402366864
-Death (3),Trial type 1,normal,*D* scores,0.5,0.010000000000000004
-Death (3),Trial type 1,normal,PI scores,0.5,0.010000000000000004
-Death (3),Trial type 1,basic,*D* scores,0.5384615384615384,0.009940828402366864
-Death (3),Trial type 1,basic,PI scores,0.5,0.010000000000000004
-Death (3),Trial type 1,bca,*D* scores,0.38461538461538464,0.009467455621301775
-Death (3),Trial type 1,bca,PI scores,0.34615384615384615,0.009053254437869824
-Death (3),Trial type 2,percent,*D* scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 2,percent,PI scores,0.19230769230769232,0.006213017751479291
-Death (3),Trial type 2,normal,*D* scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 2,normal,PI scores,0.23076923076923078,0.007100591715976333
-Death (3),Trial type 2,basic,*D* scores,0.23076923076923078,0.007100591715976333
-Death (3),Trial type 2,basic,PI scores,0.23076923076923078,0.007100591715976333
-Death (3),Trial type 2,bca,*D* scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 2,bca,PI scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 3,percent,*D* scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 3,percent,PI scores,0.23076923076923078,0.007100591715976333
-Death (3),Trial type 3,normal,*D* scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 3,normal,PI scores,0.23076923076923078,0.007100591715976333
-Death (3),Trial type 3,basic,*D* scores,0.2692307692307692,0.007869822485207102
-Death (3),Trial type 3,basic,PI scores,0.2692307692307692,0.007869822485207102
-Death (3),Trial type 3,bca,*D* scores,0.11538461538461539,0.004082840236686392
-Death (3),Trial type 3,bca,PI scores,0.15384615384615385,0.005207100591715977
-Death (3),Trial type 4,percent,*D* scores,0.19230769230769232,0.006213017751479291
-Death (3),Trial type 4,percent,PI scores,0.2692307692307692,0.007869822485207102
-Death (3),Trial type 4,normal,*D* scores,0.19230769230769232,0.006213017751479291
-Death (3),Trial type 4,normal,PI scores,0.2692307692307692,0.007869822485207102
-Death (3),Trial type 4,basic,*D* scores,0.23076923076923078,0.007100591715976333
-Death (3),Trial type 4,basic,PI scores,0.34615384615384615,0.009053254437869824
-Death (3),Trial type 4,bca,*D* scores,0.11538461538461539,0.004082840236686392
-Death (3),Trial type 4,bca,PI scores,0.23076923076923078,0.007100591715976333
-Disgust (1),Trial type 1,percent,*D* scores,0.1891891891891892,0.004261017774531289
-Disgust (1),Trial type 1,percent,PI scores,0.2702702702702703,0.00547845142439737
-Disgust (1),Trial type 1,normal,*D* scores,0.24324324324324326,0.005113221329437545
-Disgust (1),Trial type 1,normal,PI scores,0.2972972972972973,0.005803100397694991
-Disgust (1),Trial type 1,basic,*D* scores,0.2972972972972973,0.005803100397694991
-Disgust (1),Trial type 1,basic,PI scores,0.2972972972972973,0.005803100397694991
-Disgust (1),Trial type 1,bca,*D* scores,0.1891891891891892,0.004261017774531289
-Disgust (1),Trial type 1,bca,PI scores,0.24324324324324326,0.005113221329437545
-Disgust (1),Trial type 2,percent,*D* scores,0.13513513513513514,0.00324648973297622
-Disgust (1),Trial type 2,percent,PI scores,0.13513513513513514,0.00324648973297622
-Disgust (1),Trial type 2,normal,*D* scores,0.16216216216216217,0.003774044314584855
-Disgust (1),Trial type 2,normal,PI scores,0.13513513513513514,0.00324648973297622
-Disgust (1),Trial type 2,basic,*D* scores,0.16216216216216217,0.003774044314584855
-Disgust (1),Trial type 2,basic,PI scores,0.13513513513513514,0.00324648973297622
-Disgust (1),Trial type 2,bca,*D* scores,0.10810810810810811,0.0026783540297053814
-Disgust (1),Trial type 2,bca,PI scores,0.13513513513513514,0.00324648973297622
-Disgust (1),Trial type 3,percent,*D* scores,0.32432432432432434,0.0060871682493304135
-Disgust (1),Trial type 3,percent,PI scores,0.2702702702702703,0.00547845142439737
-Disgust (1),Trial type 3,normal,*D* scores,0.32432432432432434,0.0060871682493304135
-Disgust (1),Trial type 3,normal,PI scores,0.2972972972972973,0.005803100397694991
-Disgust (1),Trial type 3,basic,*D* scores,0.35135135135135137,0.006330654979303628
-Disgust (1),Trial type 3,basic,PI scores,0.2972972972972973,0.005803100397694991
-Disgust (1),Trial type 3,bca,*D* scores,0.2702702702702703,0.00547845142439737
-Disgust (1),Trial type 3,bca,PI scores,0.24324324324324326,0.005113221329437545
-Disgust (1),Trial type 4,percent,*D* scores,0.35135135135135137,0.006330654979303628
-Disgust (1),Trial type 4,percent,PI scores,0.32432432432432434,0.0060871682493304135
-Disgust (1),Trial type 4,normal,*D* scores,0.43243243243243246,0.006817628439250061
-Disgust (1),Trial type 4,normal,PI scores,0.32432432432432434,0.0060871682493304135
-Disgust (1),Trial type 4,basic,*D* scores,0.4864864864864865,0.006939371804236668
-Disgust (1),Trial type 4,basic,PI scores,0.35135135135135137,0.006330654979303628
-Disgust (1),Trial type 4,bca,*D* scores,0.2702702702702703,0.00547845142439737
-Disgust (1),Trial type 4,bca,PI scores,0.2702702702702703,0.00547845142439737
-Disgust (2),Trial type 1,percent,*D* scores,0.27906976744186046,0.004790234103376342
-Disgust (2),Trial type 1,percent,PI scores,0.32558139534883723,0.005228051198846224
-Disgust (2),Trial type 1,normal,*D* scores,0.3023255813953488,0.005022019624507456
-Disgust (2),Trial type 1,normal,PI scores,0.32558139534883723,0.005228051198846224
-Disgust (2),Trial type 1,basic,*D* scores,0.3488372093023256,0.005408328826392644
-Disgust (2),Trial type 1,basic,PI scores,0.32558139534883723,0.005228051198846224
-Disgust (2),Trial type 1,bca,*D* scores,0.2558139534883721,0.004532694635452884
-Disgust (2),Trial type 1,bca,PI scores,0.27906976744186046,0.004790234103376342
-Disgust (2),Trial type 2,percent,*D* scores,0.23255813953488372,0.004249401220737079
-Disgust (2),Trial type 2,percent,PI scores,0.27906976744186046,0.004790234103376342
-Disgust (2),Trial type 2,normal,*D* scores,0.23255813953488372,0.004249401220737079
-Disgust (2),Trial type 2,normal,PI scores,0.3023255813953488,0.005022019624507456
-Disgust (2),Trial type 2,basic,*D* scores,0.32558139534883723,0.005228051198846224
-Disgust (2),Trial type 2,basic,PI scores,0.3023255813953488,0.005022019624507456
-Disgust (2),Trial type 2,bca,*D* scores,0.20930232558139536,0.003940353859228927
-Disgust (2),Trial type 2,bca,PI scores,0.2558139534883721,0.004532694635452884
-Disgust (2),Trial type 3,percent,*D* scores,0.11627906976744186,0.0024466249452728627
-Disgust (2),Trial type 3,percent,PI scores,0.11627906976744186,0.0024466249452728627
-Disgust (2),Trial type 3,normal,*D* scores,0.13953488372093023,0.002858688093950398
-Disgust (2),Trial type 3,normal,PI scores,0.13953488372093023,0.002858688093950398
-Disgust (2),Trial type 3,basic,*D* scores,0.18604651162790697,0.00360555255092843
-Disgust (2),Trial type 3,basic,PI scores,0.16279069767441862,0.0032449972958355873
-Disgust (2),Trial type 3,bca,*D* scores,0.11627906976744186,0.0024466249452728627
-Disgust (2),Trial type 3,bca,PI scores,0.06976744186046512,0.001545236807540756
-Disgust (2),Trial type 4,percent,*D* scores,0.37209302325581395,0.005562852507146722
-Disgust (2),Trial type 4,percent,PI scores,0.4418604651162791,0.005871899868654874
-Disgust (2),Trial type 4,normal,*D* scores,0.4186046511627907,0.005794638028277834
-Disgust (2),Trial type 4,normal,PI scores,0.4418604651162791,0.005871899868654874
-Disgust (2),Trial type 4,basic,*D* scores,0.46511627906976744,0.005923407762239564
-Disgust (2),Trial type 4,basic,PI scores,0.4883720930232558,0.00594916170903191
-Disgust (2),Trial type 4,bca,*D* scores,0.32558139534883723,0.005228051198846224
-Disgust (2),Trial type 4,bca,PI scores,0.3488372093023256,0.005408328826392644
-Friend-Enemy,Trial type 1,percent,*D* scores,0.3979591836734694,0.002469975997973353
-Friend-Enemy,Trial type 1,percent,PI scores,0.42857142857142855,0.002524721228697665
-Friend-Enemy,Trial type 1,normal,*D* scores,0.3877551020408163,0.0024474338441456958
-Friend-Enemy,Trial type 1,normal,PI scores,0.45918367346938777,0.0025601446132839834
-Friend-Enemy,Trial type 1,basic,*D* scores,0.45918367346938777,0.0025601446132839834
-Friend-Enemy,Trial type 1,basic,PI scores,0.4897959183673469,0.002576246151732311
-Friend-Enemy,Trial type 1,bca,*D* scores,0.2857142857142857,0.0021039343572480536
-Friend-Enemy,Trial type 1,bca,PI scores,0.3877551020408163,0.0024474338441456958
-Friend-Enemy,Trial type 2,percent,*D* scores,0.23469387755102042,0.0018516769215575987
-Friend-Enemy,Trial type 2,percent,PI scores,0.24489795918367346,0.0019064221522819102
-Friend-Enemy,Trial type 2,normal,*D* scores,0.2653061224489796,0.0020094719983512026
-Friend-Enemy,Trial type 2,normal,PI scores,0.25510204081632654,0.001959020511213111
-Friend-Enemy,Trial type 2,basic,*D* scores,0.30612244897959184,0.0021898092289724643
-Friend-Enemy,Trial type 2,basic,PI scores,0.2653061224489796,0.0020094719983512026
-Friend-Enemy,Trial type 2,bca,*D* scores,0.1836734693877551,0.0015457476910393866
-Friend-Enemy,Trial type 2,bca,PI scores,0.20408163265306123,0.0016745599986260017
-Friend-Enemy,Trial type 3,percent,*D* scores,0.11224489795918367,0.001027278153003259
-Friend-Enemy,Trial type 3,percent,PI scores,0.12244897959183673,0.0011077858452448938
-Friend-Enemy,Trial type 3,normal,*D* scores,0.1326530612244898,0.0011861466656934183
-Friend-Enemy,Trial type 3,normal,PI scores,0.14285714285714285,0.0012623606143488326
-Friend-Enemy,Trial type 3,basic,*D* scores,0.19387755102040816,0.0016112272807292493
-Friend-Enemy,Trial type 3,basic,PI scores,0.16326530612244897,0.0014083478962803298
-Friend-Enemy,Trial type 3,bca,*D* scores,0.04081632653061224,4.0361189710472873e-4
-Friend-Enemy,Trial type 3,bca,PI scores,0.09183673469387756,8.598221531406588e-4
-Friend-Enemy,Trial type 4,percent,*D* scores,0.15306122448979592,0.0013364276912111363
-Friend-Enemy,Trial type 4,percent,PI scores,0.14285714285714285,0.0012623606143488326
-Friend-Enemy,Trial type 4,normal,*D* scores,0.1836734693877551,0.0015457476910393866
-Friend-Enemy,Trial type 4,normal,PI scores,0.15306122448979592,0.0013364276912111363
-Friend-Enemy,Trial type 4,basic,*D* scores,0.22448979591836735,0.0017947848190401766
-Friend-Enemy,Trial type 4,basic,PI scores,0.17346938775510204,0.0014781212295564136
-Friend-Enemy,Trial type 4,bca,*D* scores,0.08163265306122448,7.728738455196933e-4
-Friend-Enemy,Trial type 4,bca,PI scores,0.10204081632653061,9.44623588968514e-4
-Gender (1),Trial type 1,percent,*D* scores,0.14634146341463414,0.003123140987507436
-Gender (1),Trial type 1,percent,PI scores,0.12195121951219512,0.002676977989292088
-Gender (1),Trial type 1,normal,*D* scores,0.17073170731707318,0.003539559785841761
-Gender (1),Trial type 1,normal,PI scores,0.21951219512195122,0.00428316478286734
-Gender (1),Trial type 1,basic,*D* scores,0.1951219512195122,0.003926234384295063
-Gender (1),Trial type 1,basic,PI scores,0.2682926829268293,0.004907792980368829
-Gender (1),Trial type 1,bca,*D* scores,0.07317073170731707,0.0016954193932183226
-Gender (1),Trial type 1,bca,PI scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 2,percent,*D* scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 2,percent,PI scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 2,normal,*D* scores,0.12195121951219512,0.002676977989292088
-Gender (1),Trial type 2,normal,PI scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 2,basic,*D* scores,0.1951219512195122,0.003926234384295063
-Gender (1),Trial type 2,basic,PI scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 2,bca,*D* scores,0.024390243902439025,5.94883997620464e-4
-Gender (1),Trial type 2,bca,PI scores,0.024390243902439025,5.94883997620464e-4
-Gender (1),Trial type 3,percent,*D* scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 3,percent,PI scores,0.14634146341463414,0.003123140987507436
-Gender (1),Trial type 3,normal,*D* scores,0.12195121951219512,0.002676977989292088
-Gender (1),Trial type 3,normal,PI scores,0.14634146341463414,0.003123140987507436
-Gender (1),Trial type 3,basic,*D* scores,0.14634146341463414,0.003123140987507436
-Gender (1),Trial type 3,basic,PI scores,0.17073170731707318,0.003539559785841761
-Gender (1),Trial type 3,bca,*D* scores,0.07317073170731707,0.0016954193932183226
-Gender (1),Trial type 3,bca,PI scores,0.0975609756097561,0.002201070791195717
-Gender (1),Trial type 4,percent,*D* scores,0.21951219512195122,0.00428316478286734
-Gender (1),Trial type 4,percent,PI scores,0.1951219512195122,0.003926234384295063
-Gender (1),Trial type 4,normal,*D* scores,0.2926829268292683,0.005175490779298037
-Gender (1),Trial type 4,normal,PI scores,0.2682926829268293,0.004907792980368829
-Gender (1),Trial type 4,basic,*D* scores,0.3170731707317073,0.005413444378346223
-Gender (1),Trial type 4,basic,PI scores,0.34146341463414637,0.005621653777513387
-Gender (1),Trial type 4,bca,*D* scores,0.17073170731707318,0.003539559785841761
-Gender (1),Trial type 4,bca,PI scores,0.1951219512195122,0.003926234384295063
-Gender (2),Trial type 1,percent,*D* scores,0.24210526315789474,0.0019520245181823537
-Gender (2),Trial type 1,percent,PI scores,0.24210526315789474,0.0019520245181823537
-Gender (2),Trial type 1,normal,*D* scores,0.24210526315789474,0.0019520245181823537
-Gender (2),Trial type 1,normal,PI scores,0.24210526315789474,0.0019520245181823537
-Gender (2),Trial type 1,basic,*D* scores,0.2736842105263158,0.0021146932280308836
-Gender (2),Trial type 1,basic,PI scores,0.29473684210526313,0.002211351446926387
-Gender (2),Trial type 1,bca,*D* scores,0.17894736842105263,0.0015630341250663054
-Gender (2),Trial type 1,bca,PI scores,0.1368421052631579,0.0012565568456415395
-Gender (2),Trial type 2,percent,*D* scores,0.05263157894736842,5.304414451582485e-4
-Gender (2),Trial type 2,percent,PI scores,0.05263157894736842,5.304414451582485e-4
-Gender (2),Trial type 2,normal,*D* scores,0.10526315789473684,0.0010019449519655802
-Gender (2),Trial type 2,normal,PI scores,0.05263157894736842,5.304414451582485e-4
-Gender (2),Trial type 2,basic,*D* scores,0.12631578947368421,0.0011740437319502565
-Gender (2),Trial type 2,basic,PI scores,0.06315789473684211,6.294571815877883e-4
-Gender (2),Trial type 2,bca,*D* scores,0.042105263157894736,4.2906819119467213e-4
-Gender (2),Trial type 2,bca,PI scores,0.031578947368421054,3.253374196970591e-4
-Gender (2),Trial type 3,percent,*D* scores,0.22105263157894736,0.0018317911239464843
-Gender (2),Trial type 3,percent,PI scores,0.24210526315789474,0.0019520245181823537
-Gender (2),Trial type 3,normal,*D* scores,0.2736842105263158,0.0021146932280308836
-Gender (2),Trial type 3,normal,PI scores,0.25263157894736843,0.0020086049389992336
-Gender (2),Trial type 3,basic,*D* scores,0.30526315789473685,0.0022561442800730835
-Gender (2),Trial type 3,basic,PI scores,0.2736842105263158,0.0021146932280308836
-Gender (2),Trial type 3,bca,*D* scores,0.17894736842105263,0.0015630341250663054
-Gender (2),Trial type 3,bca,PI scores,0.18947368421052632,0.001633759651087405
-Gender (2),Trial type 4,percent,*D* scores,0.07368421052631578,7.261154004832912e-4
-Gender (2),Trial type 4,percent,PI scores,0.08421052631578947,8.204161018447576e-4
-Gender (2),Trial type 4,normal,*D* scores,0.10526315789473684,0.0010019449519655802
-Gender (2),Trial type 4,normal,PI scores,0.08421052631578947,8.204161018447576e-4
-Gender (2),Trial type 4,basic,*D* scores,0.11578947368421053,0.0010891731007249366
-Gender (2),Trial type 4,basic,PI scores,0.09473684210526316,9.123592856721874e-4
-Gender (2),Trial type 4,bca,*D* scores,0.042105263157894736,4.2906819119467213e-4
-Gender (2),Trial type 4,bca,PI scores,0.021052631578947368,2.1924913066540935e-4
-Lincoln-Hitler,Trial type 1,percent,*D* scores,0.3409090909090909,0.00171519147056968
-Lincoln-Hitler,Trial type 1,percent,PI scores,0.3712121212121212,0.0017817838341780052
-Lincoln-Hitler,Trial type 1,normal,*D* scores,0.36363636363636365,0.0017664500662418776
-Lincoln-Hitler,Trial type 1,normal,PI scores,0.4015151515151515,0.0018343567528161559
-Lincoln-Hitler,Trial type 1,basic,*D* scores,0.4015151515151515,0.0018343567528161559
-Lincoln-Hitler,Trial type 1,basic,PI scores,0.4393939393939394,0.0018803580566245381
-Lincoln-Hitler,Trial type 1,bca,*D* scores,0.2803030303030303,0.0015399484084425096
-Lincoln-Hitler,Trial type 1,bca,PI scores,0.3333333333333333,0.0016963528413910095
-Lincoln-Hitler,Trial type 2,percent,*D* scores,0.11363636363636363,7.688789350829598e-4
-Lincoln-Hitler,Trial type 2,percent,PI scores,0.12878787878787878,8.565004661465451e-4
-Lincoln-Hitler,Trial type 2,normal,*D* scores,0.14393939393939395,9.40617135967587e-4
-Lincoln-Hitler,Trial type 2,normal,PI scores,0.13636363636363635,8.989969087123842e-4
-Lincoln-Hitler,Trial type 2,basic,*D* scores,0.1893939393939394,0.001171937977975452
-Lincoln-Hitler,Trial type 2,basic,PI scores,0.1590909090909091,0.0010212289445460853
-Lincoln-Hitler,Trial type 2,bca,*D* scores,0.07575757575757576,5.344913394878698e-4
-Lincoln-Hitler,Trial type 2,bca,PI scores,0.10606060606060606,7.237538465852139e-4
-Lincoln-Hitler,Trial type 3,percent,*D* scores,0.13636363636363635,8.989969087123842e-4
-Lincoln-Hitler,Trial type 3,percent,PI scores,0.13636363636363635,8.989969087123842e-4
-Lincoln-Hitler,Trial type 3,normal,*D* scores,0.16666666666666666,0.001060220525869381
-Lincoln-Hitler,Trial type 3,normal,PI scores,0.16666666666666666,0.001060220525869381
-Lincoln-Hitler,Trial type 3,basic,*D* scores,0.20454545454545456,0.0012420352028263202
-Lincoln-Hitler,Trial type 3,basic,PI scores,0.18181818181818182,0.001135575042584064
-Lincoln-Hitler,Trial type 3,bca,*D* scores,0.06060606060606061,4.346027940753826e-4
-Lincoln-Hitler,Trial type 3,bca,PI scores,0.11363636363636363,7.688789350829598e-4
-Lincoln-Hitler,Trial type 4,percent,*D* scores,0.13636363636363635,8.989969087123842e-4
-Lincoln-Hitler,Trial type 4,percent,PI scores,0.14393939393939395,9.40617135967587e-4
-Lincoln-Hitler,Trial type 4,normal,*D* scores,0.1590909090909091,0.0010212289445460853
-Lincoln-Hitler,Trial type 4,normal,PI scores,0.15151515151515152,9.813611479121541e-4
-Lincoln-Hitler,Trial type 4,basic,*D* scores,0.1893939393939394,0.001171937977975452
-Lincoln-Hitler,Trial type 4,basic,PI scores,0.15151515151515152,9.813611479121541e-4
-Lincoln-Hitler,Trial type 4,bca,*D* scores,0.11363636363636363,7.688789350829598e-4
-Lincoln-Hitler,Trial type 4,bca,PI scores,0.12121212121212122,8.131278082700706e-4
-Personality - Agreeableness,Trial type 1,percent,*D* scores,0.358974358974359,0.0060555728571922915
-Personality - Agreeableness,Trial type 1,percent,PI scores,0.4358974358974359,0.006470812138828331
-Personality - Agreeableness,Trial type 1,normal,*D* scores,0.41025641025641024,0.006367002318419321
-Personality - Agreeableness,Trial type 1,normal,PI scores,0.48717948717948717,0.006574621959237344
-Personality - Agreeableness,Trial type 1,basic,*D* scores,0.48717948717948717,0.006574621959237344
-Personality - Agreeableness,Trial type 1,basic,PI scores,0.48717948717948717,0.006574621959237344
-Personality - Agreeableness,Trial type 1,bca,*D* scores,0.3333333333333333,0.005847953216374269
-Personality - Agreeableness,Trial type 1,bca,PI scores,0.3333333333333333,0.005847953216374269
-Personality - Agreeableness,Trial type 2,percent,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Agreeableness,Trial type 2,percent,PI scores,0.23076923076923078,0.004671441918405481
-Personality - Agreeableness,Trial type 2,normal,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Agreeableness,Trial type 2,normal,PI scores,0.23076923076923078,0.004671441918405481
-Personality - Agreeableness,Trial type 2,basic,*D* scores,0.20512820512820512,0.004290805910239109
-Personality - Agreeableness,Trial type 2,basic,PI scores,0.2564102564102564,0.0050174746531021835
-Personality - Agreeableness,Trial type 2,bca,*D* scores,0.1282051282051282,0.0029412782449219697
-Personality - Agreeableness,Trial type 2,bca,PI scores,0.20512820512820512,0.004290805910239109
-Personality - Agreeableness,Trial type 3,percent,*D* scores,0.10256410256410256,0.002422229142876916
-Personality - Agreeableness,Trial type 3,percent,PI scores,0.1282051282051282,0.0029412782449219697
-Personality - Agreeableness,Trial type 3,normal,*D* scores,0.1282051282051282,0.0029412782449219697
-Personality - Agreeableness,Trial type 3,normal,PI scores,0.15384615384615385,0.0034257240734973534
-Personality - Agreeableness,Trial type 3,basic,*D* scores,0.20512820512820512,0.004290805910239109
-Personality - Agreeableness,Trial type 3,basic,PI scores,0.15384615384615385,0.0034257240734973534
-Personality - Agreeableness,Trial type 3,bca,*D* scores,0.05128205128205128,0.0012803211183777983
-Personality - Agreeableness,Trial type 3,bca,PI scores,0.1282051282051282,0.0029412782449219697
-Personality - Agreeableness,Trial type 4,percent,*D* scores,0.15384615384615385,0.0034257240734973534
-Personality - Agreeableness,Trial type 4,percent,PI scores,0.1794871794871795,0.0038755666286030663
-Personality - Agreeableness,Trial type 4,normal,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Agreeableness,Trial type 4,normal,PI scores,0.20512820512820512,0.004290805910239109
-Personality - Agreeableness,Trial type 4,basic,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Agreeableness,Trial type 4,basic,PI scores,0.20512820512820512,0.004290805910239109
-Personality - Agreeableness,Trial type 4,bca,*D* scores,0.15384615384615385,0.0034257240734973534
-Personality - Agreeableness,Trial type 4,bca,PI scores,0.1794871794871795,0.0038755666286030663
-Personality - Conscientiousness,Trial type 1,percent,*D* scores,0.4358974358974359,0.006470812138828331
-Personality - Conscientiousness,Trial type 1,percent,PI scores,0.4358974358974359,0.006470812138828331
-Personality - Conscientiousness,Trial type 1,normal,*D* scores,0.4358974358974359,0.006470812138828331
-Personality - Conscientiousness,Trial type 1,normal,PI scores,0.46153846153846156,0.006540018685767673
-Personality - Conscientiousness,Trial type 1,basic,*D* scores,0.46153846153846156,0.006540018685767673
-Personality - Conscientiousness,Trial type 1,basic,PI scores,0.48717948717948717,0.006574621959237344
-Personality - Conscientiousness,Trial type 1,bca,*D* scores,0.38461538461538464,0.00622858922454064
-Personality - Conscientiousness,Trial type 1,bca,PI scores,0.41025641025641024,0.006367002318419321
-Personality - Conscientiousness,Trial type 2,percent,*D* scores,0.10256410256410256,0.002422229142876916
-Personality - Conscientiousness,Trial type 2,percent,PI scores,0.02564102564102564,6.574621959237343e-4
-Personality - Conscientiousness,Trial type 2,normal,*D* scores,0.10256410256410256,0.002422229142876916
-Personality - Conscientiousness,Trial type 2,normal,PI scores,0.05128205128205128,0.0012803211183777983
-Personality - Conscientiousness,Trial type 2,basic,*D* scores,0.15384615384615385,0.0034257240734973534
-Personality - Conscientiousness,Trial type 2,basic,PI scores,0.05128205128205128,0.0012803211183777983
-Personality - Conscientiousness,Trial type 2,bca,*D* scores,0.02564102564102564,6.574621959237343e-4
-Personality - Conscientiousness,Trial type 2,bca,PI scores,0,1e-6
-Personality - Conscientiousness,Trial type 3,percent,*D* scores,0.1282051282051282,0.0029412782449219697
-Personality - Conscientiousness,Trial type 3,percent,PI scores,0.10256410256410256,0.002422229142876916
-Personality - Conscientiousness,Trial type 3,normal,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Conscientiousness,Trial type 3,normal,PI scores,0.10256410256410256,0.002422229142876916
-Personality - Conscientiousness,Trial type 3,basic,*D* scores,0.20512820512820512,0.004290805910239109
-Personality - Conscientiousness,Trial type 3,basic,PI scores,0.10256410256410256,0.002422229142876916
-Personality - Conscientiousness,Trial type 3,bca,*D* scores,0.1282051282051282,0.0029412782449219697
-Personality - Conscientiousness,Trial type 3,bca,PI scores,0.10256410256410256,0.002422229142876916
-Personality - Conscientiousness,Trial type 4,percent,*D* scores,0.20512820512820512,0.004290805910239109
-Personality - Conscientiousness,Trial type 4,percent,PI scores,0.2564102564102564,0.0050174746531021835
-Personality - Conscientiousness,Trial type 4,normal,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Conscientiousness,Trial type 4,normal,PI scores,0.2564102564102564,0.0050174746531021835
-Personality - Conscientiousness,Trial type 4,basic,*D* scores,0.1794871794871795,0.0038755666286030663
-Personality - Conscientiousness,Trial type 4,basic,PI scores,0.2564102564102564,0.0050174746531021835
-Personality - Conscientiousness,Trial type 4,bca,*D* scores,0.1282051282051282,0.0029412782449219697
-Personality - Conscientiousness,Trial type 4,bca,PI scores,0.1794871794871795,0.0038755666286030663
-Personality - Extraversion,Trial type 1,percent,*D* scores,0.18181818181818182,0.004648760330578513
-Personality - Extraversion,Trial type 1,percent,PI scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 1,normal,*D* scores,0.21212121212121213,0.005222681359044996
-Personality - Extraversion,Trial type 1,normal,PI scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 1,basic,*D* scores,0.2727272727272727,0.006198347107438018
-Personality - Extraversion,Trial type 1,basic,PI scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 1,bca,*D* scores,0.18181818181818182,0.004648760330578513
-Personality - Extraversion,Trial type 1,bca,PI scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 2,percent,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 2,percent,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Extraversion,Trial type 2,normal,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 2,normal,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Extraversion,Trial type 2,basic,*D* scores,0.21212121212121213,0.005222681359044996
-Personality - Extraversion,Trial type 2,basic,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Extraversion,Trial type 2,bca,*D* scores,0.09090909090909091,0.002582644628099173
-Personality - Extraversion,Trial type 2,bca,PI scores,0.06060606060606061,0.0017791551882460972
-Personality - Extraversion,Trial type 3,percent,*D* scores,0.24242424242424243,0.005739210284664831
-Personality - Extraversion,Trial type 3,percent,PI scores,0.24242424242424243,0.005739210284664831
-Personality - Extraversion,Trial type 3,normal,*D* scores,0.2727272727272727,0.006198347107438018
-Personality - Extraversion,Trial type 3,normal,PI scores,0.24242424242424243,0.005739210284664831
-Personality - Extraversion,Trial type 3,basic,*D* scores,0.2727272727272727,0.006198347107438018
-Personality - Extraversion,Trial type 3,basic,PI scores,0.2727272727272727,0.006198347107438018
-Personality - Extraversion,Trial type 3,bca,*D* scores,0.21212121212121213,0.005222681359044996
-Personality - Extraversion,Trial type 3,bca,PI scores,0.24242424242424243,0.005739210284664831
-Personality - Extraversion,Trial type 4,percent,*D* scores,0.06060606060606061,0.0017791551882460972
-Personality - Extraversion,Trial type 4,percent,PI scores,0.030303030303030304,9.182736455463731e-4
-Personality - Extraversion,Trial type 4,normal,*D* scores,0.09090909090909091,0.002582644628099173
-Personality - Extraversion,Trial type 4,normal,PI scores,0.030303030303030304,9.182736455463731e-4
-Personality - Extraversion,Trial type 4,basic,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Extraversion,Trial type 4,basic,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Extraversion,Trial type 4,bca,*D* scores,0.06060606060606061,0.0017791551882460972
-Personality - Extraversion,Trial type 4,bca,PI scores,0,1e-6
-Personality - Neuroticism,Trial type 1,percent,*D* scores,0.28125,0.006520917338709678
-Personality - Neuroticism,Trial type 1,percent,PI scores,0.28125,0.006520917338709678
-Personality - Neuroticism,Trial type 1,normal,*D* scores,0.375,0.007560483870967741
-Personality - Neuroticism,Trial type 1,normal,PI scores,0.3125,0.0069304435483870976
-Personality - Neuroticism,Trial type 1,basic,*D* scores,0.4375,0.007938508064516129
-Personality - Neuroticism,Trial type 1,basic,PI scores,0.3125,0.0069304435483870976
-Personality - Neuroticism,Trial type 1,bca,*D* scores,0.25,0.006048387096774192
-Personality - Neuroticism,Trial type 1,bca,PI scores,0.28125,0.006520917338709678
-Personality - Neuroticism,Trial type 2,percent,*D* scores,0.21875,0.0055128528225806455
-Personality - Neuroticism,Trial type 2,percent,PI scores,0.09375,0.002740675403225807
-Personality - Neuroticism,Trial type 2,normal,*D* scores,0.21875,0.0055128528225806455
-Personality - Neuroticism,Trial type 2,normal,PI scores,0.15625,0.0042527721774193545
-Personality - Neuroticism,Trial type 2,basic,*D* scores,0.25,0.006048387096774192
-Personality - Neuroticism,Trial type 2,basic,PI scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 2,bca,*D* scores,0.09375,0.002740675403225807
-Personality - Neuroticism,Trial type 2,bca,PI scores,0.0625,0.0018901209677419353
-Personality - Neuroticism,Trial type 3,percent,*D* scores,0.25,0.006048387096774192
-Personality - Neuroticism,Trial type 3,percent,PI scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 3,normal,*D* scores,0.3125,0.0069304435483870976
-Personality - Neuroticism,Trial type 3,normal,PI scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 3,basic,*D* scores,0.34375,0.0072769657258064495
-Personality - Neuroticism,Trial type 3,basic,PI scores,0.21875,0.0055128528225806455
-Personality - Neuroticism,Trial type 3,bca,*D* scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 3,bca,PI scores,0.15625,0.0042527721774193545
-Personality - Neuroticism,Trial type 4,percent,*D* scores,0.21875,0.0055128528225806455
-Personality - Neuroticism,Trial type 4,percent,PI scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 4,normal,*D* scores,0.21875,0.0055128528225806455
-Personality - Neuroticism,Trial type 4,normal,PI scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 4,basic,*D* scores,0.28125,0.006520917338709678
-Personality - Neuroticism,Trial type 4,basic,PI scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 4,bca,*D* scores,0.1875,0.004914314516129031
-Personality - Neuroticism,Trial type 4,bca,PI scores,0.1875,0.004914314516129031
-Personality - Openness,Trial type 1,percent,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Openness,Trial type 1,percent,PI scores,0.21212121212121213,0.005222681359044996
-Personality - Openness,Trial type 1,normal,*D* scores,0.21212121212121213,0.005222681359044996
-Personality - Openness,Trial type 1,normal,PI scores,0.21212121212121213,0.005222681359044996
-Personality - Openness,Trial type 1,basic,*D* scores,0.21212121212121213,0.005222681359044996
-Personality - Openness,Trial type 1,basic,PI scores,0.2727272727272727,0.006198347107438018
-Personality - Openness,Trial type 1,bca,*D* scores,0.12121212121212122,0.0033287419651056014
-Personality - Openness,Trial type 1,bca,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Openness,Trial type 2,percent,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Openness,Trial type 2,percent,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Openness,Trial type 2,normal,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Openness,Trial type 2,normal,PI scores,0.09090909090909091,0.002582644628099173
-Personality - Openness,Trial type 2,basic,*D* scores,0.18181818181818182,0.004648760330578513
-Personality - Openness,Trial type 2,basic,PI scores,0.12121212121212122,0.0033287419651056014
-Personality - Openness,Trial type 2,bca,*D* scores,0.09090909090909091,0.002582644628099173
-Personality - Openness,Trial type 2,bca,PI scores,0.06060606060606061,0.0017791551882460972
-Personality - Openness,Trial type 3,percent,*D* scores,0.06060606060606061,0.0017791551882460972
-Personality - Openness,Trial type 3,percent,PI scores,0.06060606060606061,0.0017791551882460972
-Personality - Openness,Trial type 3,normal,*D* scores,0.09090909090909091,0.002582644628099173
-Personality - Openness,Trial type 3,normal,PI scores,0.06060606060606061,0.0017791551882460972
-Personality - Openness,Trial type 3,basic,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Openness,Trial type 3,basic,PI scores,0.18181818181818182,0.004648760330578513
-Personality - Openness,Trial type 3,bca,*D* scores,0.030303030303030304,9.182736455463731e-4
-Personality - Openness,Trial type 3,bca,PI scores,0.030303030303030304,9.182736455463731e-4
-Personality - Openness,Trial type 4,percent,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Openness,Trial type 4,percent,PI scores,0.24242424242424243,0.005739210284664831
-Personality - Openness,Trial type 4,normal,*D* scores,0.18181818181818182,0.004648760330578513
-Personality - Openness,Trial type 4,normal,PI scores,0.24242424242424243,0.005739210284664831
-Personality - Openness,Trial type 4,basic,*D* scores,0.18181818181818182,0.004648760330578513
-Personality - Openness,Trial type 4,basic,PI scores,0.2727272727272727,0.006198347107438018
-Personality - Openness,Trial type 4,bca,*D* scores,0.15151515151515152,0.004017447199265381
-Personality - Openness,Trial type 4,bca,PI scores,0.12121212121212122,0.0033287419651056014
-Race (1),Trial type 1,percent,*D* scores,0.2222222222222222,0.003928170594837262
-Race (1),Trial type 1,percent,PI scores,0.26666666666666666,0.0044444444444444444
-Race (1),Trial type 1,normal,*D* scores,0.28888888888888886,0.0046689113355780016
-Race (1),Trial type 1,normal,PI scores,0.26666666666666666,0.0044444444444444444
-Race (1),Trial type 1,basic,*D* scores,0.28888888888888886,0.0046689113355780016
-Race (1),Trial type 1,basic,PI scores,0.28888888888888886,0.0046689113355780016
-Race (1),Trial type 1,bca,*D* scores,0.15555555555555556,0.002985409652076319
-Race (1),Trial type 1,bca,PI scores,0.17777777777777778,0.0033221099887766545
-Race (1),Trial type 2,percent,*D* scores,0.08888888888888889,0.001840628507295174
-Race (1),Trial type 2,percent,PI scores,0.022222222222222223,4.938271604938272e-4
-Race (1),Trial type 2,normal,*D* scores,0.1111111111111111,0.0022446689113355778
-Race (1),Trial type 2,normal,PI scores,0.022222222222222223,4.938271604938272e-4
-Race (1),Trial type 2,basic,*D* scores,0.13333333333333333,0.002626262626262626
-Race (1),Trial type 2,basic,PI scores,0.022222222222222223,4.938271604938272e-4
-Race (1),Trial type 2,bca,*D* scores,0.044444444444444446,9.652076318742985e-4
-Race (1),Trial type 2,bca,PI scores,0.022222222222222223,4.938271604938272e-4
-Race (1),Trial type 3,percent,*D* scores,0.2,0.0036363636363636364
-Race (1),Trial type 3,percent,PI scores,0.15555555555555556,0.002985409652076319
-Race (1),Trial type 3,normal,*D* scores,0.2222222222222222,0.003928170594837262
-Race (1),Trial type 3,normal,PI scores,0.17777777777777778,0.0033221099887766545
-Race (1),Trial type 3,basic,*D* scores,0.24444444444444444,0.004197530864197532
-Race (1),Trial type 3,basic,PI scores,0.17777777777777778,0.0033221099887766545
-Race (1),Trial type 3,bca,*D* scores,0.15555555555555556,0.002985409652076319
-Race (1),Trial type 3,bca,PI scores,0.13333333333333333,0.002626262626262626
-Race (1),Trial type 4,percent,*D* scores,0.1111111111111111,0.0022446689113355778
-Race (1),Trial type 4,percent,PI scores,0.08888888888888889,0.001840628507295174
-Race (1),Trial type 4,normal,*D* scores,0.13333333333333333,0.002626262626262626
-Race (1),Trial type 4,normal,PI scores,0.1111111111111111,0.0022446689113355778
-Race (1),Trial type 4,basic,*D* scores,0.15555555555555556,0.002985409652076319
-Race (1),Trial type 4,basic,PI scores,0.1111111111111111,0.0022446689113355778
-Race (1),Trial type 4,bca,*D* scores,0.08888888888888889,0.001840628507295174
-Race (1),Trial type 4,bca,PI scores,0.06666666666666667,0.0014141414141414137
-Race (2),Trial type 1,percent,*D* scores,0.38636363636363635,0.00551364597347684
-Race (2),Trial type 1,percent,PI scores,0.45454545454545453,0.005765904285988854
-Race (2),Trial type 1,normal,*D* scores,0.38636363636363635,0.00551364597347684
-Race (2),Trial type 1,normal,PI scores,0.45454545454545453,0.005765904285988854
-Race (2),Trial type 1,basic,*D* scores,0.45454545454545453,0.005765904285988854
-Race (2),Trial type 1,basic,PI scores,0.5,0.0058139534883720955
-Race (2),Trial type 1,bca,*D* scores,0.3409090909090909,0.005225350759177396
-Race (2),Trial type 1,bca,PI scores,0.45454545454545453,0.005765904285988854
-Race (2),Trial type 2,percent,*D* scores,0.11363636363636363,0.0023423986161829713
-Race (2),Trial type 2,percent,PI scores,0.11363636363636363,0.0023423986161829713
-Race (2),Trial type 2,normal,*D* scores,0.13636363636363635,0.002738804535844706
-Race (2),Trial type 2,normal,PI scores,0.13636363636363635,0.002738804535844706
-Race (2),Trial type 2,basic,*D* scores,0.1590909090909091,0.0031111858543148184
-Race (2),Trial type 2,basic,PI scores,0.1590909090909091,0.0031111858543148184
-Race (2),Trial type 2,bca,*D* scores,0.045454545454545456,0.0010090332500480494
-Race (2),Trial type 2,bca,PI scores,0.11363636363636363,0.0023423986161829713
-Race (2),Trial type 3,percent,*D* scores,0.1590909090909091,0.0031111858543148184
-Race (2),Trial type 3,percent,PI scores,0.20454545454545456,0.0037838746876801845
-Race (2),Trial type 3,normal,*D* scores,0.1590909090909091,0.0031111858543148184
-Race (2),Trial type 3,normal,PI scores,0.22727272727272727,0.004084182202575439
-Race (2),Trial type 3,basic,*D* scores,0.20454545454545456,0.0037838746876801845
-Race (2),Trial type 3,basic,PI scores,0.22727272727272727,0.004084182202575439
-Race (2),Trial type 3,bca,*D* scores,0.13636363636363635,0.002738804535844706
-Race (2),Trial type 3,bca,PI scores,0.18181818181818182,0.003459542571593312
-Race (2),Trial type 4,percent,*D* scores,0.09090909090909091,0.001921968095329618
-Race (2),Trial type 4,percent,PI scores,0.11363636363636363,0.0023423986161829713
-Race (2),Trial type 4,normal,*D* scores,0.13636363636363635,0.002738804535844706
-Race (2),Trial type 4,normal,PI scores,0.11363636363636363,0.0023423986161829713
-Race (2),Trial type 4,basic,*D* scores,0.1590909090909091,0.0031111858543148184
-Race (2),Trial type 4,basic,PI scores,0.11363636363636363,0.0023423986161829713
-Race (2),Trial type 4,bca,*D* scores,0.06818181818181818,0.0014775129732846433
-Race (2),Trial type 4,bca,PI scores,0.09090909090909091,0.001921968095329618
-Religion,Trial type 1,percent,*D* scores,0.3,0.007241379310344828
-Religion,Trial type 1,percent,PI scores,0.23333333333333334,0.006168582375478927
-Religion,Trial type 1,normal,*D* scores,0.4,0.008275862068965516
-Religion,Trial type 1,normal,PI scores,0.26666666666666666,0.006743295019157087
-Religion,Trial type 1,basic,*D* scores,0.5,0.008620689655172414
-Religion,Trial type 1,basic,PI scores,0.3,0.007241379310344828
-Religion,Trial type 1,bca,*D* scores,0.16666666666666666,0.0047892720306513415
-Religion,Trial type 1,bca,PI scores,0.16666666666666666,0.0047892720306513415
-Religion,Trial type 2,percent,*D* scores,0.13333333333333333,0.003984674329501915
-Religion,Trial type 2,percent,PI scores,0.13333333333333333,0.003984674329501915
-Religion,Trial type 2,normal,*D* scores,0.16666666666666666,0.0047892720306513415
-Religion,Trial type 2,normal,PI scores,0.13333333333333333,0.003984674329501915
-Religion,Trial type 2,basic,*D* scores,0.23333333333333334,0.006168582375478927
-Religion,Trial type 2,basic,PI scores,0.13333333333333333,0.003984674329501915
-Religion,Trial type 2,bca,*D* scores,0.1,0.0031034482758620684
-Religion,Trial type 2,bca,PI scores,0.06666666666666667,0.002145593869731801
-Religion,Trial type 3,percent,*D* scores,0.23333333333333334,0.006168582375478927
-Religion,Trial type 3,percent,PI scores,0.3,0.007241379310344828
-Religion,Trial type 3,normal,*D* scores,0.26666666666666666,0.006743295019157087
-Religion,Trial type 3,normal,PI scores,0.3,0.007241379310344828
-Religion,Trial type 3,basic,*D* scores,0.3333333333333333,0.007662835249042146
-Religion,Trial type 3,basic,PI scores,0.3,0.007241379310344828
-Religion,Trial type 3,bca,*D* scores,0.16666666666666666,0.0047892720306513415
-Religion,Trial type 3,bca,PI scores,0.23333333333333334,0.006168582375478927
-Religion,Trial type 4,percent,*D* scores,0.16666666666666666,0.0047892720306513415
-Religion,Trial type 4,percent,PI scores,0.1,0.0031034482758620684
-Religion,Trial type 4,normal,*D* scores,0.26666666666666666,0.006743295019157087
-Religion,Trial type 4,normal,PI scores,0.1,0.0031034482758620684
-Religion,Trial type 4,basic,*D* scores,0.3333333333333333,0.007662835249042146
-Religion,Trial type 4,basic,PI scores,0.13333333333333333,0.003984674329501915
-Religion,Trial type 4,bca,*D* scores,0.13333333333333333,0.003984674329501915
-Religion,Trial type 4,bca,PI scores,0.06666666666666667,0.002145593869731801
-Rich-Poor,Trial type 1,percent,*D* scores,0.2976190476190476,0.0025185777122093815
-Rich-Poor,Trial type 1,percent,PI scores,0.30952380952380953,0.0025749255525503376
-Rich-Poor,Trial type 1,normal,*D* scores,0.32142857142857145,0.002627858372264569
-Rich-Poor,Trial type 1,normal,PI scores,0.3333333333333333,0.002677376171352075
-Rich-Poor,Trial type 1,basic,*D* scores,0.34523809523809523,0.0027234789498128574
-Rich-Poor,Trial type 1,basic,PI scores,0.35714285714285715,0.002766166707646914
-Rich-Poor,Trial type 1,bca,*D* scores,0.19047619047619047,0.001857771220938175
-Rich-Poor,Trial type 1,bca,PI scores,0.2619047619047619,0.0023290440674261672
-Rich-Poor,Trial type 2,percent,*D* scores,0.11904761904761904,0.0012635576318880968
-Rich-Poor,Trial type 2,percent,PI scores,0.10714285714285714,0.0011525694615195476
-Rich-Poor,Trial type 2,normal,*D* scores,0.17857142857142858,0.001767273174329973
-Rich-Poor,Trial type 2,normal,PI scores,0.11904761904761904,0.0012635576318880968
-Rich-Poor,Trial type 2,basic,*D* scores,0.23809523809523808,0.0021856132011037347
-Rich-Poor,Trial type 2,basic,PI scores,0.14285714285714285,0.0014752889107450208
-Rich-Poor,Trial type 2,bca,*D* scores,0.09523809523809523,0.0010381662705242743
-Rich-Poor,Trial type 2,bca,PI scores,0.07142857142857142,7.991148266535531e-4
-Rich-Poor,Trial type 3,percent,*D* scores,0.20238095238095238,0.0019448542469196518
-Rich-Poor,Trial type 3,percent,PI scores,0.2261904761904762,0.002108775237002432
-Rich-Poor,Trial type 3,normal,*D* scores,0.23809523809523808,0.0021856132011037347
-Rich-Poor,Trial type 3,normal,PI scores,0.2619047619047619,0.0023290440674261672
-Rich-Poor,Trial type 3,basic,*D* scores,0.23809523809523808,0.0021856132011037347
-Rich-Poor,Trial type 3,basic,PI scores,0.2976190476190476,0.0025185777122093815
-Rich-Poor,Trial type 3,bca,*D* scores,0.13095238095238096,0.001371130781629921
-Rich-Poor,Trial type 3,bca,PI scores,0.19047619047619047,0.001857771220938175
-Rich-Poor,Trial type 4,percent,*D* scores,0.11904761904761904,0.0012635576318880968
-Rich-Poor,Trial type 4,percent,PI scores,0.11904761904761904,0.0012635576318880968
-Rich-Poor,Trial type 4,normal,*D* scores,0.14285714285714285,0.0014752889107450208
-Rich-Poor,Trial type 4,normal,PI scores,0.14285714285714285,0.0014752889107450208
-Rich-Poor,Trial type 4,basic,*D* scores,0.19047619047619047,0.001857771220938175
-Rich-Poor,Trial type 4,basic,PI scores,0.14285714285714285,0.0014752889107450208
-Rich-Poor,Trial type 4,bca,*D* scores,0.07142857142857142,7.991148266535531e-4
-Rich-Poor,Trial type 4,bca,PI scores,0.08333333333333333,9.203480589022762e-4
-Sexuality (1),Trial type 1,percent,*D* scores,0.5,0.010000000000000004
-Sexuality (1),Trial type 1,percent,PI scores,0.5384615384615384,0.009940828402366864
-Sexuality (1),Trial type 1,normal,*D* scores,0.5,0.010000000000000004
-Sexuality (1),Trial type 1,normal,PI scores,0.5769230769230769,0.009763313609467455
-Sexuality (1),Trial type 1,basic,*D* scores,0.5769230769230769,0.009763313609467455
-Sexuality (1),Trial type 1,basic,PI scores,0.5769230769230769,0.009763313609467455
-Sexuality (1),Trial type 1,bca,*D* scores,0.38461538461538464,0.009467455621301775
-Sexuality (1),Trial type 1,bca,PI scores,0.5,0.010000000000000004
-Sexuality (1),Trial type 2,percent,*D* scores,0.15384615384615385,0.005207100591715977
-Sexuality (1),Trial type 2,percent,PI scores,0.15384615384615385,0.005207100591715977
-Sexuality (1),Trial type 2,normal,*D* scores,0.19230769230769232,0.006213017751479291
-Sexuality (1),Trial type 2,normal,PI scores,0.15384615384615385,0.005207100591715977
-Sexuality (1),Trial type 2,basic,*D* scores,0.2692307692307692,0.007869822485207102
-Sexuality (1),Trial type 2,basic,PI scores,0.23076923076923078,0.007100591715976333
-Sexuality (1),Trial type 2,bca,*D* scores,0.07692307692307693,0.002840236686390533
-Sexuality (1),Trial type 2,bca,PI scores,0.11538461538461539,0.004082840236686392
-Sexuality (1),Trial type 3,percent,*D* scores,0.3076923076923077,0.008520710059171599
-Sexuality (1),Trial type 3,percent,PI scores,0.34615384615384615,0.009053254437869824
-Sexuality (1),Trial type 3,normal,*D* scores,0.34615384615384615,0.009053254437869824
-Sexuality (1),Trial type 3,normal,PI scores,0.34615384615384615,0.009053254437869824
-Sexuality (1),Trial type 3,basic,*D* scores,0.34615384615384615,0.009053254437869824
-Sexuality (1),Trial type 3,basic,PI scores,0.38461538461538464,0.009467455621301775
-Sexuality (1),Trial type 3,bca,*D* scores,0.23076923076923078,0.007100591715976333
-Sexuality (1),Trial type 3,bca,PI scores,0.34615384615384615,0.009053254437869824
-Sexuality (1),Trial type 4,percent,*D* scores,0.2692307692307692,0.007869822485207102
-Sexuality (1),Trial type 4,percent,PI scores,0.23076923076923078,0.007100591715976333
-Sexuality (1),Trial type 4,normal,*D* scores,0.3076923076923077,0.008520710059171599
-Sexuality (1),Trial type 4,normal,PI scores,0.23076923076923078,0.007100591715976333
-Sexuality (1),Trial type 4,basic,*D* scores,0.34615384615384615,0.009053254437869824
-Sexuality (1),Trial type 4,basic,PI scores,0.23076923076923078,0.007100591715976333
-Sexuality (1),Trial type 4,bca,*D* scores,0.15384615384615385,0.005207100591715977
-Sexuality (1),Trial type 4,bca,PI scores,0.19230769230769232,0.006213017751479291
-Sexuality (2),Trial type 1,percent,*D* scores,0.6842105263157895,0.012003693444136654
-Sexuality (2),Trial type 1,percent,PI scores,0.631578947368421,0.012927054478301012
-Sexuality (2),Trial type 1,normal,*D* scores,0.6842105263157895,0.012003693444136654
-Sexuality (2),Trial type 1,normal,PI scores,0.631578947368421,0.012927054478301012
-Sexuality (2),Trial type 1,basic,*D* scores,0.6842105263157895,0.012003693444136654
-Sexuality (2),Trial type 1,basic,PI scores,0.631578947368421,0.012927054478301012
-Sexuality (2),Trial type 1,bca,*D* scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 1,bca,PI scores,0.631578947368421,0.012927054478301012
-Sexuality (2),Trial type 2,percent,*D* scores,0.42105263157894735,0.01354262850107725
-Sexuality (2),Trial type 2,percent,PI scores,0.3684210526315789,0.012927054478301012
-Sexuality (2),Trial type 2,normal,*D* scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 2,normal,PI scores,0.42105263157894735,0.01354262850107725
-Sexuality (2),Trial type 2,basic,*D* scores,0.5789473684210527,0.01354262850107725
-Sexuality (2),Trial type 2,basic,PI scores,0.42105263157894735,0.01354262850107725
-Sexuality (2),Trial type 2,bca,*D* scores,0.3684210526315789,0.012927054478301012
-Sexuality (2),Trial type 2,bca,PI scores,0.3157894736842105,0.012003693444136654
-Sexuality (2),Trial type 3,percent,*D* scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 3,percent,PI scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 3,normal,*D* scores,0.42105263157894735,0.01354262850107725
-Sexuality (2),Trial type 3,normal,PI scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 3,basic,*D* scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 3,basic,PI scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 3,bca,*D* scores,0.42105263157894735,0.01354262850107725
-Sexuality (2),Trial type 3,bca,PI scores,0.47368421052631576,0.013850415512465368
-Sexuality (2),Trial type 4,percent,*D* scores,0.3157894736842105,0.012003693444136654
-Sexuality (2),Trial type 4,percent,PI scores,0.3684210526315789,0.012927054478301012
-Sexuality (2),Trial type 4,normal,*D* scores,0.3157894736842105,0.012003693444136654
-Sexuality (2),Trial type 4,normal,PI scores,0.3684210526315789,0.012927054478301012
-Sexuality (2),Trial type 4,basic,*D* scores,0.3684210526315789,0.012927054478301012
-Sexuality (2),Trial type 4,basic,PI scores,0.3684210526315789,0.012927054478301012
-Sexuality (2),Trial type 4,bca,*D* scores,0.2631578947368421,0.010772545398584178
-Sexuality (2),Trial type 4,bca,PI scores,0.3157894736842105,0.012003693444136654
-Shapes & colors (1),Trial type 1,percent,*D* scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 1,percent,PI scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 1,normal,*D* scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 1,normal,PI scores,0.36363636363636365,0.023140495867768597
-Shapes & colors (1),Trial type 1,basic,*D* scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 1,basic,PI scores,0.36363636363636365,0.023140495867768597
-Shapes & colors (1),Trial type 1,bca,*D* scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 1,bca,PI scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 2,percent,*D* scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,percent,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,normal,*D* scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,normal,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,basic,*D* scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,basic,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,bca,*D* scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 2,bca,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 3,percent,*D* scores,0.09090909090909091,0.008264462809917356
-Shapes & colors (1),Trial type 3,percent,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 3,normal,*D* scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 3,normal,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 3,basic,*D* scores,0.36363636363636365,0.023140495867768597
-Shapes & colors (1),Trial type 3,basic,PI scores,0.2727272727272727,0.019834710743801647
-Shapes & colors (1),Trial type 3,bca,*D* scores,0,1e-6
-Shapes & colors (1),Trial type 3,bca,PI scores,0.18181818181818182,0.01487603305785124
-Shapes & colors (1),Trial type 4,percent,*D* scores,0.09090909090909091,0.008264462809917356
-Shapes & colors (1),Trial type 4,percent,PI scores,0,1e-6
-Shapes & colors (1),Trial type 4,normal,*D* scores,0.09090909090909091,0.008264462809917356
-Shapes & colors (1),Trial type 4,normal,PI scores,0.09090909090909091,0.008264462809917356
-Shapes & colors (1),Trial type 4,basic,*D* scores,0.09090909090909091,0.008264462809917356
-Shapes & colors (1),Trial type 4,basic,PI scores,0.09090909090909091,0.008264462809917356
-Shapes & colors (1),Trial type 4,bca,*D* scores,0,1e-6
-Shapes & colors (1),Trial type 4,bca,PI scores,0,1e-6
-Shapes & colors (2),Trial type 1,percent,*D* scores,0.4,0.02666666666666666
-Shapes & colors (2),Trial type 1,percent,PI scores,0.5,0.027777777777777776
-Shapes & colors (2),Trial type 1,normal,*D* scores,0.5,0.027777777777777776
-Shapes & colors (2),Trial type 1,normal,PI scores,0.5,0.027777777777777776
-Shapes & colors (2),Trial type 1,basic,*D* scores,0.5,0.027777777777777776
-Shapes & colors (2),Trial type 1,basic,PI scores,0.5,0.027777777777777776
-Shapes & colors (2),Trial type 1,bca,*D* scores,0.3,0.02333333333333333
-Shapes & colors (2),Trial type 1,bca,PI scores,0.4,0.02666666666666666
-Shapes & colors (2),Trial type 2,percent,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 2,percent,PI scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 2,normal,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 2,normal,PI scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 2,basic,*D* scores,0.3,0.02333333333333333
-Shapes & colors (2),Trial type 2,basic,PI scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 2,bca,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 2,bca,PI scores,0,1e-6
-Shapes & colors (2),Trial type 3,percent,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 3,percent,PI scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 3,normal,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 3,normal,PI scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 3,basic,*D* scores,0.2,0.017777777777777778
-Shapes & colors (2),Trial type 3,basic,PI scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 3,bca,*D* scores,0,1e-6
-Shapes & colors (2),Trial type 3,bca,PI scores,0,1e-6
-Shapes & colors (2),Trial type 4,percent,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 4,percent,PI scores,0.2,0.017777777777777778
-Shapes & colors (2),Trial type 4,normal,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 4,normal,PI scores,0.2,0.017777777777777778
-Shapes & colors (2),Trial type 4,basic,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 4,basic,PI scores,0.2,0.017777777777777778
-Shapes & colors (2),Trial type 4,bca,*D* scores,0.1,0.009999999999999998
-Shapes & colors (2),Trial type 4,bca,PI scores,0.2,0.017777777777777778
-Shapes & colors (3),Trial type 1,percent,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 1,percent,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 1,normal,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 1,normal,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 1,basic,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 1,basic,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 1,bca,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 1,bca,PI scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,percent,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,percent,PI scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,normal,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,normal,PI scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,basic,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,basic,PI scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,bca,*D* scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 2,bca,PI scores,0.1,0.009999999999999998
-Shapes & colors (3),Trial type 3,percent,*D* scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 3,percent,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 3,normal,*D* scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 3,normal,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 3,basic,*D* scores,0.5,0.027777777777777776
-Shapes & colors (3),Trial type 3,basic,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 3,bca,*D* scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 3,bca,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 4,percent,*D* scores,0.2,0.017777777777777778
-Shapes & colors (3),Trial type 4,percent,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 4,normal,*D* scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 4,normal,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 4,basic,*D* scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 4,basic,PI scores,0.3,0.02333333333333333
-Shapes & colors (3),Trial type 4,bca,*D* scores,0.2,0.017777777777777778
-Shapes & colors (3),Trial type 4,bca,PI scores,0.3,0.02333333333333333
-Shapes & colors (4),Trial type 1,percent,*D* scores,0.375,0.03348214285714285
-Shapes & colors (4),Trial type 1,percent,PI scores,0.375,0.03348214285714285
-Shapes & colors (4),Trial type 1,normal,*D* scores,0.5,0.035714285714285705
-Shapes & colors (4),Trial type 1,normal,PI scores,0.375,0.03348214285714285
-Shapes & colors (4),Trial type 1,basic,*D* scores,0.5,0.035714285714285705
-Shapes & colors (4),Trial type 1,basic,PI scores,0.375,0.03348214285714285
-Shapes & colors (4),Trial type 1,bca,*D* scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 1,bca,PI scores,0.375,0.03348214285714285
-Shapes & colors (4),Trial type 2,percent,*D* scores,0,1e-6
-Shapes & colors (4),Trial type 2,percent,PI scores,0,1e-6
-Shapes & colors (4),Trial type 2,normal,*D* scores,0.125,0.015625
-Shapes & colors (4),Trial type 2,normal,PI scores,0,1e-6
-Shapes & colors (4),Trial type 2,basic,*D* scores,0.125,0.015625
-Shapes & colors (4),Trial type 2,basic,PI scores,0.125,0.015625
-Shapes & colors (4),Trial type 2,bca,*D* scores,0,1e-6
-Shapes & colors (4),Trial type 2,bca,PI scores,0,1e-6
-Shapes & colors (4),Trial type 3,percent,*D* scores,0.125,0.015625
-Shapes & colors (4),Trial type 3,percent,PI scores,0.125,0.015625
-Shapes & colors (4),Trial type 3,normal,*D* scores,0.125,0.015625
-Shapes & colors (4),Trial type 3,normal,PI scores,0.125,0.015625
-Shapes & colors (4),Trial type 3,basic,*D* scores,0.125,0.015625
-Shapes & colors (4),Trial type 3,basic,PI scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 3,bca,*D* scores,0,1e-6
-Shapes & colors (4),Trial type 3,bca,PI scores,0.125,0.015625
-Shapes & colors (4),Trial type 4,percent,*D* scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 4,percent,PI scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 4,normal,*D* scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 4,normal,PI scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 4,basic,*D* scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 4,basic,PI scores,0.375,0.03348214285714285
-Shapes & colors (4),Trial type 4,bca,*D* scores,0.25,0.02678571428571428
-Shapes & colors (4),Trial type 4,bca,PI scores,0.25,0.02678571428571428
-Shapes & colors (5),Trial type 1,percent,*D* scores,0.5,0.011904761904761902
-Shapes & colors (5),Trial type 1,percent,PI scores,0.5,0.011904761904761902
-Shapes & colors (5),Trial type 1,normal,*D* scores,0.5454545454545454,0.011806375442739074
-Shapes & colors (5),Trial type 1,normal,PI scores,0.5,0.011904761904761902
-Shapes & colors (5),Trial type 1,basic,*D* scores,0.5,0.011904761904761902
-Shapes & colors (5),Trial type 1,basic,PI scores,0.5454545454545454,0.011806375442739074
-Shapes & colors (5),Trial type 1,bca,*D* scores,0.36363636363636365,0.011019283746556474
-Shapes & colors (5),Trial type 1,bca,PI scores,0.45454545454545453,0.011806375442739074
-Shapes & colors (5),Trial type 2,percent,*D* scores,0.09090909090909091,0.003935458480913027
-Shapes & colors (5),Trial type 2,percent,PI scores,0.09090909090909091,0.003935458480913027
-Shapes & colors (5),Trial type 2,normal,*D* scores,0.18181818181818182,0.007083825265643445
-Shapes & colors (5),Trial type 2,normal,PI scores,0.09090909090909091,0.003935458480913027
-Shapes & colors (5),Trial type 2,basic,*D* scores,0.22727272727272727,0.008362849271940179
-Shapes & colors (5),Trial type 2,basic,PI scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (5),Trial type 2,bca,*D* scores,0,1e-6
-Shapes & colors (5),Trial type 2,bca,PI scores,0.09090909090909091,0.003935458480913027
-Shapes & colors (5),Trial type 3,percent,*D* scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (5),Trial type 3,percent,PI scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (5),Trial type 3,normal,*D* scores,0.09090909090909091,0.003935458480913027
-Shapes & colors (5),Trial type 3,normal,PI scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (5),Trial type 3,basic,*D* scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (5),Trial type 3,basic,PI scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (5),Trial type 3,bca,*D* scores,0,1e-6
-Shapes & colors (5),Trial type 3,bca,PI scores,0.09090909090909091,0.003935458480913027
-Shapes & colors (5),Trial type 4,percent,*D* scores,0.045454545454545456,0.002066115702479339
-Shapes & colors (5),Trial type 4,percent,PI scores,0.18181818181818182,0.007083825265643445
-Shapes & colors (5),Trial type 4,normal,*D* scores,0.18181818181818182,0.007083825265643445
-Shapes & colors (5),Trial type 4,normal,PI scores,0.22727272727272727,0.008362849271940179
-Shapes & colors (5),Trial type 4,basic,*D* scores,0.22727272727272727,0.008362849271940179
-Shapes & colors (5),Trial type 4,basic,PI scores,0.22727272727272727,0.008362849271940179
-Shapes & colors (5),Trial type 4,bca,*D* scores,0,1e-6
-Shapes & colors (5),Trial type 4,bca,PI scores,0.13636363636363635,0.005608028335301063
-Shapes & colors (6),Trial type 1,percent,*D* scores,0.34615384615384615,0.009053254437869824
-Shapes & colors (6),Trial type 1,percent,PI scores,0.3076923076923077,0.008520710059171599
-Shapes & colors (6),Trial type 1,normal,*D* scores,0.38461538461538464,0.009467455621301775
-Shapes & colors (6),Trial type 1,normal,PI scores,0.3076923076923077,0.008520710059171599
-Shapes & colors (6),Trial type 1,basic,*D* scores,0.4230769230769231,0.009763313609467455
-Shapes & colors (6),Trial type 1,basic,PI scores,0.34615384615384615,0.009053254437869824
-Shapes & colors (6),Trial type 1,bca,*D* scores,0.2692307692307692,0.007869822485207102
-Shapes & colors (6),Trial type 1,bca,PI scores,0.23076923076923078,0.007100591715976333
-Shapes & colors (6),Trial type 2,percent,*D* scores,0.19230769230769232,0.006213017751479291
-Shapes & colors (6),Trial type 2,percent,PI scores,0.19230769230769232,0.006213017751479291
-Shapes & colors (6),Trial type 2,normal,*D* scores,0.2692307692307692,0.007869822485207102
-Shapes & colors (6),Trial type 2,normal,PI scores,0.19230769230769232,0.006213017751479291
-Shapes & colors (6),Trial type 2,basic,*D* scores,0.2692307692307692,0.007869822485207102
-Shapes & colors (6),Trial type 2,basic,PI scores,0.23076923076923078,0.007100591715976333
-Shapes & colors (6),Trial type 2,bca,*D* scores,0.11538461538461539,0.004082840236686392
-Shapes & colors (6),Trial type 2,bca,PI scores,0.19230769230769232,0.006213017751479291
-Shapes & colors (6),Trial type 3,percent,*D* scores,0.15384615384615385,0.005207100591715977
-Shapes & colors (6),Trial type 3,percent,PI scores,0.11538461538461539,0.004082840236686392
-Shapes & colors (6),Trial type 3,normal,*D* scores,0.11538461538461539,0.004082840236686392
-Shapes & colors (6),Trial type 3,normal,PI scores,0.11538461538461539,0.004082840236686392
-Shapes & colors (6),Trial type 3,basic,*D* scores,0.19230769230769232,0.006213017751479291
-Shapes & colors (6),Trial type 3,basic,PI scores,0.11538461538461539,0.004082840236686392
-Shapes & colors (6),Trial type 3,bca,*D* scores,0.07692307692307693,0.002840236686390533
-Shapes & colors (6),Trial type 3,bca,PI scores,0.07692307692307693,0.002840236686390533
-Shapes & colors (6),Trial type 4,percent,*D* scores,0.3076923076923077,0.008520710059171599
-Shapes & colors (6),Trial type 4,percent,PI scores,0.34615384615384615,0.009053254437869824
-Shapes & colors (6),Trial type 4,normal,*D* scores,0.38461538461538464,0.009467455621301775
-Shapes & colors (6),Trial type 4,normal,PI scores,0.34615384615384615,0.009053254437869824
-Shapes & colors (6),Trial type 4,basic,*D* scores,0.4230769230769231,0.009763313609467455
-Shapes & colors (6),Trial type 4,basic,PI scores,0.4230769230769231,0.009763313609467455
-Shapes & colors (6),Trial type 4,bca,*D* scores,0.2692307692307692,0.007869822485207102
-Shapes & colors (6),Trial type 4,bca,PI scores,0.2692307692307692,0.007869822485207102
-Shapes & colors (7),Trial type 1,percent,*D* scores,0.5714285714285714,0.018838304552590262
-Shapes & colors (7),Trial type 1,percent,PI scores,0.6428571428571429,0.017660910518053376
-Shapes & colors (7),Trial type 1,normal,*D* scores,0.5714285714285714,0.018838304552590262
-Shapes & colors (7),Trial type 1,normal,PI scores,0.6428571428571429,0.017660910518053376
-Shapes & colors (7),Trial type 1,basic,*D* scores,0.6428571428571429,0.017660910518053376
-Shapes & colors (7),Trial type 1,basic,PI scores,0.7142857142857143,0.015698587127158558
-Shapes & colors (7),Trial type 1,bca,*D* scores,0.5714285714285714,0.018838304552590262
-Shapes & colors (7),Trial type 1,bca,PI scores,0.5,0.019230769230769232
-Shapes & colors (7),Trial type 2,percent,*D* scores,0.2857142857142857,0.015698587127158558
-Shapes & colors (7),Trial type 2,percent,PI scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 2,normal,*D* scores,0.2857142857142857,0.015698587127158558
-Shapes & colors (7),Trial type 2,normal,PI scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 2,basic,*D* scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 2,basic,PI scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 2,bca,*D* scores,0.14285714285714285,0.009419152276295133
-Shapes & colors (7),Trial type 2,bca,PI scores,0.21428571428571427,0.012951334379905812
-Shapes & colors (7),Trial type 3,percent,*D* scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 3,percent,PI scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 3,normal,*D* scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 3,normal,PI scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 3,basic,*D* scores,0.5,0.019230769230769232
-Shapes & colors (7),Trial type 3,basic,PI scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 3,bca,*D* scores,0.2857142857142857,0.015698587127158558
-Shapes & colors (7),Trial type 3,bca,PI scores,0.21428571428571427,0.012951334379905812
-Shapes & colors (7),Trial type 4,percent,*D* scores,0.42857142857142855,0.018838304552590262
-Shapes & colors (7),Trial type 4,percent,PI scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 4,normal,*D* scores,0.6428571428571429,0.017660910518053376
-Shapes & colors (7),Trial type 4,normal,PI scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 4,basic,*D* scores,0.7857142857142857,0.012951334379905812
-Shapes & colors (7),Trial type 4,basic,PI scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 4,bca,*D* scores,0.35714285714285715,0.017660910518053376
-Shapes & colors (7),Trial type 4,bca,PI scores,0.35714285714285715,0.017660910518053376
-Stigma - ADHD,Trial type 1,percent,*D* scores,0.24193548387096775,0.0030066017297555483
-Stigma - ADHD,Trial type 1,percent,PI scores,0.3387096774193548,0.003671892325275925
-Stigma - ADHD,Trial type 1,normal,*D* scores,0.2903225806451613,0.003377629177257297
-Stigma - ADHD,Trial type 1,normal,PI scores,0.3548387096774194,0.0037529213080636633
-Stigma - ADHD,Trial type 1,basic,*D* scores,0.3709677419354839,0.0038254209242421663
-Stigma - ADHD,Trial type 1,basic,PI scores,0.3709677419354839,0.0038254209242421663
-Stigma - ADHD,Trial type 1,bca,*D* scores,0.1774193548387097,0.0023924873338905858
-Stigma - ADHD,Trial type 1,bca,PI scores,0.27419354838709675,0.003262482728032617
-Stigma - ADHD,Trial type 2,percent,*D* scores,0.0967741935483871,0.0014329335903515807
-Stigma - ADHD,Trial type 2,percent,PI scores,0.11290322580645161,0.0016419030722778529
-Stigma - ADHD,Trial type 2,normal,*D* scores,0.0967741935483871,0.0014329335903515807
-Stigma - ADHD,Trial type 2,normal,PI scores,0.11290322580645161,0.0016419030722778529
-Stigma - ADHD,Trial type 2,basic,*D* scores,0.16129032258064516,0.002217635318401256
-Stigma - ADHD,Trial type 2,basic,PI scores,0.12903225806451613,0.0018423431875948893
-Stigma - ADHD,Trial type 2,bca,*D* scores,0.0967741935483871,0.0014329335903515807
-Stigma - ADHD,Trial type 2,bca,PI scores,0.08064516129032258,0.0012154347418160726
-Stigma - ADHD,Trial type 3,percent,*D* scores,0.1774193548387097,0.0023924873338905858
-Stigma - ADHD,Trial type 3,percent,PI scores,0.1935483870967742,0.0025588099827706795
-Stigma - ADHD,Trial type 3,normal,*D* scores,0.1935483870967742,0.0025588099827706795
-Stigma - ADHD,Trial type 3,normal,PI scores,0.1935483870967742,0.0025588099827706795
-Stigma - ADHD,Trial type 3,basic,*D* scores,0.22580645161290322,0.0028658671807031606
-Stigma - ADHD,Trial type 3,basic,PI scores,0.1935483870967742,0.0025588099827706795
-Stigma - ADHD,Trial type 3,bca,*D* scores,0.12903225806451613,0.0018423431875948893
-Stigma - ADHD,Trial type 3,bca,PI scores,0.14516129032258066,0.00203425393630269
-Stigma - ADHD,Trial type 4,percent,*D* scores,0.1774193548387097,0.0023924873338905858
-Stigma - ADHD,Trial type 4,percent,PI scores,0.24193548387096775,0.0030066017297555483
-Stigma - ADHD,Trial type 4,normal,*D* scores,0.1935483870967742,0.0025588099827706795
-Stigma - ADHD,Trial type 4,normal,PI scores,0.25806451612903225,0.0031388069121987003
-Stigma - ADHD,Trial type 4,basic,*D* scores,0.22580645161290322,0.0028658671807031606
-Stigma - ADHD,Trial type 4,basic,PI scores,0.2903225806451613,0.003377629177257297
-Stigma - ADHD,Trial type 4,bca,*D* scores,0.11290322580645161,0.0016419030722778529
-Stigma - ADHD,Trial type 4,bca,PI scores,0.1935483870967742,0.0025588099827706795
-Stigma - PTSD,Trial type 1,percent,*D* scores,0.35185185185185186,0.004302870305665554
-Stigma - PTSD,Trial type 1,percent,PI scores,0.35185185185185186,0.004302870305665554
-Stigma - PTSD,Trial type 1,normal,*D* scores,0.4074074074074074,0.004555219090509099
-Stigma - PTSD,Trial type 1,normal,PI scores,0.35185185185185186,0.004302870305665554
-Stigma - PTSD,Trial type 1,basic,*D* scores,0.42592592592592593,0.004613453425472993
-Stigma - PTSD,Trial type 1,basic,PI scores,0.37037037037037035,0.004399927530605378
-Stigma - PTSD,Trial type 1,bca,*D* scores,0.3148148148148148,0.0040699329658099755
-Stigma - PTSD,Trial type 1,bca,PI scores,0.3333333333333333,0.00419287211740042
-Stigma - PTSD,Trial type 2,percent,*D* scores,0.16666666666666666,0.002620545073375262
-Stigma - PTSD,Trial type 2,percent,PI scores,0.14814814814814814,0.002381137251857028
-Stigma - PTSD,Trial type 2,normal,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - PTSD,Trial type 2,normal,PI scores,0.16666666666666666,0.002620545073375262
-Stigma - PTSD,Trial type 2,basic,*D* scores,0.2222222222222222,0.0032611227579781034
-Stigma - PTSD,Trial type 2,basic,PI scores,0.16666666666666666,0.002620545073375262
-Stigma - PTSD,Trial type 2,bca,*D* scores,0.12962962962962962,0.0021287884670134847
-Stigma - PTSD,Trial type 2,bca,PI scores,0.07407407407407407,0.0012940963325309936
-Stigma - PTSD,Trial type 3,percent,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - PTSD,Trial type 3,percent,PI scores,0.2222222222222222,0.0032611227579781034
-Stigma - PTSD,Trial type 3,normal,*D* scores,0.16666666666666666,0.002620545073375262
-Stigma - PTSD,Trial type 3,normal,PI scores,0.2222222222222222,0.0032611227579781034
-Stigma - PTSD,Trial type 3,basic,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - PTSD,Trial type 3,basic,PI scores,0.25925925925925924,0.003623469731086782
-Stigma - PTSD,Trial type 3,bca,*D* scores,0.12962962962962962,0.0021287884670134847
-Stigma - PTSD,Trial type 3,bca,PI scores,0.2037037037037037,0.0030605378264357995
-Stigma - PTSD,Trial type 4,percent,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - PTSD,Trial type 4,percent,PI scores,0.09259259259259259,0.0015852680073504665
-Stigma - PTSD,Trial type 4,normal,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - PTSD,Trial type 4,normal,PI scores,0.09259259259259259,0.0015852680073504665
-Stigma - PTSD,Trial type 4,basic,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - PTSD,Trial type 4,basic,PI scores,0.12962962962962962,0.0021287884670134847
-Stigma - PTSD,Trial type 4,bca,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - PTSD,Trial type 4,bca,PI scores,0.09259259259259259,0.0015852680073504665
-Stigma - Schizophrenia,Trial type 1,percent,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - Schizophrenia,Trial type 1,percent,PI scores,0.24074074074074073,0.003448766726195098
-Stigma - Schizophrenia,Trial type 1,normal,*D* scores,0.16666666666666666,0.002620545073375262
-Stigma - Schizophrenia,Trial type 1,normal,PI scores,0.2962962962962963,0.003934052850894219
-Stigma - Schizophrenia,Trial type 1,basic,*D* scores,0.2037037037037037,0.0030605378264357995
-Stigma - Schizophrenia,Trial type 1,basic,PI scores,0.3148148148148148,0.0040699329658099755
-Stigma - Schizophrenia,Trial type 1,bca,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - Schizophrenia,Trial type 1,bca,PI scores,0.2037037037037037,0.0030605378264357995
-Stigma - Schizophrenia,Trial type 2,percent,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - Schizophrenia,Trial type 2,percent,PI scores,0.18518518518518517,0.002847011931568186
-Stigma - Schizophrenia,Trial type 2,normal,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - Schizophrenia,Trial type 2,normal,PI scores,0.2037037037037037,0.0030605378264357995
-Stigma - Schizophrenia,Trial type 2,basic,*D* scores,0.2222222222222222,0.0032611227579781034
-Stigma - Schizophrenia,Trial type 2,basic,PI scores,0.2037037037037037,0.0030605378264357995
-Stigma - Schizophrenia,Trial type 2,bca,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - Schizophrenia,Trial type 2,bca,PI scores,0.14814814814814814,0.002381137251857028
-Stigma - Schizophrenia,Trial type 3,percent,*D* scores,0.2777777777777778,0.0037852317726531567
-Stigma - Schizophrenia,Trial type 3,percent,PI scores,0.35185185185185186,0.004302870305665554
-Stigma - Schizophrenia,Trial type 3,normal,*D* scores,0.3148148148148148,0.0040699329658099755
-Stigma - Schizophrenia,Trial type 3,normal,PI scores,0.37037037037037035,0.004399927530605378
-Stigma - Schizophrenia,Trial type 3,basic,*D* scores,0.35185185185185186,0.004302870305665554
-Stigma - Schizophrenia,Trial type 3,basic,PI scores,0.42592592592592593,0.004613453425472993
-Stigma - Schizophrenia,Trial type 3,bca,*D* scores,0.2222222222222222,0.0032611227579781034
-Stigma - Schizophrenia,Trial type 3,bca,PI scores,0.3333333333333333,0.00419287211740042
-Stigma - Schizophrenia,Trial type 4,percent,*D* scores,0.16666666666666666,0.002620545073375262
-Stigma - Schizophrenia,Trial type 4,percent,PI scores,0.18518518518518517,0.002847011931568186
-Stigma - Schizophrenia,Trial type 4,normal,*D* scores,0.18518518518518517,0.002847011931568186
-Stigma - Schizophrenia,Trial type 4,normal,PI scores,0.2037037037037037,0.0030605378264357995
-Stigma - Schizophrenia,Trial type 4,basic,*D* scores,0.2037037037037037,0.0030605378264357995
-Stigma - Schizophrenia,Trial type 4,basic,PI scores,0.2222222222222222,0.0032611227579781034
-Stigma - Schizophrenia,Trial type 4,bca,*D* scores,0.1111111111111111,0.0018634987188446306
-Stigma - Schizophrenia,Trial type 4,bca,PI scores,0.12962962962962962,0.0021287884670134847
-Valenced words,Trial type 1,percent,*D* scores,0.5405405405405406,0.0068987906825744684
-Valenced words,Trial type 1,percent,PI scores,0.4864864864864865,0.006939371804236668
-Valenced words,Trial type 1,normal,*D* scores,0.5675675675675675,0.006817628439250061
-Valenced words,Trial type 1,normal,PI scores,0.5405405405405406,0.0068987906825744684
-Valenced words,Trial type 1,basic,*D* scores,0.5675675675675675,0.006817628439250061
-Valenced words,Trial type 1,basic,PI scores,0.5945945945945946,0.0066958850742634525
-Valenced words,Trial type 1,bca,*D* scores,0.43243243243243246,0.006817628439250061
-Valenced words,Trial type 1,bca,PI scores,0.43243243243243246,0.006817628439250061
-Valenced words,Trial type 2,percent,*D* scores,0.13513513513513514,0.00324648973297622
-Valenced words,Trial type 2,percent,PI scores,0.13513513513513514,0.00324648973297622
-Valenced words,Trial type 2,normal,*D* scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 2,normal,PI scores,0.1891891891891892,0.004261017774531289
-Valenced words,Trial type 2,basic,*D* scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 2,basic,PI scores,0.1891891891891892,0.004261017774531289
-Valenced words,Trial type 2,bca,*D* scores,0.13513513513513514,0.00324648973297622
-Valenced words,Trial type 2,bca,PI scores,0.10810810810810811,0.0026783540297053814
-Valenced words,Trial type 3,percent,*D* scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 3,percent,PI scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 3,normal,*D* scores,0.1891891891891892,0.004261017774531289
-Valenced words,Trial type 3,normal,PI scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 3,basic,*D* scores,0.21621621621621623,0.004707410112815519
-Valenced words,Trial type 3,basic,PI scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 3,bca,*D* scores,0.10810810810810811,0.0026783540297053814
-Valenced words,Trial type 3,bca,PI scores,0.10810810810810811,0.0026783540297053814
-Valenced words,Trial type 4,percent,*D* scores,0.13513513513513514,0.00324648973297622
-Valenced words,Trial type 4,percent,PI scores,0.13513513513513514,0.00324648973297622
-Valenced words,Trial type 4,normal,*D* scores,0.13513513513513514,0.00324648973297622
-Valenced words,Trial type 4,normal,PI scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 4,basic,*D* scores,0.1891891891891892,0.004261017774531289
-Valenced words,Trial type 4,basic,PI scores,0.16216216216216217,0.003774044314584855
-Valenced words,Trial type 4,bca,*D* scores,0.10810810810810811,0.0026783540297053814
-Valenced words,Trial type 4,bca,PI scores,0.08108108108108109,0.0020696372047723397
+domain,trial_type,scoring_method,proportion_diff_zero,variance,proportion_diff_zero_logit
+Body image,Trial type 1,*D* scores,0.19047619047619047,0.007709750566893425,-1.4469189829363254
+Body image,Trial type 1,PI scores,0.19047619047619047,0.007709750566893425,-1.4469189829363254
+Body image,Trial type 2,*D* scores,0.09523809523809523,0.004308390022675737,-2.2512917986064953
+Body image,Trial type 2,PI scores,0.09523809523809523,0.004308390022675737,-2.2512917986064953
+Body image,Trial type 3,*D* scores,0.047619047619047616,0.0022675736961451243,-2.995732273553991
+Body image,Trial type 3,PI scores,0.14285714285714285,0.006122448979591836,-1.791759469228055
+Body image,Trial type 4,*D* scores,0.19047619047619047,0.007709750566893425,-1.4469189829363254
+Body image,Trial type 4,PI scores,0.09523809523809523,0.004308390022675737,-2.2512917986064953
+Clinton-Trump,Trial type 1,*D* scores,0.20618556701030927,0.0017049279059056937,-1.348073148299693
+Clinton-Trump,Trial type 1,PI scores,0.25773195876288657,0.0019927728770326287,-1.0577902941478547
+Clinton-Trump,Trial type 2,*D* scores,0.08247422680412371,7.882523824706844e-4,-2.409194828052304
+Clinton-Trump,Trial type 2,PI scores,0.07216494845360824,6.974705069614201e-4,-2.553899521274952
+Clinton-Trump,Trial type 3,*D* scores,0.18556701030927836,0.001574290572855777,-1.4790760945708568
+Clinton-Trump,Trial type 3,PI scores,0.17525773195876287,0.0015056506182024305,-1.5488132906176655
+Clinton-Trump,Trial type 4,*D* scores,0.09278350515463918,8.768200658943566e-4,-2.280112237141987
+Clinton-Trump,Trial type 4,PI scores,0.041237113402061855,4.1183972792007654e-4,-3.1463051320333655
+Countries (1),Trial type 1,*D* scores,0.20754716981132076,0.0031629104252813753,-1.3397743454849977
+Countries (1),Trial type 1,PI scores,0.33962264150943394,0.004313059670838239,-0.6649763035932491
+Countries (1),Trial type 2,*D* scores,0.1509433962264151,0.0024646055261932803,-1.7272209480904839
+Countries (1),Trial type 2,PI scores,0.18867924528301888,0.0029438343785086404,-1.4586150226995167
+Countries (1),Trial type 3,*D* scores,0.09433962264150944,0.0016430703507955197,-2.2617630984737906
+Countries (1),Trial type 3,PI scores,0.07547169811320754,0.001341840786483008,-2.505525936990736
+Countries (1),Trial type 4,*D* scores,0.018867924528301886,3.559985760056961e-4,-3.9512437185814275
+Countries (1),Trial type 4,PI scores,0.018867924528301886,3.559985760056961e-4,-3.9512437185814275
+Countries (2),Trial type 1,*D* scores,0.08,0.0015020408163265305,-2.4423470353692043
+Countries (2),Trial type 1,PI scores,0.14,0.0024571428571428574,-1.8152899666382492
+Countries (2),Trial type 2,*D* scores,0.12,0.0021551020408163268,-1.9924301646902063
+Countries (2),Trial type 2,PI scores,0.2,0.0032653061224489784,-1.3862943611198906
+Countries (2),Trial type 3,*D* scores,0.1,0.0018367346938775511,-2.197224577336219
+Countries (2),Trial type 3,PI scores,0.1,0.0018367346938775511,-2.197224577336219
+Countries (2),Trial type 4,*D* scores,0.06,0.0011510204081632656,-2.751535313041949
+Countries (2),Trial type 4,PI scores,0.08,0.0015020408163265305,-2.4423470353692043
+Death (1),Trial type 1,*D* scores,0.058823529411764705,0.0034602076124567475,-2.772588722239781
+Death (1),Trial type 1,PI scores,0.058823529411764705,0.0034602076124567475,-2.772588722239781
+Death (1),Trial type 2,*D* scores,0.11764705882352941,0.006487889273356401,-2.0149030205422647
+Death (1),Trial type 2,PI scores,0.11764705882352941,0.006487889273356401,-2.0149030205422647
+Death (1),Trial type 3,*D* scores,0.35294117647058826,0.014273356401384085,-0.6061358035703154
+Death (1),Trial type 3,PI scores,0.17647058823529413,0.009083044982698962,-1.5404450409471488
+Death (1),Trial type 4,*D* scores,0.058823529411764705,0.0034602076124567475,-2.772588722239781
+Death (1),Trial type 4,PI scores,0.058823529411764705,0.0034602076124567475,-2.772588722239781
+Death (2),Trial type 1,*D* scores,0.1,0.004736842105263157,-2.197224577336219
+Death (2),Trial type 1,PI scores,0.1,0.004736842105263157,-2.197224577336219
+Death (2),Trial type 2,*D* scores,0.15,0.006710526315789474,-1.7346010553881064
+Death (2),Trial type 2,PI scores,0.1,0.004736842105263157,-2.197224577336219
+Death (2),Trial type 3,*D* scores,0.1,0.004736842105263157,-2.197224577336219
+Death (2),Trial type 3,PI scores,0.15,0.006710526315789474,-1.7346010553881064
+Death (2),Trial type 4,*D* scores,0.1,0.004736842105263157,-2.197224577336219
+Death (2),Trial type 4,PI scores,0.25,0.009868421052631578,-1.0986122886681098
+Death (3),Trial type 1,*D* scores,0.38461538461538464,0.009467455621301775,-0.4700036292457356
+Death (3),Trial type 1,PI scores,0.34615384615384615,0.009053254437869824,-0.6359887667199967
+Death (3),Trial type 2,*D* scores,0.15384615384615385,0.005207100591715977,-1.7047480922384253
+Death (3),Trial type 2,PI scores,0.15384615384615385,0.005207100591715977,-1.7047480922384253
+Death (3),Trial type 3,*D* scores,0.11538461538461539,0.004082840236686392,-2.0368819272610397
+Death (3),Trial type 3,PI scores,0.15384615384615385,0.005207100591715977,-1.7047480922384253
+Death (3),Trial type 4,*D* scores,0.11538461538461539,0.004082840236686392,-2.0368819272610397
+Death (3),Trial type 4,PI scores,0.23076923076923078,0.007100591715976333,-1.203972804325936
+Disgust (1),Trial type 1,*D* scores,0.1891891891891892,0.004261017774531289,-1.455287232606842
+Disgust (1),Trial type 1,PI scores,0.24324324324324326,0.005113221329437545,-1.1349799328389845
+Disgust (1),Trial type 2,*D* scores,0.10810810810810811,0.0026783540297053814,-2.1102132003465894
+Disgust (1),Trial type 2,PI scores,0.13513513513513514,0.00324648973297622,-1.8562979903656263
+Disgust (1),Trial type 3,*D* scores,0.2702702702702703,0.00547845142439737,-0.9932517730102833
+Disgust (1),Trial type 3,PI scores,0.24324324324324326,0.005113221329437545,-1.1349799328389845
+Disgust (1),Trial type 4,*D* scores,0.2702702702702703,0.00547845142439737,-0.9932517730102833
+Disgust (1),Trial type 4,PI scores,0.2702702702702703,0.00547845142439737,-0.9932517730102833
+Disgust (2),Trial type 1,*D* scores,0.2558139534883721,0.004532694635452884,-1.067840630001356
+Disgust (2),Trial type 1,PI scores,0.27906976744186046,0.004790234103376342,-0.9490805546971458
+Disgust (2),Trial type 2,*D* scores,0.20930232558139536,0.003940353859228927,-1.329135947279942
+Disgust (2),Trial type 2,PI scores,0.2558139534883721,0.004532694635452884,-1.067840630001356
+Disgust (2),Trial type 3,*D* scores,0.11627906976744186,0.0024466249452728627,-2.0281482472922856
+Disgust (2),Trial type 3,PI scores,0.06976744186046512,0.001545236807540756,-2.5902671654458267
+Disgust (2),Trial type 4,*D* scores,0.32558139534883723,0.005228051198846224,-0.7282385003712153
+Disgust (2),Trial type 4,PI scores,0.3488372093023256,0.005408328826392644,-0.6241543090729939
+Friend-Enemy,Trial type 1,*D* scores,0.2857142857142857,0.0021039343572480536,-0.9162907318741551
+Friend-Enemy,Trial type 1,PI scores,0.3877551020408163,0.0024474338441456958,-0.456758402495715
+Friend-Enemy,Trial type 2,*D* scores,0.1836734693877551,0.0015457476910393866,-1.491654876777717
+Friend-Enemy,Trial type 2,PI scores,0.20408163265306123,0.0016745599986260017,-1.3609765531356006
+Friend-Enemy,Trial type 3,*D* scores,0.04081632653061224,4.0361189710472873e-4,-3.1570004211501135
+Friend-Enemy,Trial type 3,PI scores,0.09183673469387756,8.598221531406588e-4,-2.2914117923959205
+Friend-Enemy,Trial type 4,*D* scores,0.08163265306122448,7.728738455196933e-4,-2.4203681286504293
+Friend-Enemy,Trial type 4,PI scores,0.10204081632653061,9.44623588968514e-4,-2.174751721484161
+Gender (1),Trial type 1,*D* scores,0.07317073170731707,0.0016954193932183226,-2.538973871058276
+Gender (1),Trial type 1,PI scores,0.0975609756097561,0.002201070791195717,-2.2246235515243336
+Gender (1),Trial type 2,*D* scores,0.024390243902439025,5.94883997620464e-4,-3.6888794541139363
+Gender (1),Trial type 2,PI scores,0.024390243902439025,5.94883997620464e-4,-3.6888794541139363
+Gender (1),Trial type 3,*D* scores,0.07317073170731707,0.0016954193932183226,-2.538973871058276
+Gender (1),Trial type 3,PI scores,0.0975609756097561,0.002201070791195717,-2.2246235515243336
+Gender (1),Trial type 4,*D* scores,0.17073170731707318,0.003539559785841761,-1.5804503755608479
+Gender (1),Trial type 4,PI scores,0.1951219512195122,0.003926234384295063,-1.4170660197866443
+Gender (2),Trial type 1,*D* scores,0.17894736842105263,0.0015630341250663054,-1.5234954826333758
+Gender (2),Trial type 1,PI scores,0.1368421052631579,0.0012565568456415395,-1.8417698898027164
+Gender (2),Trial type 2,*D* scores,0.042105263157894736,4.2906819119467213e-4,-3.1245651453969594
+Gender (2),Trial type 2,PI scores,0.031578947368421054,3.253374196970591e-4,-3.4231762883809305
+Gender (2),Trial type 3,*D* scores,0.17894736842105263,0.0015630341250663054,-1.5234954826333758
+Gender (2),Trial type 3,PI scores,0.18947368421052632,0.001633759651087405,-1.4534336639575192
+Gender (2),Trial type 4,*D* scores,0.042105263157894736,4.2906819119467213e-4,-3.1245651453969594
+Gender (2),Trial type 4,PI scores,0.021052631578947368,2.1924913066540935e-4,-3.839452312593311
+Lincoln-Hitler,Trial type 1,*D* scores,0.2803030303030303,0.0015399484084425096,-0.9429589789563165
+Lincoln-Hitler,Trial type 1,PI scores,0.3333333333333333,0.0016963528413910095,-0.6931471805599454
+Lincoln-Hitler,Trial type 2,*D* scores,0.07575757575757576,5.344913394878698e-4,-2.501435951739211
+Lincoln-Hitler,Trial type 2,PI scores,0.10606060606060606,7.237538465852139e-4,-2.1316272948504063
+Lincoln-Hitler,Trial type 3,*D* scores,0.06060606060606061,4.346027940753826e-4,-2.740840023925201
+Lincoln-Hitler,Trial type 3,PI scores,0.11363636363636363,7.688789350829598e-4,-2.0541237336955462
+Lincoln-Hitler,Trial type 4,*D* scores,0.11363636363636363,7.688789350829598e-4,-2.0541237336955462
+Lincoln-Hitler,Trial type 4,PI scores,0.12121212121212122,8.131278082700706e-4,-1.9810014688665833
+Personality - Agreeableness,Trial type 1,*D* scores,0.3333333333333333,0.005847953216374269,-0.6931471805599454
+Personality - Agreeableness,Trial type 1,PI scores,0.3333333333333333,0.005847953216374269,-0.6931471805599454
+Personality - Agreeableness,Trial type 2,*D* scores,0.1282051282051282,0.0029412782449219697,-1.9169226121820613
+Personality - Agreeableness,Trial type 2,PI scores,0.20512820512820512,0.004290805910239109,-1.3545456628053103
+Personality - Agreeableness,Trial type 3,*D* scores,0.05128205128205128,0.0012803211183777983,-2.917770732084279
+Personality - Agreeableness,Trial type 3,PI scores,0.1282051282051282,0.0029412782449219697,-1.9169226121820613
+Personality - Agreeableness,Trial type 4,*D* scores,0.15384615384615385,0.0034257240734973534,-1.7047480922384253
+Personality - Agreeableness,Trial type 4,PI scores,0.1794871794871795,0.0038755666286030663,-1.5198257537444133
+Personality - Conscientiousness,Trial type 1,*D* scores,0.38461538461538464,0.00622858922454064,-0.4700036292457356
+Personality - Conscientiousness,Trial type 1,PI scores,0.41025641025641024,0.006367002318419321,-0.3629054936893685
+Personality - Conscientiousness,Trial type 2,*D* scores,0.02564102564102564,6.574621959237343e-4,-3.6375861597263857
+Personality - Conscientiousness,Trial type 3,*D* scores,0.1282051282051282,0.0029412782449219697,-1.9169226121820613
+Personality - Conscientiousness,Trial type 3,PI scores,0.10256410256410256,0.002422229142876916,-2.169053700369523
+Personality - Conscientiousness,Trial type 4,*D* scores,0.1282051282051282,0.0029412782449219697,-1.9169226121820613
+Personality - Conscientiousness,Trial type 4,PI scores,0.1794871794871795,0.0038755666286030663,-1.5198257537444133
+Personality - Extraversion,Trial type 1,*D* scores,0.18181818181818182,0.004648760330578513,-1.504077396776274
+Personality - Extraversion,Trial type 1,PI scores,0.15151515151515152,0.004017447199265381,-1.7227665977411035
+Personality - Extraversion,Trial type 2,*D* scores,0.09090909090909091,0.002582644628099173,-2.3025850929940455
+Personality - Extraversion,Trial type 2,PI scores,0.06060606060606061,0.0017791551882460972,-2.740840023925201
+Personality - Extraversion,Trial type 3,*D* scores,0.21212121212121213,0.005222681359044996,-1.3121863889661687
+Personality - Extraversion,Trial type 3,PI scores,0.24242424242424243,0.005739210284664831,-1.1394342831883648
+Personality - Extraversion,Trial type 4,*D* scores,0.06060606060606061,0.0017791551882460972,-2.740840023925201
+Personality - Neuroticism,Trial type 1,*D* scores,0.25,0.006048387096774192,-1.0986122886681098
+Personality - Neuroticism,Trial type 1,PI scores,0.28125,0.006520917338709678,-0.9382696385929302
+Personality - Neuroticism,Trial type 2,*D* scores,0.09375,0.002740675403225807,-2.268683541318364
+Personality - Neuroticism,Trial type 2,PI scores,0.0625,0.0018901209677419353,-2.70805020110221
+Personality - Neuroticism,Trial type 3,*D* scores,0.1875,0.004914314516129031,-1.466337068793427
+Personality - Neuroticism,Trial type 3,PI scores,0.15625,0.0042527721774193545,-1.6863989535702288
+Personality - Neuroticism,Trial type 4,*D* scores,0.1875,0.004914314516129031,-1.466337068793427
+Personality - Neuroticism,Trial type 4,PI scores,0.1875,0.004914314516129031,-1.466337068793427
+Personality - Openness,Trial type 1,*D* scores,0.12121212121212122,0.0033287419651056014,-1.9810014688665833
+Personality - Openness,Trial type 1,PI scores,0.09090909090909091,0.002582644628099173,-2.3025850929940455
+Personality - Openness,Trial type 2,*D* scores,0.09090909090909091,0.002582644628099173,-2.3025850929940455
+Personality - Openness,Trial type 2,PI scores,0.06060606060606061,0.0017791551882460972,-2.740840023925201
+Personality - Openness,Trial type 3,*D* scores,0.030303030303030304,9.182736455463731e-4,-3.4657359027997265
+Personality - Openness,Trial type 3,PI scores,0.030303030303030304,9.182736455463731e-4,-3.4657359027997265
+Personality - Openness,Trial type 4,*D* scores,0.15151515151515152,0.004017447199265381,-1.7227665977411035
+Personality - Openness,Trial type 4,PI scores,0.12121212121212122,0.0033287419651056014,-1.9810014688665833
+Race (1),Trial type 1,*D* scores,0.15555555555555556,0.002985409652076319,-1.6916760106710724
+Race (1),Trial type 1,PI scores,0.17777777777777778,0.0033221099887766545,-1.5314763709643884
+Race (1),Trial type 2,*D* scores,0.044444444444444446,9.652076318742985e-4,-3.068052935133617
+Race (1),Trial type 2,PI scores,0.022222222222222223,4.938271604938272e-4,-3.784189633918261
+Race (1),Trial type 3,*D* scores,0.15555555555555556,0.002985409652076319,-1.6916760106710724
+Race (1),Trial type 3,PI scores,0.13333333333333333,0.002626262626262626,-1.8718021769015916
+Race (1),Trial type 4,*D* scores,0.08888888888888889,0.001840628507295174,-2.327277705584417
+Race (1),Trial type 4,PI scores,0.06666666666666667,0.0014141414141414137,-2.639057329615259
+Race (2),Trial type 1,*D* scores,0.3409090909090909,0.005225350759177396,-0.6592456288842641
+Race (2),Trial type 1,PI scores,0.45454545454545453,0.005765904285988854,-0.1823215567939546
+Race (2),Trial type 2,*D* scores,0.045454545454545456,0.0010090332500480494,-3.044522437723423
+Race (2),Trial type 2,PI scores,0.11363636363636363,0.0023423986161829713,-2.0541237336955462
+Race (2),Trial type 3,*D* scores,0.13636363636363635,0.002738804535844706,-1.845826690498331
+Race (2),Trial type 3,PI scores,0.18181818181818182,0.003459542571593312,-1.504077396776274
+Race (2),Trial type 4,*D* scores,0.06818181818181818,0.0014775129732846433,-2.6149597780361984
+Race (2),Trial type 4,PI scores,0.09090909090909091,0.001921968095329618,-2.3025850929940455
+Religion,Trial type 1,*D* scores,0.16666666666666666,0.0047892720306513415,-1.6094379124341005
+Religion,Trial type 1,PI scores,0.16666666666666666,0.0047892720306513415,-1.6094379124341005
+Religion,Trial type 2,*D* scores,0.1,0.0031034482758620684,-2.197224577336219
+Religion,Trial type 2,PI scores,0.06666666666666667,0.002145593869731801,-2.639057329615259
+Religion,Trial type 3,*D* scores,0.16666666666666666,0.0047892720306513415,-1.6094379124341005
+Religion,Trial type 3,PI scores,0.23333333333333334,0.006168582375478927,-1.1895840668738362
+Religion,Trial type 4,*D* scores,0.13333333333333333,0.003984674329501915,-1.8718021769015916
+Religion,Trial type 4,PI scores,0.06666666666666667,0.002145593869731801,-2.639057329615259
+Rich-Poor,Trial type 1,*D* scores,0.19047619047619047,0.001857771220938175,-1.4469189829363254
+Rich-Poor,Trial type 1,PI scores,0.2619047619047619,0.0023290440674261672,-1.0360919316867756
+Rich-Poor,Trial type 2,*D* scores,0.09523809523809523,0.0010381662705242743,-2.2512917986064953
+Rich-Poor,Trial type 2,PI scores,0.07142857142857142,7.991148266535531e-4,-2.5649493574615367
+Rich-Poor,Trial type 3,*D* scores,0.13095238095238096,0.001371130781629921,-1.8925641683500207
+Rich-Poor,Trial type 3,PI scores,0.19047619047619047,0.001857771220938175,-1.4469189829363254
+Rich-Poor,Trial type 4,*D* scores,0.07142857142857142,7.991148266535531e-4,-2.5649493574615367
+Rich-Poor,Trial type 4,PI scores,0.08333333333333333,9.203480589022762e-4,-2.3978952727983707
+Sexuality (1),Trial type 1,*D* scores,0.38461538461538464,0.009467455621301775,-0.4700036292457356
+Sexuality (1),Trial type 1,PI scores,0.5,0.010000000000000004,0
+Sexuality (1),Trial type 2,*D* scores,0.07692307692307693,0.002840236686390533,-2.4849066497880004
+Sexuality (1),Trial type 2,PI scores,0.11538461538461539,0.004082840236686392,-2.0368819272610397
+Sexuality (1),Trial type 3,*D* scores,0.23076923076923078,0.007100591715976333,-1.203972804325936
+Sexuality (1),Trial type 3,PI scores,0.34615384615384615,0.009053254437869824,-0.6359887667199967
+Sexuality (1),Trial type 4,*D* scores,0.15384615384615385,0.005207100591715977,-1.7047480922384253
+Sexuality (1),Trial type 4,PI scores,0.19230769230769232,0.006213017751479291,-1.4350845252893225
+Sexuality (2),Trial type 1,*D* scores,0.47368421052631576,0.013850415512465368,-0.10536051565782652
+Sexuality (2),Trial type 1,PI scores,0.631578947368421,0.012927054478301012,0.5389965007326868
+Sexuality (2),Trial type 2,*D* scores,0.3684210526315789,0.012927054478301012,-0.5389965007326869
+Sexuality (2),Trial type 2,PI scores,0.3157894736842105,0.012003693444136654,-0.7731898882334818
+Sexuality (2),Trial type 3,*D* scores,0.42105263157894735,0.01354262850107725,-0.31845373111853476
+Sexuality (2),Trial type 3,PI scores,0.47368421052631576,0.013850415512465368,-0.10536051565782652
+Sexuality (2),Trial type 4,*D* scores,0.2631578947368421,0.010772545398584178,-1.0296194171811583
+Sexuality (2),Trial type 4,PI scores,0.3157894736842105,0.012003693444136654,-0.7731898882334818
+Shapes & colors (1),Trial type 1,*D* scores,0.18181818181818182,0.01487603305785124,-1.504077396776274
+Shapes & colors (1),Trial type 1,PI scores,0.2727272727272727,0.019834710743801647,-0.9808292530117264
+Shapes & colors (1),Trial type 2,*D* scores,0.18181818181818182,0.01487603305785124,-1.504077396776274
+Shapes & colors (1),Trial type 2,PI scores,0.18181818181818182,0.01487603305785124,-1.504077396776274
+Shapes & colors (1),Trial type 3,PI scores,0.18181818181818182,0.01487603305785124,-1.504077396776274
+Shapes & colors (2),Trial type 1,*D* scores,0.3,0.02333333333333333,-0.8472978603872036
+Shapes & colors (2),Trial type 1,PI scores,0.4,0.02666666666666666,-0.4054651081081643
+Shapes & colors (2),Trial type 2,*D* scores,0.1,0.009999999999999998,-2.197224577336219
+Shapes & colors (2),Trial type 4,*D* scores,0.1,0.009999999999999998,-2.197224577336219
+Shapes & colors (2),Trial type 4,PI scores,0.2,0.017777777777777778,-1.3862943611198906
+Shapes & colors (3),Trial type 1,*D* scores,0.1,0.009999999999999998,-2.197224577336219
+Shapes & colors (3),Trial type 1,PI scores,0.1,0.009999999999999998,-2.197224577336219
+Shapes & colors (3),Trial type 2,*D* scores,0.1,0.009999999999999998,-2.197224577336219
+Shapes & colors (3),Trial type 2,PI scores,0.1,0.009999999999999998,-2.197224577336219
+Shapes & colors (3),Trial type 3,*D* scores,0.3,0.02333333333333333,-0.8472978603872036
+Shapes & colors (3),Trial type 3,PI scores,0.3,0.02333333333333333,-0.8472978603872036
+Shapes & colors (3),Trial type 4,*D* scores,0.2,0.017777777777777778,-1.3862943611198906
+Shapes & colors (3),Trial type 4,PI scores,0.3,0.02333333333333333,-0.8472978603872036
+Shapes & colors (4),Trial type 1,*D* scores,0.25,0.02678571428571428,-1.0986122886681098
+Shapes & colors (4),Trial type 1,PI scores,0.375,0.03348214285714285,-0.5108256237659907
+Shapes & colors (4),Trial type 3,PI scores,0.125,0.015625,-1.9459101490553135
+Shapes & colors (4),Trial type 4,*D* scores,0.25,0.02678571428571428,-1.0986122886681098
+Shapes & colors (4),Trial type 4,PI scores,0.25,0.02678571428571428,-1.0986122886681098
+Shapes & colors (5),Trial type 1,*D* scores,0.36363636363636365,0.011019283746556474,-0.5596157879354225
+Shapes & colors (5),Trial type 1,PI scores,0.45454545454545453,0.011806375442739074,-0.1823215567939546
+Shapes & colors (5),Trial type 2,PI scores,0.09090909090909091,0.003935458480913027,-2.3025850929940455
+Shapes & colors (5),Trial type 3,PI scores,0.09090909090909091,0.003935458480913027,-2.3025850929940455
+Shapes & colors (5),Trial type 4,PI scores,0.13636363636363635,0.005608028335301063,-1.845826690498331
+Shapes & colors (6),Trial type 1,*D* scores,0.2692307692307692,0.007869822485207102,-0.9985288301111274
+Shapes & colors (6),Trial type 1,PI scores,0.23076923076923078,0.007100591715976333,-1.203972804325936
+Shapes & colors (6),Trial type 2,*D* scores,0.11538461538461539,0.004082840236686392,-2.0368819272610397
+Shapes & colors (6),Trial type 2,PI scores,0.19230769230769232,0.006213017751479291,-1.4350845252893225
+Shapes & colors (6),Trial type 3,*D* scores,0.07692307692307693,0.002840236686390533,-2.4849066497880004
+Shapes & colors (6),Trial type 3,PI scores,0.07692307692307693,0.002840236686390533,-2.4849066497880004
+Shapes & colors (6),Trial type 4,*D* scores,0.2692307692307692,0.007869822485207102,-0.9985288301111274
+Shapes & colors (6),Trial type 4,PI scores,0.2692307692307692,0.007869822485207102,-0.9985288301111274
+Shapes & colors (7),Trial type 1,*D* scores,0.5714285714285714,0.018838304552590262,0.28768207245178085
+Shapes & colors (7),Trial type 1,PI scores,0.5,0.019230769230769232,0
+Shapes & colors (7),Trial type 2,*D* scores,0.14285714285714285,0.009419152276295133,-1.791759469228055
+Shapes & colors (7),Trial type 2,PI scores,0.21428571428571427,0.012951334379905812,-1.2992829841302609
+Shapes & colors (7),Trial type 3,*D* scores,0.2857142857142857,0.015698587127158558,-0.9162907318741551
+Shapes & colors (7),Trial type 3,PI scores,0.21428571428571427,0.012951334379905812,-1.2992829841302609
+Shapes & colors (7),Trial type 4,*D* scores,0.35714285714285715,0.017660910518053376,-0.587786664902119
+Shapes & colors (7),Trial type 4,PI scores,0.35714285714285715,0.017660910518053376,-0.587786664902119
+Stigma - ADHD,Trial type 1,*D* scores,0.1774193548387097,0.0023924873338905858,-1.533930359925955
+Stigma - ADHD,Trial type 1,PI scores,0.27419354838709675,0.003262482728032617,-0.9734491457141039
+Stigma - ADHD,Trial type 2,*D* scores,0.0967741935483871,0.0014329335903515807,-2.2335922215070942
+Stigma - ADHD,Trial type 2,PI scores,0.08064516129032258,0.0012154347418160726,-2.4336133554004498
+Stigma - ADHD,Trial type 3,*D* scores,0.12903225806451613,0.0018423431875948893,-1.9095425048844386
+Stigma - ADHD,Trial type 3,PI scores,0.14516129032258066,0.00203425393630269,-1.7730673362159024
+Stigma - ADHD,Trial type 4,*D* scores,0.11290322580645161,0.0016419030722778529,-2.0614230361771577
+Stigma - ADHD,Trial type 4,PI scores,0.1935483870967742,0.0025588099827706795,-1.4271163556401456
+Stigma - PTSD,Trial type 1,*D* scores,0.3148148148148148,0.0040699329658099755,-0.7777045685880082
+Stigma - PTSD,Trial type 1,PI scores,0.3333333333333333,0.00419287211740042,-0.6931471805599454
+Stigma - PTSD,Trial type 2,*D* scores,0.12962962962962962,0.0021287884670134847,-1.9042374526547454
+Stigma - PTSD,Trial type 2,PI scores,0.07407407407407407,0.0012940963325309936,-2.5257286443082556
+Stigma - PTSD,Trial type 3,*D* scores,0.12962962962962962,0.0021287884670134847,-1.9042374526547454
+Stigma - PTSD,Trial type 3,PI scores,0.2037037037037037,0.0030605378264357995,-1.363304842895192
+Stigma - PTSD,Trial type 4,*D* scores,0.1111111111111111,0.0018634987188446306,-2.0794415416798357
+Stigma - PTSD,Trial type 4,PI scores,0.09259259259259259,0.0015852680073504665,-2.2823823856765264
+Stigma - Schizophrenia,Trial type 1,*D* scores,0.1111111111111111,0.0018634987188446306,-2.0794415416798357
+Stigma - Schizophrenia,Trial type 1,PI scores,0.2037037037037037,0.0030605378264357995,-1.363304842895192
+Stigma - Schizophrenia,Trial type 2,*D* scores,0.1111111111111111,0.0018634987188446306,-2.0794415416798357
+Stigma - Schizophrenia,Trial type 2,PI scores,0.14814814814814814,0.002381137251857028,-1.749199854809259
+Stigma - Schizophrenia,Trial type 3,*D* scores,0.2222222222222222,0.0032611227579781034,-1.252762968495368
+Stigma - Schizophrenia,Trial type 3,PI scores,0.3333333333333333,0.00419287211740042,-0.6931471805599454
+Stigma - Schizophrenia,Trial type 4,*D* scores,0.1111111111111111,0.0018634987188446306,-2.0794415416798357
+Stigma - Schizophrenia,Trial type 4,PI scores,0.12962962962962962,0.0021287884670134847,-1.9042374526547454
+Valenced words,Trial type 1,*D* scores,0.43243243243243246,0.006817628439250061,-0.27193371548364165
+Valenced words,Trial type 1,PI scores,0.43243243243243246,0.006817628439250061,-0.27193371548364165
+Valenced words,Trial type 2,*D* scores,0.13513513513513514,0.00324648973297622,-1.8562979903656263
+Valenced words,Trial type 2,PI scores,0.10810810810810811,0.0026783540297053814,-2.1102132003465894
+Valenced words,Trial type 3,*D* scores,0.10810810810810811,0.0026783540297053814,-2.1102132003465894
+Valenced words,Trial type 3,PI scores,0.10810810810810811,0.0026783540297053814,-2.1102132003465894
+Valenced words,Trial type 4,*D* scores,0.10810810810810811,0.0026783540297053814,-2.1102132003465894
+Valenced words,Trial type 4,PI scores,0.08108108108108109,0.0020696372047723397,-2.4277482359480516

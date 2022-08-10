@@ -188,7 +188,7 @@ p_cis_by_domain <-
   xlab("Ranked participant") +
   ylab("*D* score") +
   labs(color = "95% CI excludes zero point") + 
-  facet_wrap(~ domain, ncol = 6)
+  facet_wrap(~ domain, ncol = 10)
 
 p_cis_by_domain
 
@@ -227,7 +227,7 @@ data_diff_zero <-
 data_diff_zero
 
 # # save to disk
-# write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
+# write_csv(data_diff_zero, "../data/results/data_diff_zero_irap_vs_iat.csv")
 
 ```
 
@@ -249,7 +249,8 @@ p_diff_zero <-
   mdthemes::md_theme_linedraw() +
   labs(x = "Proportion of scores different from zero point",
        y = "") + 
-  theme(legend.position = "top")
+  theme(legend.position = "top") +
+  xlim(0,1)
 
 p_diff_zero
 
@@ -659,31 +660,31 @@ summary(data_emms_ci_width_proportions)$`pairwise differences of measure` %>%
 
 # Combined plots
 
-## Plot 4
+## Figure 2
 
-```{r fig.height=16, fig.width=8}
+```{r fig.height=12, fig.width=12}
 
 p_cis_by_domain
 
-ggsave(filename  = "plots/figure_4_cis_by_domain_irap_vs_iat.pdf",
+ggsave(filename  = "plots/supplementary_figure_2_cis_by_domain_iat_d.pdf",
        plot      = p_cis_by_domain,
        device    = "pdf",
        # path      = NULL,
        # dpi       = 300,
        units     = "in",
-       width     = 8,
+       width     = 16,
        height    = 16,
        limitsize = TRUE)
 
 ```
 
-## Plot 5
+## Supplementary figure
 
 ```{r fig.height=12, fig.width=6}
 
 p_ci_widths
 
-ggsave(filename  = "plots/figure_5_ci_widths_irap_vs_iat.pdf",
+ggsave(filename  = "plots/supplementary_figure_ci_widths_iat_d.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
@@ -695,7 +696,25 @@ ggsave(filename  = "plots/figure_5_ci_widths_irap_vs_iat.pdf",
 
 ```
 
-## Plot 6
+## Supplementary figure
+
+```{r fig.height=7, fig.width=8}
+
+p_diff_zero
+
+ggsave(filename  = "plots/supplementary_figure_proportion_excluding_zero_point_iat.pdf",
+       plot      = p_diff_zero,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 6,
+       height    = 14,
+       limitsize = TRUE)
+
+```
+
+## Supplementary figure
 
 ```{r fig.height=5, fig.width=5}
 
@@ -707,7 +726,7 @@ p_combined <-
 
 p_combined
 
-ggsave(filename  = "plots/figure_6_metaanalyses_irap_vs_iat.pdf",
+ggsave(filename  = "plots/figure_3_metaanalyses_irap_d_vs_iat_d.pdf",
        plot      = p_combined,
        device    = "pdf",
        # path      = NULL,

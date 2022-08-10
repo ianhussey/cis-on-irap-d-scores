@@ -303,7 +303,7 @@ p_ci_widths
 
 By domain
 
-```{r fig.height=12, fig.width=8}
+```{r fig.height=10, fig.width=10}
 
 p_cis_by_domain <- 
   data_estimates_D %>%
@@ -326,7 +326,7 @@ p_cis_by_domain <-
   xlab("Ranked participant") +
   ylab("*D* score") +
   labs(color = "95% CI excludes zero point") + 
-  facet_wrap(~ domain, ncol = 4)
+  facet_wrap(~ domain, ncol = 5)
 
 p_cis_by_domain
 
@@ -360,6 +360,7 @@ data_diff_zero <-
 
 # # save to disk
 # write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
+# data_diff_zero <- read_csv("../data/results/data_diff_zero.csv")
 
 ```
 
@@ -383,7 +384,8 @@ p_diff_zero <-
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
-  theme(legend.position = "top")
+  theme(legend.position = "top") +
+  coord_cartesian(xlim = c(0,1))
 
 p_diff_zero
 
@@ -633,7 +635,8 @@ p_discriminability <-
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
-  theme(legend.position = "top")
+  theme(legend.position = "top") +
+  coord_cartesian(xlim = c(0,1))
 
 p_discriminability
 
@@ -714,6 +717,15 @@ NB observed range of confidence intervals
 
 ```{r}
 
+# max range as example
+data_estimates_D %>%
+  dplyr::summarize(min = min(ci_lower, na.rm = TRUE),
+                   max = max(ci_upper, na.rm = TRUE),
+                   .groups = "drop") %>%
+  mutate(range = max - min) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
 ## calculate observed ranges 
 observed_range_estimates_D <- data_estimates_D %>%
   group_by(domain, trial_type) %>%
@@ -728,7 +740,6 @@ observed_range_estimates_PI <- data_estimates_PI %>%
                    max = max(ci_upper, na.rm = TRUE),
                    .groups = "drop") %>%
   mutate(range = max - min) 
-
 
 # calculate CI / range 
 data_ci_width_proportions_D <- data_estimates_D %>%
@@ -751,12 +762,43 @@ data_ci_width_proportions_combined <-
             data_ci_width_proportions_PI) %>%
   mutate(domain = as.factor(domain),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4")) %>%
+  group_by(scoring_method, domain, trial_type) %>%
+  summarize(ci_width_proportion_mean = mean(ci_width_proportion),
+            variance = plotrix::std.error(ci_width_proportion)^2) %>%
+  ungroup() %>%
   # logit transform
-  mutate(ci_width_proportion_temp = case_when(ci_width_proportion < 0.0001 ~ 0.0001,
-                                              ci_width_proportion > 0.9999 ~ 0.9999,
-                                              TRUE ~ ci_width_proportion),
-         ci_width_proportion_logit = boot::logit(ci_width_proportion_temp)) %>%
-  select(-ci_width_proportion_temp)
+  mutate(ci_width_proportion_mean_temp = case_when(ci_width_proportion_mean < 0.0001 ~ 0.0001,
+                                                   ci_width_proportion_mean > 0.9999 ~ 0.9999,
+                                                   TRUE ~ ci_width_proportion_mean),
+         ci_width_proportion_mean_logit = boot::logit(ci_width_proportion_mean_temp)) %>%
+  select(-ci_width_proportion_mean_temp)
+
+```
+
+## Plot
+
+```{r fig.height=7, fig.width=8}
+
+p_coverage <- 
+  data_ci_width_proportions_combined %>%
+  mutate(domain = fct_rev(factor(domain))) %>%
+  ggplot(aes(ci_width_proportion_mean, domain, color = scoring_method, shape = scoring_method)) +
+  geom_point(position = position_dodge(width = 0.75)) +
+  scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
+  geom_linerangeh(aes(xmin = ci_width_proportion_mean - sqrt(variance)*1.96,
+                      xmax = ci_width_proportion_mean + sqrt(variance)*1.96),
+                  position = position_dodge(width = 0.75)) + 
+  scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
+  mdthemes::md_theme_linedraw() +
+  facet_wrap(~ trial_type, ncol = 4) +
+  labs(x = "Proportion of observed range covered<br/>by individual participants' 95% CIs",
+       y = "",
+       color = "Scoring method",
+       shape = "Scoring method") + 
+  theme(legend.position = "top") +
+  xlim(0,1)
+
+p_coverage
 
 ```
 
@@ -766,13 +808,14 @@ data_ci_width_proportions_combined <-
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
+  lmer(ci_width_proportion_mean_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
+       weights = 1/variance,
        data = data_ci_width_proportions_combined)
 
 # extract marginal means
 results_emm_ci_width_proportions <-
   summary(emmeans(fit_ci_width_proportions, ~ scoring_method)) %>%
-  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
+  dplyr::select(scoring_method, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # extract re Tau
 results_re_tau_ci_width_proportions <-
@@ -829,27 +872,27 @@ summary(data_emms_ci_width_proportions)$`pairwise differences of scoring_method`
 
 # Combined plots
 
-## Plot 1
+## Figure 1
 
 Plot 1 is merely illustrative. It shows the bootstrapped CIs for all participants, split by domain, but not splitting by trial type. 
 
-```{r fig.height=12, fig.width=8}
+```{r fig.height=10, fig.width=10}
 
 p_cis_by_domain
 
-ggsave(filename  = "plots/figure_1_cis_by_domain_d_vs_pi.pdf",
+ggsave(filename  = "plots/figure_1_cis_by_domain_irap_d.pdf",
        plot      = p_cis_by_domain,
        device    = "pdf",
        # path      = NULL,
        # dpi       = 300,
        units     = "in",
-       width     = 8,
-       height    = 12,
+       width     = 10,
+       height    = 10,
        limitsize = TRUE)
 
 ```
 
-## Plot 2
+## Supplementary figure
 
 Most probable CI width for *D* scores when bootstrapped using four different methods. Very similar results are found across methods. Overall Maximum A-Posteroi width (MAP, i.e., the mode of a continuous variable) was *D* = 1.31. Some domains and trial types did demonstrate smaller most probable widths. 
 
@@ -859,7 +902,7 @@ NB I elected not to meta-analyze these widths as they demonstrate very large ske
 
 p_ci_widths
 
-ggsave(filename  = "plots/figure_2_ci_widths_d_vs_pi.pdf",
+ggsave(filename  = "plots/supplementary_figure_ci_widths_irap_d.pdf",
        plot      = p_ci_widths,
        device    = "pdf",
        # path      = NULL,
@@ -871,7 +914,61 @@ ggsave(filename  = "plots/figure_2_ci_widths_d_vs_pi.pdf",
 
 ```
 
-## Plot 3
+## Figure 2
+
+```{r fig.height=7, fig.width=8}
+
+p_diff_zero
+
+ggsave(filename  = "plots/figure_2_proportion_excluding_zero_point_irap.pdf",
+       plot      = p_diff_zero,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 7,
+       limitsize = TRUE)
+
+```
+
+## Figure 3
+
+```{r fig.height=7, fig.width=8}
+
+p_discriminability
+
+ggsave(filename  = "plots/figure_3_proportion_discriminable_irap.pdf",
+       plot      = p_discriminability,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 7,
+       limitsize = TRUE)
+
+```
+
+## Figure 4
+
+```{r}
+
+p_coverage
+
+ggsave(filename  = "plots/figure_4_proportion_coverage_irap.pdf",
+       plot      = p_coverage,
+       device    = "pdf",
+       # path      = NULL,
+       # dpi       = 300,
+       units     = "in",
+       width     = 8,
+       height    = 7,
+       limitsize = TRUE)
+
+```
+
+## Figure 5
 
 The results of three hierarchical/meta analytic models are presented below, all of which provide information via different methods regarding how informative an individual participants' *D* (or PI) score is in terms of being able to state that they demonstrated evidence of a bias/IRAP effect/implicit attitude, whether that individual can be discriminated from other individuals in the same domain using the same trial type, and how much of the range of observed scores an individuals score's CI spans.  
 
@@ -891,7 +988,7 @@ p_combined <-
 
 p_combined
 
-ggsave(filename  = "plots/figure_3_metaanalyses_d_vs_pi.pdf",
+ggsave(filename  = "plots/figure_5_metaanalyses_irap_d_vs_irap_pi.pdf",
        plot      = p_combined,
        device    = "pdf",
        # path      = NULL,
