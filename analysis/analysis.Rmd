@@ -12,15 +12,6 @@ output:
     toc_float: yes
 ---
 
-# TODOs
-
-- clean up text in this doc
-- tau[1]?
-
-# Overview 
-
-IRAP trial-type *D* scores are calculated from an average of only 18 pairs of reaction times. This would be deemed as far too low anywhere else in the literature on reaction time based tasks. The implications of this can be seen in how poorly estimated any one IRAP D score is. We can observe this by bootstrapping reaction times for each participant's *D* scores and noting how wide their confidence intervals are.
-
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,
                       warning=FALSE,
@@ -235,6 +226,8 @@ data_map_ci_widths <- data_estimates_D %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   ungroup()
 
+write_csv(data_map_ci_widths, "../data/results/data_map_ci_widths_irap_d_vs_pi.csv") 
+
 data_map_ci_widths %>%
   summarize(map_map = point_estimate(MAP, centrality = "MAP"),
             min_map = min(MAP),
@@ -249,7 +242,7 @@ data_map_ci_widths %>%
 
 ## MAP CI width
 
-By domain and trial type using basic bootstrapping, on the basis that it has the best performance for % of non-zero *D* scores (further below).
+By domain and trial type
 
 ```{r fig.height=16, fig.width=16}
 
@@ -280,8 +273,8 @@ data_ci_width_map_D <- data_estimates_D %>%
   #arrange(domain) %>%
   mutate(domain = fct_rev(domain))
 
-# # save to disk
-# write_csv(data_ci_width_map_D, "../data/results/data_ci_width_map_D.csv")
+# save to disk
+write_csv(data_ci_width_map_D, "../data/results/data_ci_width_map_D.csv")
 
 # plot
 p_ci_widths <- 
@@ -359,8 +352,8 @@ data_diff_zero <-
   mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
 
 # # save to disk
-# write_csv(data_diff_zero, "../data/results/data_diff_zero.csv")
-# data_diff_zero <- read_csv("../data/results/data_diff_zero.csv")
+write_csv(data_diff_zero, "../data/results/data_diff_zero_irap_d_vs_pi.csv")
+# data_diff_zero <- read_csv("../data/results/data_diff_zero_irap_d_vs_pi.csv")
 
 ```
 
@@ -514,7 +507,7 @@ bootstrap_discriminability <- function(data){
                parallel  = "multicore", 
                ncpus     = parallel::detectCores())
   
-  results <- boot::boot.ci(fit, conf = 0.95, type = "percent") # bca bootstraps throw an error, so use next best
+  results <- boot::boot.ci(fit, conf = 0.95, type = "perc") # bca bootstraps throw an error, so use next best
   
   output <-
     tibble(
@@ -545,11 +538,11 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
-    select(unique_id, domain, trial_type, estimate, di_upper, di_lower) |>
-    group_by(domain, trial_type) |>
+    select(unique_id, method, domain, trial_type, estimate, di_upper, di_lower) |>
+    group_by(method, domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
-    filter(method == "bca") |>
+    #filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
@@ -558,6 +551,9 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
   
   # save to disk
   write_csv(data_discriminability_D, "../data/results/data_discriminability_D.csv")
+  
+  data_discriminability_D <- data_discriminability_D %>%
+    filter(method == "bca")
   
 }
 
@@ -580,11 +576,11 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
     # expand CIs by sqrt(2) to form discriminability intervals
     mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
            di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
-    select(unique_id, domain, trial_type, method, estimate, di_upper, di_lower) |>
-    group_by(domain, trial_type) |>
+    select(unique_id, method, domain, trial_type, estimate, di_upper, di_lower) |>
+    group_by(method, domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
-    filter(method == "bca") |>
+    #filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
@@ -593,6 +589,9 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
   
   # save to disk
   write_csv(data_discriminability_PI, "../data/results/data_discriminability_PI.csv")
+  
+  data_discriminability_PI <- data_discriminability_PI %>%
+    filter(method == "bca")
   
 }
 
@@ -781,6 +780,8 @@ data_ci_width_proportions_combined <-
          ci_width_proportion_mean_logit = boot::logit(ci_width_proportion_mean_temp)) %>%
   select(-ci_width_proportion_mean_temp)
 
+write_csv(data_ci_width_proportions_combined, "../data/results/data_ci_width_proportions_irap_d_vs_pi.csv")
+
 ```
 
 ## Plot
@@ -885,8 +886,6 @@ summary(data_emms_ci_width_proportions)$`pairwise differences of scoring_method`
 # Combined plots
 
 ## Figure 1
-
-Plot 1 is merely illustrative. It shows the bootstrapped CIs for all participants, split by domain, but not splitting by trial type. 
 
 ```{r fig.height=10, fig.width=10}
 

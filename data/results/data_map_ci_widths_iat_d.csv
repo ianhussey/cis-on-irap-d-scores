@@ -1,0 +1,96 @@
+domain,trial_type,MAP
+50 Cent - Britney Spears,iat,0.7016099706744867
+African Americans - European Americans,iat,0.7048739002932551
+Artists - Musicians,iat,0.6926177908113391
+Asians - Whites,iat,0.7130263929618769
+Astrology - Science,iat,0.6972873900293255
+Atheism - Religion,iat,0.7072922776148582
+Athletic People - Intelligent People,iat,0.715642228739003
+Avoiding - Approaching,iat,0.5087321603128054
+Bill Clinton - Hillary Clinton,iat,0.6952375366568915
+Briefs - Boxers,iat,0.6904164222873901
+Burger King - McDonald's,iat,0.7024545454545454
+Canadian - American,iat,0.7092795698924732
+Capital Punishment - Imprisonment,iat,0.712763440860215
+Career - Family,iat,0.7047419354838709
+Chaos - Order,iat,0.5559491691104594
+Coffee - Tea,iat,0.6997536656891495
+Cold - Hot,iat,0.705763440860215
+Conservatives - Liberals,iat,0.6803343108504398
+Corporations - Nonprofits,iat,0.7080215053763441
+David Letterman - Jay Leno,iat,0.7147976539589442
+Denzel Washington - Tom Cruise,iat,0.6886852394916911
+Determinism - Free will,iat,0.6684115347018573
+Difficult - Simple,iat,0.6644134897360703
+Dogs - Cats,iat,0.6628064516129033
+Dramas - Comedies,iat,0.692516129032258
+Drinking - Abstaining,iat,0.7066011730205278
+Effort - Talent,iat,0.6732404692082112
+Evolution - Creationism,iat,0.7005268817204301
+Fat People - Thin People,iat,0.7037331378299121
+Foreign Places - American Places,iat,0.7085014662756598
+Friends - Family,iat,0.7128387096774194
+Gay People - Straight People,iat,0.7065454545454546
+George Bush - John Kerry,iat,0.7084692082111437
+Gun Control - Gun Rights,iat,0.7076099706744867
+Helpers - Leaders,iat,0.6992512218963831
+Hiphop - Classical,iat,0.7102844574780058
+Innocence - Wisdom,iat,0.7040957966764418
+Japan - United States,iat,0.7117272727272727
+Jazz - Teen Pop,iat,0.7021476050830889
+Jews - Christians,iat,0.7092072336265886
+Jocks - Nerds,iat,0.7180185728250243
+Kobe - Shaq,iat,0.7095923753665689
+Lawyers - Politicians,iat,0.7100557184750733
+Lord of the Rings - Harry Potter,iat,0.7043196480938416
+Manufactured - Natural,iat,0.6334848484848485
+Meat - Vegetables,iat,0.6935601173020529
+Meg Ryan - Julia Roberts,iat,0.7044926686217009
+Microsoft - Apple,iat,0.7068924731182795
+Money - Love,iat,0.4651505376344086
+Mother Teresa - Princess Diana,iat,0.7129188660801564
+Mountains - Ocean,iat,0.7097448680351905
+Muslims - Jews,iat,0.6982121212121213
+National Defense - Education,iat,0.6901290322580644
+New York - California,iat,0.706741935483871
+Night - Morning,iat,0.6790009775171066
+Numbers - Letters,iat,0.6959002932551319
+Old People - Young People,iat,0.7131847507331379
+Organized Labor - Management,iat,0.705774193548387
+Pants - Skirts,iat,0.7119413489736071
+Past - Future,iat,0.654800586510264
+Pepsi - Coke,iat,0.7142785923753665
+Poor People - Rich People,iat,0.5554975562072336
+Private - Public,iat,0.7002130987292278
+Prolife - Prochoice,iat,0.7105317693059628
+Protein - Carbohydrates,iat,0.7066647116324536
+Protestants - Catholics,iat,0.7069550342130988
+Punishment - Forgiveness,iat,0.5727008797653959
+Realism - Idealism,iat,0.7065483870967743
+Reason - Emotions,iat,0.7132463343108504
+Rebellious - Conforming,iat,0.6811378299120234
+Receiving - Giving,iat,0.7141955034213099
+Redsox - Yankees,iat,0.710763440860215
+Relaxing - Exercising,iat,0.7123489736070381
+Republicans - Democrats,iat,0.6771583577712609
+Rich People - Beautiful People,iat,0.7082746823069404
+Security - Freedom,iat,0.7147966764418376
+Single - Married,iat,0.7115835777126099
+Skeptical - Trusting,iat,0.5075024437927664
+Solitude - Companionship,iat,0.6974105571847506
+Southerners - Northerners,iat,0.7015522971652004
+Speed - Accuracy,iat,0.7096129032258065
+Stable - Flexible,iat,0.7088162267839687
+State - Church,iat,0.7106627565982405
+Strong - Sensitive,iat,0.7128748778103617
+Tall People - Short People,iat,0.7023049853372434
+Tax Reductions - Social Programs,iat,0.7128709677419354
+Team - Individual,iat,0.7104281524926686
+Technology - Nature,iat,0.6912375366568915
+Television - Books,iat,0.7018211143695015
+Tradition - Progress,iat,0.7091045943304009
+Traditional Values - Feminism,iat,0.713950146627566
+Urban - Rural,iat,0.7103695014662756
+West Coast - East Coast,iat,0.7084486803519061
+Winter - Summer,iat,0.7131368523949169
+Wrinkles - Plastic Surgery,iat,0.7108709677419356

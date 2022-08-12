@@ -1,561 +1,141 @@
-domain,trial_type,method,proportion_discriminable,ci_lower,ci_upper,variance,DV_type,proportion_discriminable_logit
-Body image,tt1,basic,0.2086,0.0909,0.3458,0.0042,*D* scores,-1.3334
-Body image,tt1,bca,0.127,0.0148,0.2517,0.0037,*D* scores,-1.9277
-Body image,tt1,normal,0.1701,0.0564,0.3016,0.0039,*D* scores,-1.5849
-Body image,tt1,percent,0.1338,0.0303,0.2485,0.0031,*D* scores,-1.8678
-Body image,tt2,basic,0.127,0.032,0.2386,0.0028,*D* scores,-1.9277
-Body image,tt2,bca,0.0499,-0.0139,0.1197,0.0012,*D* scores,-2.9465
-Body image,tt2,normal,0.0998,0.0152,0.1948,0.0021,*D* scores,-2.1994
-Body image,tt2,percent,0.068,-0.0095,0.1543,0.0017,*D* scores,-2.6178
-Body image,tt3,basic,0.1429,0.0383,0.262,0.0033,*D* scores,-1.7914
-Body image,tt3,bca,0.0454,-0.0145,0.1102,0.001,*D* scores,-3.0458
-Body image,tt3,normal,0.1066,0.0151,0.2112,0.0025,*D* scores,-2.126
-Body image,tt3,percent,0.0862,-0.0026,0.184,0.0023,*D* scores,-2.3609
-Body image,tt4,basic,0.2222,0.1,0.3651,0.0046,*D* scores,-1.2529
-Body image,tt4,bca,0.1474,0.0358,0.2724,0.0036,*D* scores,-1.7551
-Body image,tt4,normal,0.1905,0.0736,0.3214,0.004,*D* scores,-1.4468
-Body image,tt4,percent,0.1791,0.0575,0.3212,0.0045,*D* scores,-1.5225
-Clinton-Trump,tt1,basic,0.1164,0.0724,0.1632,5e-4,*D* scores,-2.027
-Clinton-Trump,tt1,bca,0.0643,0.0284,0.1004,3e-4,*D* scores,-2.6777
-Clinton-Trump,tt1,normal,0.094,0.0537,0.1357,4e-4,*D* scores,-2.2657
-Clinton-Trump,tt1,percent,0.0945,0.0527,0.138,5e-4,*D* scores,-2.2599
-Clinton-Trump,tt2,basic,0.1403,0.0823,0.201,9e-4,*D* scores,-1.8128
-Clinton-Trump,tt2,bca,0.0722,0.026,0.1177,5e-4,*D* scores,-2.5534
-Clinton-Trump,tt2,normal,0.1094,0.0548,0.1645,8e-4,*D* scores,-2.0969
-Clinton-Trump,tt2,percent,0.0945,0.0435,0.1477,7e-4,*D* scores,-2.2599
-Clinton-Trump,tt3,basic,0.1746,0.1184,0.234,9e-4,*D* scores,-1.5534
-Clinton-Trump,tt3,bca,0.0923,0.0473,0.1372,5e-4,*D* scores,-2.2859
-Clinton-Trump,tt3,normal,0.139,0.0867,0.1941,8e-4,*D* scores,-1.8236
-Clinton-Trump,tt3,percent,0.1222,0.0725,0.1762,7e-4,*D* scores,-1.9718
-Clinton-Trump,tt4,basic,0.1607,0.1075,0.2144,7e-4,*D* scores,-1.653
-Clinton-Trump,tt4,bca,0.0745,0.0357,0.1154,4e-4,*D* scores,-2.5195
-Clinton-Trump,tt4,normal,0.1285,0.0795,0.1808,7e-4,*D* scores,-1.9143
-Clinton-Trump,tt4,percent,0.1022,0.0561,0.1499,6e-4,*D* scores,-2.173
-Countries (1),tt1,basic,0.1175,0.0455,0.1924,0.0014,*D* scores,-2.0163
-Countries (1),tt1,bca,0.0641,0.0171,0.1137,6e-4,*D* scores,-2.6811
-Countries (1),tt1,normal,0.1007,0.0387,0.1677,0.0011,*D* scores,-2.1895
-Countries (1),tt1,percent,0.1011,0.044,0.1614,9e-4,*D* scores,-2.1851
-Countries (1),tt2,basic,0.146,0.0767,0.2203,0.0013,*D* scores,-1.7663
-Countries (1),tt2,bca,0.0644,0.0179,0.1141,6e-4,*D* scores,-2.6761
-Countries (1),tt2,normal,0.1118,0.0516,0.1767,0.001,*D* scores,-2.0725
-Countries (1),tt2,percent,0.0933,0.0428,0.1486,7e-4,*D* scores,-2.274
-Countries (1),tt3,basic,0.2147,0.1387,0.2989,0.0017,*D* scores,-1.2968
-Countries (1),tt3,bca,0.1121,0.0502,0.1779,0.0011,*D* scores,-2.0695
-Countries (1),tt3,normal,0.1744,0.1006,0.2506,0.0015,*D* scores,-1.5548
-Countries (1),tt3,percent,0.1499,0.0818,0.2225,0.0013,*D* scores,-1.7354
-Countries (1),tt4,basic,0.1111,0.0459,0.1803,0.0012,*D* scores,-2.0796
-Countries (1),tt4,bca,0.0409,0.0034,0.0808,4e-4,*D* scores,-3.1549
-Countries (1),tt4,normal,0.0815,0.0224,0.1419,9e-4,*D* scores,-2.4221
-Countries (1),tt4,percent,0.0555,0.0095,0.1027,6e-4,*D* scores,-2.8343
-Countries (2),tt1,basic,0.1196,0.0524,0.1915,0.0013,*D* scores,-1.9962
-Countries (2),tt1,bca,0.056,0.0046,0.11,7e-4,*D* scores,-2.8248
-Countries (2),tt1,normal,0.0968,0.0366,0.1608,0.001,*D* scores,-2.2333
-Countries (2),tt1,percent,0.0896,0.0274,0.1543,0.001,*D* scores,-2.3185
-Countries (2),tt2,basic,0.1864,0.1074,0.2705,0.0017,*D* scores,-1.4736
-Countries (2),tt2,bca,0.0988,0.0334,0.1655,0.0011,*D* scores,-2.2106
-Countries (2),tt2,normal,0.1588,0.0806,0.2425,0.0017,*D* scores,-1.6672
-Countries (2),tt2,percent,0.152,0.0742,0.2374,0.0017,*D* scores,-1.719
-Countries (2),tt3,basic,0.1792,0.1015,0.2648,0.0017,*D* scores,-1.5218
-Countries (2),tt3,bca,0.0916,0.0311,0.1561,0.001,*D* scores,-2.2943
-Countries (2),tt3,normal,0.152,0.0775,0.2356,0.0016,*D* scores,-1.719
-Countries (2),tt3,percent,0.1308,0.0581,0.2102,0.0015,*D* scores,-1.8939
-Countries (2),tt4,basic,0.144,0.0705,0.2243,0.0015,*D* scores,-1.7825
-Countries (2),tt4,bca,0.0544,0.0064,0.1053,6e-4,*D* scores,-2.8555
-Countries (2),tt4,normal,0.1064,0.0413,0.1755,0.0012,*D* scores,-2.1281
-Countries (2),tt4,percent,0.0844,0.0246,0.1444,9e-4,*D* scores,-2.384
-Death (1),tt1,basic,0.0346,-0.0197,0.0927,8e-4,*D* scores,-3.3287
-Death (1),tt1,bca,0.0173,-0.014,0.0513,3e-4,*D* scores,-4.0396
-Death (1),tt1,normal,0.0242,-0.0244,0.0719,6e-4,*D* scores,-3.6969
-Death (1),tt1,percent,0.0554,-0.0239,0.1409,0.0018,*D* scores,-2.8362
-Death (1),tt2,basic,0.1765,0.0542,0.316,0.0045,*D* scores,-1.5402
-Death (1),tt2,bca,0.0623,-0.0073,0.1409,0.0014,*D* scores,-2.7115
-Death (1),tt2,normal,0.1419,0.031,0.266,0.0036,*D* scores,-1.7996
-Death (1),tt2,percent,0.1073,0.0148,0.2114,0.0025,*D* scores,-2.1186
-Death (1),tt3,basic,0.1903,0.0164,0.3851,0.0088,*D* scores,-1.4481
-Death (1),tt3,bca,0.1488,0.0057,0.3104,0.006,*D* scores,-1.744
-Death (1),tt3,normal,0.1765,0.0143,0.3603,0.0078,*D* scores,-1.5402
-Death (1),tt3,percent,0.1972,0.0521,0.3674,0.0065,*D* scores,-1.4039
-Death (1),tt4,basic,0.1003,-0.04,0.2503,0.0055,*D* scores,-2.1939
-Death (1),tt4,bca,0.0865,-0.0537,0.2349,0.0054,*D* scores,-2.3571
-Death (1),tt4,normal,0.0969,-0.036,0.2373,0.0049,*D* scores,-2.2322
-Death (1),tt4,percent,0.0934,-0.0348,0.2379,0.0048,*D* scores,-2.2728
-Death (2),tt1,basic,0.155,0.0408,0.2853,0.0039,*D* scores,-1.6959
-Death (2),tt1,bca,0.0725,-0.0176,0.167,0.0022,*D* scores,-2.5489
-Death (2),tt1,normal,0.11,0.0079,0.2196,0.0029,*D* scores,-2.0907
-Death (2),tt1,percent,0.095,-0.0123,0.2138,0.0033,*D* scores,-2.2541
-Death (2),tt2,basic,0.22,0.0856,0.3752,0.0055,*D* scores,-1.2657
-Death (2),tt2,bca,0.1,0.0039,0.2082,0.0027,*D* scores,-2.1972
-Death (2),tt2,normal,0.1825,0.0613,0.3218,0.0044,*D* scores,-1.4995
-Death (2),tt2,percent,0.1475,0.0253,0.2804,0.0042,*D* scores,-1.7543
-Death (2),tt3,basic,0.0975,0.0129,0.1937,0.0021,*D* scores,-2.2253
-Death (2),tt3,bca,0.0375,-0.012,0.091,7e-4,*D* scores,-3.2452
-Death (2),tt3,normal,0.0775,0.0042,0.1593,0.0016,*D* scores,-2.4768
-Death (2),tt3,percent,0.065,-0.0062,0.1418,0.0014,*D* scores,-2.6662
-Death (2),tt4,basic,0.2375,0.0781,0.4296,0.008,*D* scores,-1.1664
-Death (2),tt4,bca,0.1475,0.0152,0.2985,0.0052,*D* scores,-1.7543
-Death (2),tt4,normal,0.21,0.05,0.3871,0.0074,*D* scores,-1.3249
-Death (2),tt4,percent,0.21,0.0568,0.3778,0.0067,*D* scores,-1.3249
-Death (3),tt1,basic,0.105,0.0346,0.1848,0.0015,*D* scores,-2.1429
-Death (3),tt1,bca,0.0503,-0.0024,0.1095,8e-4,*D* scores,-2.9381
-Death (3),tt1,normal,0.0843,0.0183,0.1551,0.0012,*D* scores,-2.3853
-Death (3),tt1,percent,0.0799,0.0176,0.1481,0.0011,*D* scores,-2.4437
-Death (3),tt2,basic,0.213,0.0956,0.351,0.0042,*D* scores,-1.3069
-Death (3),tt2,bca,0.1317,0.0195,0.2514,0.0035,*D* scores,-1.886
-Death (3),tt2,normal,0.1864,0.0737,0.3139,0.0038,*D* scores,-1.4736
-Death (3),tt2,percent,0.1701,0.0519,0.3009,0.004,*D* scores,-1.5849
-Death (3),tt3,basic,0.2056,0.0996,0.3242,0.0033,*D* scores,-1.3517
-Death (3),tt3,bca,0.0814,0.0111,0.1606,0.0015,*D* scores,-2.4235
-Death (3),tt3,normal,0.1686,0.0767,0.2781,0.0026,*D* scores,-1.5956
-Death (3),tt3,percent,0.1346,0.0455,0.2339,0.0023,*D* scores,-1.8609
-Death (3),tt4,basic,0.2101,0.0929,0.3443,0.0041,*D* scores,-1.3243
-Death (3),tt4,bca,0.1524,0.0337,0.2788,0.0039,*D* scores,-1.7159
-Death (3),tt4,normal,0.2027,0.082,0.3385,0.0043,*D* scores,-1.3695
-Death (3),tt4,percent,0.1982,0.0697,0.3408,0.0048,*D* scores,-1.3976
-Disgust (1),tt1,basic,0.1454,0.068,0.2291,0.0017,*D* scores,-1.7711
-Disgust (1),tt1,bca,0.0738,0.0136,0.1351,0.001,*D* scores,-2.5297
-Disgust (1),tt1,normal,0.1183,0.0443,0.1962,0.0015,*D* scores,-2.0086
-Disgust (1),tt1,percent,0.0979,0.0303,0.1689,0.0013,*D* scores,-2.2208
-Disgust (1),tt2,basic,0.1103,0.0391,0.1888,0.0015,*D* scores,-2.0877
-Disgust (1),tt2,bca,0.065,0.0111,0.124,8e-4,*D* scores,-2.6662
-Disgust (1),tt2,normal,0.0986,0.0298,0.1732,0.0013,*D* scores,-2.2129
-Disgust (1),tt2,percent,0.1008,0.032,0.1755,0.0013,*D* scores,-2.1884
-Disgust (1),tt3,basic,0.2542,0.1508,0.3703,0.0031,*D* scores,-1.0763
-Disgust (1),tt3,bca,0.2001,0.0944,0.3168,0.0032,*D* scores,-1.3857
-Disgust (1),tt3,normal,0.233,0.1231,0.3533,0.0034,*D* scores,-1.1914
-Disgust (1),tt3,percent,0.2294,0.123,0.3503,0.0034,*D* scores,-1.2117
-Disgust (1),tt4,basic,0.1958,0.1025,0.2976,0.0025,*D* scores,-1.4128
-Disgust (1),tt4,bca,0.1308,0.0543,0.2152,0.0017,*D* scores,-1.8939
-Disgust (1),tt4,normal,0.1753,0.0859,0.277,0.0024,*D* scores,-1.5485
-Disgust (1),tt4,percent,0.1563,0.0742,0.2478,0.002,*D* scores,-1.686
-Disgust (2),tt1,basic,0.1704,0.0769,0.2698,0.0024,*D* scores,-1.5828
-Disgust (2),tt1,bca,0.1044,0.0327,0.183,0.0015,*D* scores,-2.1493
-Disgust (2),tt1,normal,0.1433,0.0554,0.2339,0.0021,*D* scores,-1.7881
-Disgust (2),tt1,percent,0.1336,0.0537,0.2237,0.0019,*D* scores,-1.8695
-Disgust (2),tt2,basic,0.1579,0.0835,0.242,0.0016,*D* scores,-1.6739
-Disgust (2),tt2,bca,0.0941,0.0328,0.1613,0.0011,*D* scores,-2.2646
-Disgust (2),tt2,normal,0.1352,0.0663,0.2122,0.0014,*D* scores,-1.8557
-Disgust (2),tt2,percent,0.1314,0.0611,0.2079,0.0014,*D* scores,-1.8886
-Disgust (2),tt3,basic,0.1687,0.0746,0.2704,0.0025,*D* scores,-1.5949
-Disgust (2),tt3,bca,0.1163,0.0134,0.2253,0.0029,*D* scores,-2.0279
-Disgust (2),tt3,normal,0.1504,0.0493,0.2559,0.0028,*D* scores,-1.7315
-Disgust (2),tt3,percent,0.1347,0.0319,0.2399,0.0028,*D* scores,-1.86
-Disgust (2),tt4,basic,0.1417,0.065,0.2235,0.0016,*D* scores,-1.8012
-Disgust (2),tt4,bca,0.0914,0.0217,0.164,0.0013,*D* scores,-2.2967
-Disgust (2),tt4,normal,0.1157,0.0461,0.1918,0.0014,*D* scores,-2.0338
-Disgust (2),tt4,percent,0.1255,0.0522,0.2018,0.0015,*D* scores,-1.9413
-Friend-Enemy,tt1,basic,0.1643,0.1025,0.2291,0.001,*D* scores,-1.6266
-Friend-Enemy,tt1,bca,0.1153,0.0583,0.1734,9e-4,*D* scores,-2.0377
-Friend-Enemy,tt1,normal,0.1444,0.0853,0.2054,9e-4,*D* scores,-1.7792
-Friend-Enemy,tt1,percent,0.1325,0.074,0.1944,9e-4,*D* scores,-1.879
-Friend-Enemy,tt2,basic,0.1485,0.0996,0.1997,7e-4,*D* scores,-1.7464
-Friend-Enemy,tt2,bca,0.0812,0.0451,0.1185,3e-4,*D* scores,-2.4262
-Friend-Enemy,tt2,normal,0.1217,0.0772,0.1686,5e-4,*D* scores,-1.9764
-Friend-Enemy,tt2,percent,0.1081,0.0669,0.1534,5e-4,*D* scores,-2.1103
-Friend-Enemy,tt3,basic,0.1221,0.076,0.1699,6e-4,*D* scores,-1.9727
-Friend-Enemy,tt3,bca,0.0474,0.0201,0.0752,2e-4,*D* scores,-3.0006
-Friend-Enemy,tt3,normal,0.0938,0.0522,0.136,5e-4,*D* scores,-2.2681
-Friend-Enemy,tt3,percent,0.0716,0.0375,0.1083,3e-4,*D* scores,-2.5624
-Friend-Enemy,tt4,basic,0.1579,0.1091,0.2112,7e-4,*D* scores,-1.6739
-Friend-Enemy,tt4,bca,0.0804,0.0426,0.1202,4e-4,*D* scores,-2.4369
-Friend-Enemy,tt4,normal,0.1271,0.0814,0.1747,6e-4,*D* scores,-1.9268
-Friend-Enemy,tt4,percent,0.1115,0.0639,0.161,6e-4,*D* scores,-2.0755
-Gender (1),tt1,basic,0.1196,0.0483,0.1948,0.0014,*D* scores,-1.9962
-Gender (1),tt1,bca,0.0458,0.0017,0.0902,5e-4,*D* scores,-3.0366
-Gender (1),tt1,normal,0.091,0.0276,0.158,0.0011,*D* scores,-2.3015
-Gender (1),tt1,percent,0.0809,0.0225,0.1431,9e-4,*D* scores,-2.4302
-Gender (1),tt2,basic,0.1023,0.0394,0.1708,0.0011,*D* scores,-2.1719
-Gender (1),tt2,bca,0.0256,-0.0028,0.0546,2e-4,*D* scores,-3.6392
-Gender (1),tt2,normal,0.075,0.0211,0.1341,8e-4,*D* scores,-2.5123
-Gender (1),tt2,percent,0.05,0.0073,0.0951,5e-4,*D* scores,-2.9444
-Gender (1),tt3,basic,0.135,0.0588,0.2163,0.0016,*D* scores,-1.8575
-Gender (1),tt3,bca,0.0637,0.0097,0.1226,8e-4,*D* scores,-2.6878
-Gender (1),tt3,normal,0.1089,0.039,0.1859,0.0014,*D* scores,-2.102
-Gender (1),tt3,percent,0.0964,0.0289,0.1674,0.0012,*D* scores,-2.2379
-Gender (1),tt4,basic,0.1279,0.0575,0.2059,0.0014,*D* scores,-1.9197
-Gender (1),tt4,bca,0.0577,0.0063,0.113,7e-4,*D* scores,-2.7931
-Gender (1),tt4,normal,0.1059,0.0384,0.1772,0.0013,*D* scores,-2.1333
-Gender (1),tt4,percent,0.0976,0.0361,0.1643,0.0011,*D* scores,-2.2242
-Gender (2),tt1,basic,0.1802,0.1223,0.242,9e-4,*D* scores,-1.515
-Gender (2),tt1,bca,0.1028,0.0589,0.1484,5e-4,*D* scores,-2.1665
-Gender (2),tt1,normal,0.1525,0.0996,0.2071,8e-4,*D* scores,-1.7151
-Gender (2),tt1,percent,0.1412,0.0901,0.1958,7e-4,*D* scores,-1.8054
-Gender (2),tt2,basic,0.0781,0.0371,0.1197,4e-4,*D* scores,-2.4684
-Gender (2),tt2,bca,0.0209,0.0011,0.0414,0,*D* scores,-3.8469
-Gender (2),tt2,normal,0.0546,0.0211,0.0887,3e-4,*D* scores,-2.8516
-Gender (2),tt2,percent,0.0362,0.0081,0.0649,2e-4,*D* scores,-3.2818
-Gender (2),tt3,basic,0.1386,0.0887,0.1917,7e-4,*D* scores,-1.827
-Gender (2),tt3,bca,0.0585,0.0276,0.0906,3e-4,*D* scores,-2.7784
-Gender (2),tt3,normal,0.108,0.0659,0.1526,5e-4,*D* scores,-2.1113
-Gender (2),tt3,percent,0.0873,0.0487,0.1273,4e-4,*D* scores,-2.3471
-Gender (2),tt4,basic,0.1056,0.0576,0.1547,6e-4,*D* scores,-2.1365
-Gender (2),tt4,bca,0.0388,0.0121,0.0658,2e-4,*D* scores,-3.2098
-Gender (2),tt4,normal,0.0767,0.0376,0.118,4e-4,*D* scores,-2.4881
-Gender (2),tt4,percent,0.0602,0.025,0.0964,3e-4,*D* scores,-2.748
-Lincoln-Hitler,tt1,basic,0.1603,0.1131,0.2103,6e-4,*D* scores,-1.656
-Lincoln-Hitler,tt1,bca,0.0975,0.058,0.1381,4e-4,*D* scores,-2.2253
-Lincoln-Hitler,tt1,normal,0.1338,0.0893,0.1814,6e-4,*D* scores,-1.8678
-Lincoln-Hitler,tt1,percent,0.124,0.0818,0.1675,5e-4,*D* scores,-1.9551
-Lincoln-Hitler,tt2,basic,0.143,0.0973,0.1925,6e-4,*D* scores,-1.7906
-Lincoln-Hitler,tt2,bca,0.0827,0.0446,0.1225,4e-4,*D* scores,-2.4062
-Lincoln-Hitler,tt2,normal,0.1177,0.073,0.1634,5e-4,*D* scores,-2.0144
-Lincoln-Hitler,tt2,percent,0.1028,0.0592,0.149,5e-4,*D* scores,-2.1665
-Lincoln-Hitler,tt3,basic,0.1585,0.1103,0.2089,6e-4,*D* scores,-1.6694
-Lincoln-Hitler,tt3,bca,0.0915,0.0497,0.1344,5e-4,*D* scores,-2.2955
-Lincoln-Hitler,tt3,normal,0.1341,0.0852,0.1848,6e-4,*D* scores,-1.8652
-Lincoln-Hitler,tt3,percent,0.1179,0.071,0.1676,6e-4,*D* scores,-2.0125
-Lincoln-Hitler,tt4,basic,0.1763,0.1237,0.2318,8e-4,*D* scores,-1.5416
-Lincoln-Hitler,tt4,bca,0.1134,0.0661,0.1625,6e-4,*D* scores,-2.0565
-Lincoln-Hitler,tt4,normal,0.1523,0.0998,0.2063,7e-4,*D* scores,-1.7167
-Lincoln-Hitler,tt4,percent,0.132,0.0805,0.1853,7e-4,*D* scores,-1.8834
-Personality - Agreeableness,tt1,basic,0.1394,0.0705,0.2146,0.0014,*D* scores,-1.8203
-Personality - Agreeableness,tt1,bca,0.0907,0.0254,0.1601,0.0012,*D* scores,-2.3051
-Personality - Agreeableness,tt1,normal,0.121,0.0535,0.1917,0.0012,*D* scores,-1.983
-Personality - Agreeableness,tt1,percent,0.1164,0.0518,0.1855,0.0012,*D* scores,-2.027
-Personality - Agreeableness,tt2,basic,0.1085,0.0392,0.1815,0.0013,*D* scores,-2.1062
-Personality - Agreeableness,tt2,bca,0.046,0.0029,0.0919,5e-4,*D* scores,-3.032
-Personality - Agreeableness,tt2,normal,0.0822,0.0224,0.1461,0.001,*D* scores,-2.4128
-Personality - Agreeableness,tt2,percent,0.0763,0.0201,0.1376,9e-4,*D* scores,-2.4937
-Personality - Agreeableness,tt3,basic,0.2051,0.1029,0.3197,0.0031,*D* scores,-1.3547
-Personality - Agreeableness,tt3,bca,0.1236,0.014,0.2431,0.0034,*D* scores,-1.9588
-Personality - Agreeableness,tt3,normal,0.1775,0.0672,0.2952,0.0034,*D* scores,-1.5334
-Personality - Agreeableness,tt3,percent,0.1637,0.0564,0.2855,0.0034,*D* scores,-1.631
-Personality - Agreeableness,tt4,basic,0.1867,0.0881,0.2974,0.0028,*D* scores,-1.4716
-Personality - Agreeableness,tt4,bca,0.1236,0.0326,0.2215,0.0023,*D* scores,-1.9588
-Personality - Agreeableness,tt4,normal,0.1631,0.0645,0.2717,0.0028,*D* scores,-1.6353
-Personality - Agreeableness,tt4,percent,0.1558,0.0586,0.2604,0.0027,*D* scores,-1.6898
-Personality - Conscientiousness,tt1,basic,0.2137,0.1335,0.3053,0.0019,*D* scores,-1.3028
-Personality - Conscientiousness,tt1,bca,0.1558,0.071,0.2481,0.002,*D* scores,-1.6898
-Personality - Conscientiousness,tt1,normal,0.2038,0.1187,0.2997,0.0021,*D* scores,-1.3627
-Personality - Conscientiousness,tt1,percent,0.1986,0.1088,0.2928,0.0022,*D* scores,-1.3951
-Personality - Conscientiousness,tt2,basic,0.0579,0.0087,0.1089,7e-4,*D* scores,-2.7894
-Personality - Conscientiousness,tt2,bca,0.0105,-0.005,0.0265,0,*D* scores,-4.5458
-Personality - Conscientiousness,tt2,normal,0.0342,6e-4,0.0709,3e-4,*D* scores,-3.3407
-Personality - Conscientiousness,tt2,percent,0.021,-0.0044,0.0474,2e-4,*D* scores,-3.842
-Personality - Conscientiousness,tt3,basic,0.1887,0.0949,0.2931,0.0026,*D* scores,-1.4585
-Personality - Conscientiousness,tt3,bca,0.1124,0.0263,0.2043,0.0021,*D* scores,-2.0665
-Personality - Conscientiousness,tt3,normal,0.1552,0.0615,0.2605,0.0026,*D* scores,-1.6944
-Personality - Conscientiousness,tt3,percent,0.1387,0.0392,0.2404,0.0026,*D* scores,-1.8261
-Personality - Conscientiousness,tt4,basic,0.1591,0.0763,0.252,0.002,*D* scores,-1.6649
-Personality - Conscientiousness,tt4,bca,0.0809,0.0175,0.1481,0.0011,*D* scores,-2.4302
-Personality - Conscientiousness,tt4,normal,0.1269,0.0515,0.2093,0.0016,*D* scores,-1.9287
-Personality - Conscientiousness,tt4,percent,0.1236,0.0476,0.2057,0.0016,*D* scores,-1.9588
-Personality - Extraversion,tt1,basic,0.1286,0.0554,0.2107,0.0016,*D* scores,-1.9134
-Personality - Extraversion,tt1,bca,0.0569,0.0035,0.1124,8e-4,*D* scores,-2.8079
-Personality - Extraversion,tt1,normal,0.1001,0.0302,0.1796,0.0015,*D* scores,-2.1961
-Personality - Extraversion,tt1,percent,0.0918,0.0262,0.1635,0.0012,*D* scores,-2.2919
-Personality - Extraversion,tt2,basic,0.1864,0.0965,0.2881,0.0024,*D* scores,-1.4736
-Personality - Extraversion,tt2,bca,0.0762,0.0075,0.149,0.0013,*D* scores,-2.4951
-Personality - Extraversion,tt2,normal,0.1368,0.05,0.232,0.0022,*D* scores,-1.8421
-Personality - Extraversion,tt2,percent,0.0973,0.0216,0.1791,0.0016,*D* scores,-2.2276
-Personality - Extraversion,tt3,basic,0.2048,0.1154,0.3086,0.0024,*D* scores,-1.3566
-Personality - Extraversion,tt3,bca,0.1267,0.0512,0.2112,0.0017,*D* scores,-1.9305
-Personality - Extraversion,tt3,normal,0.1781,0.0894,0.2794,0.0023,*D* scores,-1.5293
-Personality - Extraversion,tt3,percent,0.157,0.0774,0.2469,0.0019,*D* scores,-1.6807
-Personality - Extraversion,tt4,basic,0.0808,0.014,0.1502,0.0012,*D* scores,-2.4315
-Personality - Extraversion,tt4,bca,0.0239,-0.0029,0.0532,2e-4,*D* scores,-3.7097
-Personality - Extraversion,tt4,normal,0.0615,0.0041,0.1219,9e-4,*D* scores,-2.7252
-Personality - Extraversion,tt4,percent,0.0358,-0.0029,0.0776,4e-4,*D* scores,-3.2934
-Personality - Neuroticism,tt1,basic,0.1768,0.0922,0.2712,0.0021,*D* scores,-1.5382
-Personality - Neuroticism,tt1,bca,0.0947,0.025,0.1708,0.0014,*D* scores,-2.2576
-Personality - Neuroticism,tt1,normal,0.1436,0.0641,0.2324,0.0018,*D* scores,-1.7857
-Personality - Neuroticism,tt1,percent,0.1289,0.0524,0.2144,0.0017,*D* scores,-1.9107
-Personality - Neuroticism,tt2,basic,0.1621,0.0767,0.258,0.0021,*D* scores,-1.6427
-Personality - Neuroticism,tt2,bca,0.0625,0.0084,0.1198,8e-4,*D* scores,-2.7081
-Personality - Neuroticism,tt2,normal,0.1201,0.0428,0.205,0.0017,*D* scores,-1.9915
-Personality - Neuroticism,tt2,percent,0.1055,0.0319,0.1844,0.0015,*D* scores,-2.1376
-Personality - Neuroticism,tt3,basic,0.2217,0.1246,0.3332,0.0028,*D* scores,-1.2558
-Personality - Neuroticism,tt3,bca,0.0996,0.0302,0.1752,0.0014,*D* scores,-2.2017
-Personality - Neuroticism,tt3,normal,0.1768,0.0865,0.2772,0.0024,*D* scores,-1.5382
-Personality - Neuroticism,tt3,percent,0.1367,0.0572,0.2212,0.0017,*D* scores,-1.843
-Personality - Neuroticism,tt4,basic,0.2031,0.1045,0.3129,0.0028,*D* scores,-1.367
-Personality - Neuroticism,tt4,bca,0.1084,0.0274,0.1938,0.0018,*D* scores,-2.1072
-Personality - Neuroticism,tt4,normal,0.1699,0.0769,0.2704,0.0024,*D* scores,-1.5863
-Personality - Neuroticism,tt4,percent,0.1475,0.0521,0.2478,0.0025,*D* scores,-1.7543
-Personality - Openness,tt1,basic,0.1304,0.0535,0.2186,0.0018,*D* scores,-1.8974
-Personality - Openness,tt1,bca,0.0689,0.0108,0.133,0.001,*D* scores,-2.6037
-Personality - Openness,tt1,normal,0.1047,0.025,0.1885,0.0017,*D* scores,-2.1461
-Personality - Openness,tt1,percent,0.0937,0.024,0.1703,0.0014,*D* scores,-2.2693
-Personality - Openness,tt2,basic,0.169,0.0727,0.2806,0.0028,*D* scores,-1.5927
-Personality - Openness,tt2,bca,0.0771,0.0028,0.1532,0.0015,*D* scores,-2.4824
-Personality - Openness,tt2,normal,0.1368,0.0453,0.2357,0.0024,*D* scores,-1.8421
-Personality - Openness,tt2,percent,0.1019,0.0215,0.19,0.0018,*D* scores,-2.1763
-Personality - Openness,tt3,basic,0.1001,0.0243,0.1839,0.0017,*D* scores,-2.1961
-Personality - Openness,tt3,bca,0.0376,-0.0094,0.0857,6e-4,*D* scores,-3.2424
-Personality - Openness,tt3,normal,0.0753,0.0088,0.1481,0.0013,*D* scores,-2.508
-Personality - Openness,tt3,percent,0.0588,-0.0025,0.1226,0.001,*D* scores,-2.773
-Personality - Openness,tt4,basic,0.1901,0.08,0.3094,0.0034,*D* scores,-1.4494
-Personality - Openness,tt4,bca,0.1377,0.0405,0.2459,0.0027,*D* scores,-1.8345
-Personality - Openness,tt4,normal,0.1717,0.0707,0.2856,0.003,*D* scores,-1.5736
-Personality - Openness,tt4,percent,0.169,0.068,0.2819,0.003,*D* scores,-1.5927
-Race (1),tt1,basic,0.2163,0.1266,0.314,0.0023,*D* scores,-1.2874
-Race (1),tt1,bca,0.1323,0.0443,0.2228,0.0021,*D* scores,-1.8808
-Race (1),tt1,normal,0.1847,0.0984,0.2794,0.0021,*D* scores,-1.4848
-Race (1),tt1,percent,0.1832,0.0912,0.2844,0.0024,*D* scores,-1.4948
-Race (1),tt2,basic,0.1017,0.0311,0.1767,0.0014,*D* scores,-2.1785
-Race (1),tt2,bca,0.036,-0.0059,0.0794,5e-4,*D* scores,-3.2876
-Race (1),tt2,normal,0.0731,0.0127,0.1362,0.001,*D* scores,-2.54
-Race (1),tt2,percent,0.0588,3e-4,0.1207,9e-4,*D* scores,-2.773
-Race (1),tt3,basic,0.1442,0.079,0.2193,0.0013,*D* scores,-1.7808
-Race (1),tt3,bca,0.0667,0.0192,0.1177,6e-4,*D* scores,-2.6385
-Race (1),tt3,normal,0.117,0.0549,0.1849,0.0011,*D* scores,-2.0212
-Race (1),tt3,percent,0.1022,0.0441,0.1649,9e-4,*D* scores,-2.173
-Race (1),tt4,basic,0.1294,0.0608,0.2045,0.0013,*D* scores,-1.9063
-Race (1),tt4,bca,0.0504,0.0097,0.0926,4e-4,*D* scores,-2.936
-Race (1),tt4,normal,0.1002,0.0352,0.1683,0.0012,*D* scores,-2.195
-Race (1),tt4,percent,0.079,0.026,0.1349,8e-4,*D* scores,-2.456
-Race (2),tt1,basic,0.2025,0.1019,0.312,0.0029,*D* scores,-1.3707
-Race (2),tt1,bca,0.1581,0.0635,0.2628,0.0026,*D* scores,-1.6724
-Race (2),tt1,normal,0.186,0.0904,0.2935,0.0027,*D* scores,-1.4762
-Race (2),tt1,percent,0.1761,0.0779,0.2822,0.0027,*D* scores,-1.543
-Race (2),tt2,basic,0.1183,0.0504,0.19,0.0013,*D* scores,-2.0086
-Race (2),tt2,bca,0.0764,0.0218,0.1344,8e-4,*D* scores,-2.4923
-Race (2),tt2,normal,0.1028,0.0385,0.1714,0.0011,*D* scores,-2.1665
-Race (2),tt2,percent,0.0925,0.0327,0.1579,0.001,*D* scores,-2.2835
-Race (2),tt3,basic,0.1322,0.065,0.2054,0.0013,*D* scores,-1.8816
-Race (2),tt3,bca,0.0697,0.0247,0.1192,6e-4,*D* scores,-2.5913
-Race (2),tt3,normal,0.109,0.0488,0.1749,0.001,*D* scores,-2.101
-Race (2),tt3,percent,0.0971,0.0413,0.1578,9e-4,*D* scores,-2.2299
-Race (2),tt4,basic,0.1255,0.0603,0.1957,0.0012,*D* scores,-1.9413
-Race (2),tt4,bca,0.0708,0.0251,0.1215,6e-4,*D* scores,-2.5745
-Race (2),tt4,normal,0.1018,0.0421,0.167,0.001,*D* scores,-2.1774
-Race (2),tt4,percent,0.0909,0.0342,0.1539,9e-4,*D* scores,-2.3027
-Religion,tt1,basic,0.1522,0.0409,0.2705,0.0034,*D* scores,-1.7174
-Religion,tt1,bca,0.0844,0.0066,0.1666,0.0017,*D* scores,-2.384
-Religion,tt1,normal,0.1367,0.0292,0.2514,0.0032,*D* scores,-1.843
-Religion,tt1,percent,0.1256,0.0289,0.2288,0.0026,*D* scores,-1.9404
-Religion,tt2,basic,0.1489,0.0628,0.2448,0.0022,*D* scores,-1.7433
-Religion,tt2,bca,0.0478,6e-4,0.0997,6e-4,*D* scores,-2.9917
-Religion,tt2,normal,0.1133,0.038,0.1962,0.0016,*D* scores,-2.0575
-Religion,tt2,percent,0.0844,0.0172,0.1554,0.0012,*D* scores,-2.384
-Religion,tt3,basic,0.2067,0.0955,0.3322,0.0036,*D* scores,-1.3449
-Religion,tt3,bca,0.12,0.0209,0.23,0.0028,*D* scores,-1.9924
-Religion,tt3,normal,0.1811,0.0708,0.303,0.0035,*D* scores,-1.5089
-Religion,tt3,percent,0.1633,0.0599,0.2798,0.0031,*D* scores,-1.6339
-Religion,tt4,basic,0.1489,0.0618,0.2462,0.0022,*D* scores,-1.7433
-Religion,tt4,bca,0.0833,0.0181,0.1546,0.0012,*D* scores,-2.3983
-Religion,tt4,normal,0.1344,0.0528,0.2263,0.002,*D* scores,-1.8626
-Religion,tt4,percent,0.1189,0.0377,0.2082,0.0019,*D* scores,-2.0029
-Rich-Poor,tt1,basic,0.1268,0.0764,0.18,7e-4,*D* scores,-1.9296
-Rich-Poor,tt1,bca,0.0548,0.0216,0.0878,3e-4,*D* scores,-2.8477
-Rich-Poor,tt1,normal,0.1002,0.0554,0.1462,5e-4,*D* scores,-2.195
-Rich-Poor,tt1,percent,0.0785,0.0408,0.118,4e-4,*D* scores,-2.4629
-Rich-Poor,tt2,basic,0.1583,0.1009,0.2178,9e-4,*D* scores,-1.6709
-Rich-Poor,tt2,bca,0.0733,0.0329,0.1173,5e-4,*D* scores,-2.5371
-Rich-Poor,tt2,normal,0.1236,0.0697,0.1817,8e-4,*D* scores,-1.9588
-Rich-Poor,tt2,percent,0.0967,0.0478,0.1467,6e-4,*D* scores,-2.2344
-Rich-Poor,tt3,basic,0.1465,0.092,0.2051,8e-4,*D* scores,-1.7623
-Rich-Poor,tt3,bca,0.0668,0.0268,0.1074,4e-4,*D* scores,-2.6369
-Rich-Poor,tt3,normal,0.1152,0.0657,0.1681,7e-4,*D* scores,-2.0387
-Rich-Poor,tt3,percent,0.0944,0.0503,0.1418,5e-4,*D* scores,-2.2611
-Rich-Poor,tt4,basic,0.139,0.086,0.1948,8e-4,*D* scores,-1.8236
-Rich-Poor,tt4,bca,0.0519,0.0191,0.0845,3e-4,*D* scores,-2.9051
-Rich-Poor,tt4,normal,0.1047,0.0564,0.1546,6e-4,*D* scores,-2.1461
-Rich-Poor,tt4,percent,0.0867,0.0416,0.1329,5e-4,*D* scores,-2.3546
-Sexuality (1),tt1,basic,0.2737,0.1424,0.4291,0.0053,*D* scores,-0.9759
-Sexuality (1),tt1,bca,0.2086,0.0865,0.3457,0.0044,*D* scores,-1.3334
-Sexuality (1),tt1,normal,0.2574,0.1223,0.4138,0.0055,*D* scores,-1.0595
-Sexuality (1),tt1,percent,0.2485,0.1213,0.3969,0.0049,*D* scores,-1.1066
-Sexuality (1),tt2,basic,0.1553,0.0339,0.2874,0.0042,*D* scores,-1.6936
-Sexuality (1),tt2,bca,0.0976,0.0067,0.2003,0.0024,*D* scores,-2.2242
-Sexuality (1),tt2,normal,0.1391,0.0245,0.2629,0.0037,*D* scores,-1.8228
-Sexuality (1),tt2,percent,0.1346,0.0192,0.2572,0.0037,*D* scores,-1.8609
-Sexuality (1),tt3,basic,0.3683,0.2674,0.5006,0.0035,*D* scores,-0.5395
-Sexuality (1),tt3,bca,0.2663,0.1435,0.4077,0.0045,*D* scores,-1.0135
-Sexuality (1),tt3,normal,0.3328,0.2216,0.4697,0.004,*D* scores,-0.6955
-Sexuality (1),tt3,percent,0.2973,0.1801,0.4408,0.0044,*D* scores,-0.8602
-Sexuality (1),tt4,basic,0.247,0.1389,0.3742,0.0036,*D* scores,-1.1147
-Sexuality (1),tt4,bca,0.1731,0.066,0.2926,0.0033,*D* scores,-1.5638
-Sexuality (1),tt4,normal,0.2293,0.1196,0.3547,0.0036,*D* scores,-1.2123
-Sexuality (1),tt4,percent,0.2041,0.0988,0.3219,0.0032,*D* scores,-1.3609
-Sexuality (2),tt1,basic,0.3906,0.2816,0.5416,0.0044,*D* scores,-0.4448
-Sexuality (2),tt1,bca,0.3601,0.2457,0.5161,0.0048,*D* scores,-0.5749
-Sexuality (2),tt1,normal,0.3795,0.2773,0.5272,0.0041,*D* scores,-0.4917
-Sexuality (2),tt1,percent,0.3906,0.2849,0.533,0.004,*D* scores,-0.4448
-Sexuality (2),tt2,basic,0.3989,0.284,0.5629,0.0051,*D* scores,-0.4101
-Sexuality (2),tt2,bca,0.3269,0.2038,0.4859,0.0052,*D* scores,-0.7222
-Sexuality (2),tt2,normal,0.3823,0.2687,0.5343,0.0046,*D* scores,-0.4798
-Sexuality (2),tt2,percent,0.3546,0.233,0.5108,0.005,*D* scores,-0.5989
-Sexuality (2),tt3,basic,0.4183,0.2989,0.5855,0.0053,*D* scores,-0.3298
-Sexuality (2),tt3,bca,0.3878,0.2552,0.5617,0.0061,*D* scores,-0.4566
-Sexuality (2),tt3,normal,0.4072,0.2883,0.5696,0.0051,*D* scores,-0.3756
-Sexuality (2),tt3,percent,0.4072,0.283,0.5756,0.0056,*D* scores,-0.3756
-Sexuality (2),tt4,basic,0.2964,0.1539,0.4686,0.0064,*D* scores,-0.8645
-Sexuality (2),tt4,bca,0.2465,0.1128,0.4119,0.0058,*D* scores,-1.1174
-Sexuality (2),tt4,normal,0.2798,0.1377,0.4599,0.0068,*D* scores,-0.9455
-Sexuality (2),tt4,percent,0.2798,0.1401,0.4544,0.0064,*D* scores,-0.9455
-Shapes & colors (1),tt1,basic,0.0248,-0.0279,0.0842,8e-4,*D* scores,-3.6718
-Shapes & colors (1),tt1,bca,0.0248,-0.0229,0.076,6e-4,*D* scores,-3.6718
-Shapes & colors (1),tt1,normal,0.0413,-0.0158,0.1064,0.001,*D* scores,-3.1447
-Shapes & colors (1),tt1,percent,0.1074,0.0063,0.2299,0.0033,*D* scores,-2.1176
-Shapes & colors (1),tt2,basic,0.1157,-0.0141,0.2684,0.0052,*D* scores,-2.0338
-Shapes & colors (1),tt2,bca,0.0413,-0.0278,0.1171,0.0014,*D* scores,-3.1447
-Shapes & colors (1),tt2,normal,0.0992,-0.0139,0.2285,0.0038,*D* scores,-2.2061
-Shapes & colors (1),tt2,percent,0.1157,-0.0108,0.2598,0.0048,*D* scores,-2.0338
-Shapes & colors (1),tt3,basic,0.2149,0.0587,0.4088,0.008,*D* scores,-1.2956
-Shapes & colors (1),tt3,bca,0.1157,-0.0217,0.2713,0.0056,*D* scores,-2.0338
-Shapes & colors (1),tt3,normal,0.157,0.0095,0.3406,0.0071,*D* scores,-1.6807
-Shapes & colors (1),tt3,percent,0.1405,-0.0107,0.313,0.0068,*D* scores,-1.8111
-Shapes & colors (1),tt4,basic,0.0744,-0.0201,0.184,0.0027,*D* scores,-2.521
-Shapes & colors (1),tt4,bca,0.0165,-0.0268,0.063,5e-4,*D* scores,-4.0878
-Shapes & colors (1),tt4,normal,0.0496,-0.0314,0.1413,0.0019,*D* scores,-2.9529
-Shapes & colors (1),tt4,percent,0.0165,-0.0323,0.0667,6e-4,*D* scores,-4.0878
-Shapes & colors (2),tt1,basic,0.26,0.067,0.5032,0.0124,*D* scores,-1.046
-Shapes & colors (2),tt1,bca,0.17,-0.0198,0.3913,0.011,*D* scores,-1.5856
-Shapes & colors (2),tt1,normal,0.23,0.0323,0.4651,0.0122,*D* scores,-1.2083
-Shapes & colors (2),tt1,percent,0.23,0.0358,0.4696,0.0122,*D* scores,-1.2083
-Shapes & colors (2),tt2,basic,0.16,0.007,0.3466,0.0075,*D* scores,-1.6582
-Shapes & colors (2),tt2,bca,0.06,-0.0344,0.1652,0.0026,*D* scores,-2.7515
-Shapes & colors (2),tt2,normal,0.1,-0.0296,0.2457,0.0049,*D* scores,-2.1972
-Shapes & colors (2),tt2,percent,0.07,-0.0393,0.1941,0.0035,*D* scores,-2.5867
-Shapes & colors (2),tt3,basic,0.01,-0.0189,0.04,2e-4,*D* scores,-4.5951
-Shapes & colors (2),tt3,bca,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (2),tt3,normal,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (2),tt3,percent,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (2),tt4,basic,0.04,-0.0408,0.1269,0.0018,*D* scores,-3.1781
-Shapes & colors (2),tt4,bca,0.01,-0.0176,0.0389,2e-4,*D* scores,-4.5951
-Shapes & colors (2),tt4,normal,0.02,-0.0209,0.0655,5e-4,*D* scores,-3.8918
-Shapes & colors (2),tt4,percent,0.01,-0.0164,0.0386,2e-4,*D* scores,-4.5951
-Shapes & colors (3),tt1,basic,0.08,-0.0479,0.2232,0.0048,*D* scores,-2.4423
-Shapes & colors (3),tt1,bca,0.02,-0.0213,0.0655,5e-4,*D* scores,-3.8918
-Shapes & colors (3),tt1,normal,0.04,-0.0324,0.1228,0.0016,*D* scores,-3.1781
-Shapes & colors (3),tt1,percent,0.04,-0.0376,0.1243,0.0017,*D* scores,-3.1781
-Shapes & colors (3),tt2,basic,0.15,-0.0592,0.3942,0.0134,*D* scores,-1.7346
-Shapes & colors (3),tt2,bca,0.12,-0.0583,0.3264,0.0096,*D* scores,-1.9924
-Shapes & colors (3),tt2,normal,0.14,-0.0649,0.3738,0.0125,*D* scores,-1.8153
-Shapes & colors (3),tt2,percent,0.12,-0.0587,0.3229,0.0095,*D* scores,-1.9924
-Shapes & colors (3),tt3,basic,0.27,0.1199,0.4766,0.0083,*D* scores,-0.9946
-Shapes & colors (3),tt3,bca,0.16,0.0222,0.3275,0.0061,*D* scores,-1.6582
-Shapes & colors (3),tt3,normal,0.24,0.0986,0.4288,0.0071,*D* scores,-1.1527
-Shapes & colors (3),tt3,percent,0.19,0.0629,0.3523,0.0054,*D* scores,-1.45
-Shapes & colors (3),tt4,basic,0.2,-0.0188,0.4552,0.0146,*D* scores,-1.3863
-Shapes & colors (3),tt4,bca,0.12,-0.0479,0.3135,0.0085,*D* scores,-1.9924
-Shapes & colors (3),tt4,normal,0.18,-0.0311,0.4227,0.0134,*D* scores,-1.5163
-Shapes & colors (3),tt4,percent,0.15,-0.0375,0.36870000000000003,0.0107,*D* scores,-1.7346
-Shapes & colors (4),tt1,basic,0.1875,0.0051,0.4172,0.0111,*D* scores,-1.4663
-Shapes & colors (4),tt1,bca,0.0781,-0.0291,0.2079,0.0037,*D* scores,-2.4684
-Shapes & colors (4),tt1,normal,0.1719,-5e-4,0.3878,0.0098,*D* scores,-1.5722
-Shapes & colors (4),tt1,percent,0.1563,-0.0028,0.3594,0.0085,*D* scores,-1.686
-Shapes & colors (4),tt2,basic,0.1094,-0.0222,0.2703,0.0056,*D* scores,-2.0969
-Shapes & colors (4),tt2,bca,0.0313,-0.0469,0.1172,0.0018,*D* scores,-3.4323
-Shapes & colors (4),tt2,normal,0.0625,-0.0395,0.1848,0.0033,*D* scores,-2.7081
-Shapes & colors (4),tt2,percent,0.0313,-0.0471,0.1178,0.0018,*D* scores,-3.4323
-Shapes & colors (4),tt3,basic,0.0469,-0.0505,0.1511,0.0026,*D* scores,-3.0117
-Shapes & colors (4),tt3,bca,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (4),tt3,normal,0.0313,-0.0303,0.0991,0.0011,*D* scores,-3.4323
-Shapes & colors (4),tt3,percent,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (4),tt4,basic,0.1719,-0.0587,0.4404,0.0162,*D* scores,-1.5722
-Shapes & colors (4),tt4,bca,0.1563,-0.0446,0.3962,0.0126,*D* scores,-1.686
-Shapes & colors (4),tt4,normal,0.1563,-0.0522,0.4018,0.0134,*D* scores,-1.686
-Shapes & colors (4),tt4,percent,0.1875,-0.0521,0.4793,0.0184,*D* scores,-1.4663
-Shapes & colors (5),tt1,basic,0.1074,0.0098,0.2157,0.0028,*D* scores,-2.1176
-Shapes & colors (5),tt1,bca,0.0661,0.0041,0.1354,0.0011,*D* scores,-2.6482
-Shapes & colors (5),tt1,normal,0.0909,0.0015,0.1871,0.0022,*D* scores,-2.3027
-Shapes & colors (5),tt1,percent,0.1178,0.0393,0.2087,0.0019,*D* scores,-2.0134
-Shapes & colors (5),tt2,basic,0.124,0.0236,0.2351,0.0029,*D* scores,-1.9551
-Shapes & colors (5),tt2,bca,0.0475,-0.0167,0.114,0.0011,*D* scores,-2.9984
-Shapes & colors (5),tt2,normal,0.1012,0.0064,0.2049,0.0026,*D* scores,-2.184
-Shapes & colors (5),tt2,percent,0.0806,-0.0044,0.1715,0.002,*D* scores,-2.4342
-Shapes & colors (5),tt3,basic,0.1116,0.0238,0.2102,0.0023,*D* scores,-2.0745
-Shapes & colors (5),tt3,bca,0.0269,-0.0107,0.0657,4e-4,*D* scores,-3.5884
-Shapes & colors (5),tt3,normal,0.0764,0.0044,0.155,0.0015,*D* scores,-2.4923
-Shapes & colors (5),tt3,percent,0.0661,-0.0058,0.1411,0.0014,*D* scores,-2.6482
-Shapes & colors (5),tt4,basic,0.0558,-0.0063,0.1203,0.001,*D* scores,-2.8286
-Shapes & colors (5),tt4,bca,0.0062,-0.0065,0.0194,0,*D* scores,-5.077
-Shapes & colors (5),tt4,normal,0.031,-0.0116,0.076,5e-4,*D* scores,-3.4423
-Shapes & colors (5),tt4,percent,0.0083,-0.0078,0.0247,0,*D* scores,-4.7832
-Shapes & colors (6),tt1,basic,0.0947,0.024,0.1711,0.0014,*D* scores,-2.2576
-Shapes & colors (6),tt1,bca,0.0355,-0.0071,0.082,5e-4,*D* scores,-3.3021
-Shapes & colors (6),tt1,normal,0.0695,0.0072,0.1359,0.0011,*D* scores,-2.5944
-Shapes & colors (6),tt1,percent,0.0695,0.0106,0.133,0.001,*D* scores,-2.5944
-Shapes & colors (6),tt2,basic,0.1154,0.0312,0.2081,0.002,*D* scores,-2.0367
-Shapes & colors (6),tt2,bca,0.0251,-0.0091,0.0599,3e-4,*D* scores,-3.6595
-Shapes & colors (6),tt2,normal,0.074,0.0089,0.1456,0.0012,*D* scores,-2.5268
-Shapes & colors (6),tt2,percent,0.0518,0.0059,0.1016,6e-4,*D* scores,-2.9072
-Shapes & colors (6),tt3,basic,0.0932,0.0137,0.1764,0.0017,*D* scores,-2.2752
-Shapes & colors (6),tt3,bca,0.0192,-0.0092,0.0485,2e-4,*D* scores,-3.9335
-Shapes & colors (6),tt3,normal,0.0651,0.0033,0.1319,0.0011,*D* scores,-2.6645
-Shapes & colors (6),tt3,percent,0.0547,-0.0015,0.1158,9e-4,*D* scores,-2.8496
-Shapes & colors (6),tt4,basic,0.1553,0.0622,0.2647,0.0027,*D* scores,-1.6936
-Shapes & colors (6),tt4,bca,0.0621,0.0037,0.1232,9e-4,*D* scores,-2.7149
-Shapes & colors (6),tt4,normal,0.1109,0.0343,0.1995,0.0018,*D* scores,-2.0816
-Shapes & colors (6),tt4,percent,0.0814,0.0202,0.1483,0.0011,*D* scores,-2.4235
-Shapes & colors (7),tt1,basic,0.0306,-0.0243,0.0886,8e-4,*D* scores,-3.4557
-Shapes & colors (7),tt1,bca,0.0153,-0.0228,0.053900000000000003,4e-4,*D* scores,-4.1645
-Shapes & colors (7),tt1,normal,0.0204,-0.0191,0.0621,4e-4,*D* scores,-3.8716
-Shapes & colors (7),tt1,percent,0.0357,-0.0141,0.0902,7e-4,*D* scores,-3.2963
-Shapes & colors (7),tt2,basic,0.0102,-0.0126,0.0343,0,*D* scores,-4.5751
-Shapes & colors (7),tt2,bca,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (7),tt2,normal,0.0051,-0.009,0.0202,0,*D* scores,-5.2734
-Shapes & colors (7),tt2,percent,0,0,0,0,*D* scores,-6.9068
-Shapes & colors (7),tt3,basic,0.0408,-0.0212,0.1081,0.0011,*D* scores,-3.1574
-Shapes & colors (7),tt3,bca,0.0153,-0.0243,0.055,4e-4,*D* scores,-4.1645
-Shapes & colors (7),tt3,normal,0.0408,-0.0205,0.1081,0.0011,*D* scores,-3.1574
-Shapes & colors (7),tt3,percent,0.0306,-0.0135,0.0791,6e-4,*D* scores,-3.4557
-Shapes & colors (7),tt4,basic,0.25,0.0488,0.4928,0.0128,*D* scores,-1.0986
-Shapes & colors (7),tt4,bca,0.1786,0,0.3801,0.0094,*D* scores,-1.5259
-Shapes & colors (7),tt4,normal,0.2398,0.0313,0.4784,0.013,*D* scores,-1.1538
-Shapes & colors (7),tt4,percent,0.2143,0.0458,0.4123,0.0087,*D* scores,-1.2992
-Stigma - ADHD,tt1,basic,0.2432,0.1644,0.3258,0.0017,*D* scores,-1.1352
-Stigma - ADHD,tt1,bca,0.1764,0.1017,0.2566,0.0016,*D* scores,-1.5409
-Stigma - ADHD,tt1,normal,0.2125,0.1368,0.2955,0.0016,*D* scores,-1.3099
-Stigma - ADHD,tt1,percent,0.2099,0.1276,0.3004,0.0019,*D* scores,-1.3255
-Stigma - ADHD,tt2,basic,0.134,0.0687,0.2016,0.0011,*D* scores,-1.866
-Stigma - ADHD,tt2,bca,0.0692,0.0197,0.1198,7e-4,*D* scores,-2.599
-Stigma - ADHD,tt2,normal,0.1067,0.048,0.1681,9e-4,*D* scores,-2.1249
-Stigma - ADHD,tt2,percent,0.0934,0.0337,0.155,0.001,*D* scores,-2.2728
-Stigma - ADHD,tt3,basic,0.1501,0.0854,0.2193,0.0012,*D* scores,-1.7338
-Stigma - ADHD,tt3,bca,0.0676,0.0234,0.1141,5e-4,*D* scores,-2.6242
-Stigma - ADHD,tt3,normal,0.109,0.0528,0.1718,9e-4,*D* scores,-2.101
-Stigma - ADHD,tt3,percent,0.0981,0.0451,0.1554,8e-4,*D* scores,-2.2185
-Stigma - ADHD,tt4,basic,0.1995,0.1287,0.278,0.0015,*D* scores,-1.3894
-Stigma - ADHD,tt4,bca,0.1116,0.053900000000000003,0.1761,0.001,*D* scores,-2.0745
-Stigma - ADHD,tt4,normal,0.1665,0.1008,0.2386,0.0012,*D* scores,-1.6106
-Stigma - ADHD,tt4,percent,0.1548,0.0895,0.2265,0.0012,*D* scores,-1.6974
-Stigma - PTSD,tt1,basic,0.1955,0.1103,0.2877,0.002,*D* scores,-1.4147
-Stigma - PTSD,tt1,bca,0.1279,0.0549,0.2059,0.0015,*D* scores,-1.9197
-Stigma - PTSD,tt1,normal,0.1718,0.0946,0.2562,0.0017,*D* scores,-1.5729
-Stigma - PTSD,tt1,percent,0.1605,0.0832,0.2428,0.0017,*D* scores,-1.6545
-Stigma - PTSD,tt2,basic,0.1872,0.1141,0.2651,0.0015,*D* scores,-1.4683
-Stigma - PTSD,tt2,bca,0.1012,0.0431,0.1624,9e-4,*D* scores,-2.184
-Stigma - PTSD,tt2,normal,0.1509,0.0837,0.2258,0.0013,*D* scores,-1.7276
-Stigma - PTSD,tt2,percent,0.1303,0.0654,0.2004,0.0012,*D* scores,-1.8983
-Stigma - PTSD,tt3,basic,0.1248,0.0413,0.2131,0.0019,*D* scores,-1.9477
-Stigma - PTSD,tt3,bca,0.0868,0.0108,0.1677,0.0016,*D* scores,-2.3533
-Stigma - PTSD,tt3,normal,0.1115,0.03,0.1961,0.0018,*D* scores,-2.0755
-Stigma - PTSD,tt3,percent,0.1008,0.0209,0.1857,0.0018,*D* scores,-2.1884
-Stigma - PTSD,tt4,basic,0.1272,0.0409,0.218,0.002,*D* scores,-1.9259
-Stigma - PTSD,tt4,bca,0.0995,0.0218,0.1815,0.0017,*D* scores,-2.2028
-Stigma - PTSD,tt4,normal,0.118,0.0314,0.2078,0.002,*D* scores,-2.0115
-Stigma - PTSD,tt4,percent,0.1166,0.0302,0.2059,0.002,*D* scores,-2.025
-Stigma - Schizophrenia,tt1,basic,0.1039,0.049,0.1617,8e-4,*D* scores,-2.1546
-Stigma - Schizophrenia,tt1,bca,0.0401,0.0073,0.0753,3e-4,*D* scores,-3.1755
-Stigma - Schizophrenia,tt1,normal,0.0785,0.029,0.1318,7e-4,*D* scores,-2.4629
-Stigma - Schizophrenia,tt1,percent,0.061,0.0208,0.1051,5e-4,*D* scores,-2.7339
-Stigma - Schizophrenia,tt2,basic,0.1776,0.1008,0.257,0.0016,*D* scores,-1.5327
-Stigma - Schizophrenia,tt2,bca,0.108,0.0471,0.175,0.0011,*D* scores,-2.1113
-Stigma - Schizophrenia,tt2,normal,0.155,0.0848,0.2326,0.0014,*D* scores,-1.6959
-Stigma - Schizophrenia,tt2,percent,0.1416,0.0726,0.2169,0.0014,*D* scores,-1.8021
-Stigma - Schizophrenia,tt3,basic,0.2171,0.1434,0.3005,0.0016,*D* scores,-1.2826
-Stigma - Schizophrenia,tt3,bca,0.1337,0.0603,0.2127,0.0015,*D* scores,-1.8686
-Stigma - Schizophrenia,tt3,normal,0.1838,0.1101,0.2641,0.0015,*D* scores,-1.4908
-Stigma - Schizophrenia,tt3,percent,0.1677,0.0907,0.249,0.0016,*D* scores,-1.602
-Stigma - Schizophrenia,tt4,basic,0.1776,0.1,0.2632,0.0017,*D* scores,-1.5327
-Stigma - Schizophrenia,tt4,bca,0.0995,0.0338,0.1691,0.0012,*D* scores,-2.2028
-Stigma - Schizophrenia,tt4,normal,0.1502,0.0793,0.2286,0.0015,*D* scores,-1.733
-Stigma - Schizophrenia,tt4,percent,0.1331,0.0609,0.2105,0.0015,*D* scores,-1.8738
-Valenced words,tt1,basic,0.1885,0.0763,0.3114,0.0036,*D* scores,-1.4598
-Valenced words,tt1,bca,0.1359,0.0302,0.2503,0.0032,*D* scores,-1.8498000000000001
-Valenced words,tt1,normal,0.1644,0.058,0.2816,0.0033,*D* scores,-1.6258
-Valenced words,tt1,percent,0.1782,0.0737,0.2968,0.0032,*D* scores,-1.5286
-Valenced words,tt2,basic,0.195,0.09,0.3103,0.0032,*D* scores,-1.4178
-Valenced words,tt2,bca,0.1315,0.0264,0.2431,0.0031,*D* scores,-1.8878
-Valenced words,tt2,normal,0.1585,0.0493,0.2752,0.0033,*D* scores,-1.6694
-Valenced words,tt2,percent,0.1505,0.044,0.2664,0.0032,*D* scores,-1.7307
-Valenced words,tt3,basic,0.1446,0.058,0.2417,0.0022,*D* scores,-1.7776
-Valenced words,tt3,bca,0.0789,0.0024,0.1601,0.0016,*D* scores,-2.4574
-Valenced words,tt3,normal,0.1176,0.0361,0.2067,0.0019,*D* scores,-2.0154
-Valenced words,tt3,percent,0.103,0.0181,0.1943,0.002,*D* scores,-2.1643
-Valenced words,tt4,basic,0.176,0.0677,0.2953,0.0034,*D* scores,-1.5437
-Valenced words,tt4,bca,0.1373,0.0246,0.2576,0.0035,*D* scores,-1.8379
-Valenced words,tt4,normal,0.16,0.0504,0.2774,0.0034,*D* scores,-1.6582
-Valenced words,tt4,percent,0.1563,0.0412,0.2797,0.0037,*D* scores,-1.686
+method,domain,trial_type,proportion_discriminable,ci_lower,ci_upper,variance,scoring_method
+bca,Body image,tt1,0.1269841269841271,0.01819746393229553,0.2448979591836734,0.003344512348189556,*D* scores
+bca,Body image,tt2,0.04988662131519295,0,0.12698412698412687,0.0010493654015202559,*D* scores
+bca,Body image,tt3,0.04535147392290251,0,0.1201814058956916,9.399449658387766e-4,*D* scores
+bca,Body image,tt4,0.14739229024943312,0.034013605442176686,0.26530612244897966,0.0034813767976456587,*D* scores
+bca,Clinton-Trump,tt1,0.06430013816558611,0.031140397491763006,0.10234614926196813,0.00032995751022751397,*D* scores
+bca,Clinton-Trump,tt2,0.07216494845360821,0.030505375873540647,0.12019872853775262,5.235382075272479e-4,*D* scores
+bca,Clinton-Trump,tt3,0.09225209905409704,0.04878841143461415,0.14018492932298876,5.436096601754464e-4,*D* scores
+bca,Clinton-Trump,tt4,0.07450313529599306,0.03741098947815935,0.11765064495757857,4.1899223705330405e-4,*D* scores
+bca,Countries (1),tt1,0.0640797436810252,0.01852085496409496,0.11641153435386264,6.236063821968899e-4,*D* scores
+bca,Countries (1),tt2,0.06443574225703086,0.021003915984335934,0.11711460249407528,6.011339065346075e-4,*D* scores
+bca,Countries (1),tt3,0.11213955144179444,0.05268778924884299,0.17764328942684227,0.0010161050750165284,*D* scores
+bca,Countries (1),tt4,0.040939836240655,0.008187967248130867,0.08294766820932731,3.637164780174612e-4,*D* scores
+bca,Countries (2),tt1,0.05599999999999994,0.011599999999999944,0.11280000000000001,6.664827155351946e-4,*D* scores
+bca,Countries (2),tt2,0.0988,0.03520000000000012,0.16960000000000008,0.0011755102040816323,*D* scores
+bca,Countries (2),tt3,0.0915999999999999,0.03199999999999992,0.16000000000000003,0.001066222407330281,*D* scores
+bca,Countries (2),tt4,0.054400000000000004,0.012799999999999926,0.10840000000000005,5.947625989171194e-4,*D* scores
+bca,Death (1),tt1,0.01730103806228367,0,0.06228373702422141,2.5245105540024786e-4,*D* scores
+bca,Death (1),tt2,0.06228373702422141,0,0.1487889273356401,0.0014406851896143784,*D* scores
+bca,Death (1),tt3,0.1487889273356402,0.01384083044982698,0.30441148237320936,0.00549454028003823,*D* scores
+bca,Death (1),tt4,0.08650519031141879,0,0.24913494809688586,0.004039216886403973,*D* scores
+bca,Death (2),tt1,0.07250000000000012,0,0.17499999999999993,0.0019929846938775498,*D* scores
+bca,Death (2),tt2,0.09999999999999998,0.012499999999999956,0.2025,0.002349281549354437,*D* scores
+bca,Death (2),tt3,0.03749999999999998,0,0.09999999999999998,6.507705122865469e-4,*D* scores
+bca,Death (2),tt4,0.14749999999999996,0.010000000000000231,0.29000000000000004,0.005102040816326524,*D* scores
+bca,Death (3),tt1,0.050295857988165715,0.004437869822485174,0.11242603550295871,7.588923838396372e-4,*D* scores
+bca,Death (3),tt2,0.13165680473372765,0.02071005917159774,0.25,0.003421352884546297,*D* scores
+bca,Death (3),tt3,0.08136094674556227,0.016272189349112343,0.16712266036369428,0.0014808845666728202,*D* scores
+bca,Death (3),tt4,0.15236686390532528,0.03254437869822491,0.27071005917159763,0.003691358506569182,*D* scores
+bca,Disgust (1),tt1,0.07377647918188446,0.0197224251278304,0.14024835646457268,9.453417927809451e-4,*D* scores
+bca,Disgust (1),tt2,0.06501095690284886,0.014609203798393033,0.12635129175007836,8.12571208598122e-4,*D* scores
+bca,Disgust (1),tt3,0.20014609203798406,0.08473338203067937,0.3097151205259314,0.0032939909579567093,*D* scores
+bca,Disgust (1),tt4,0.13075237399561734,0.051862673484295074,0.21402483564645725,0.0017113030271961797,*D* scores
+bca,Disgust (2),tt1,0.1043807463493781,0.03244997295835572,0.1855056787452678,0.0015244981956691085,*D* scores
+bca,Disgust (2),tt2,0.094104921579232,0.033531638723634405,0.1617090319091401,0.0010691797769049175,*D* scores
+bca,Disgust (2),tt3,0.11627906976744184,0.01784748512709567,0.2282314764737695,0.002880402945059177,*D* scores
+bca,Disgust (2),tt4,0.09140075716603557,0.027596041965463666,0.1681990265008113,0.0012865211930085908,*D* scores
+bca,Friend-Enemy,tt1,0.11526447313619348,0.06039150354019152,0.17294354818947488,8.243936611525325e-4,*D* scores
+bca,Friend-Enemy,tt2,0.08121615993336095,0.045189504373178035,0.12130101191231324,3.7698885749946865e-4,*D* scores
+bca,Friend-Enemy,tt3,0.047376093294460575,0.02228499391859061,0.07590326097520372,1.870912225475247e-4,*D* scores
+bca,Friend-Enemy,tt4,0.08038317367763437,0.043315285297792605,0.12119950020824655,3.9475419956644213e-4,*D* scores
+bca,Gender (1),tt1,0.04580606781677565,0.008328375966686563,0.09458655562165375,4.842040788596285e-4,*D* scores
+bca,Gender (1),tt2,0.02558001189768,0.0035693039857226383,0.0600683631206766,2.077352979966046e-4,*D* scores
+bca,Gender (1),tt3,0.06365258774538973,0.011897679952409205,0.12254610350981576,7.96743130189195e-4,*D* scores
+bca,Gender (1),tt4,0.057703747769185076,0.013087447947650155,0.11719214753123142,7.052913158181294e-4,*D* scores
+bca,Gender (2),tt1,0.10282548476454278,0.057842114304060256,0.15080054497571826,5.623483595986992e-4,*D* scores
+bca,Gender (2),tt2,0.020941828254847805,0.003988919667590074,0.043764533895385926,1.0295836937724098e-4,*D* scores
+bca,Gender (2),tt3,0.0585041551246539,0.02870084006583305,0.09218836565096955,2.623038515802896e-4,*D* scores
+bca,Gender (2),tt4,0.0387811634349029,0.014847645429362788,0.06858169936971903,1.8790012968978513e-4,*D* scores
+bca,Lincoln-Hitler,tt1,0.09750918273645548,0.059228650137740924,0.138600488889225,4.099781853128637e-4,*D* scores
+bca,Lincoln-Hitler,tt2,0.08270202020202011,0.04482467180866284,0.12522812892595597,4.207046488710691e-4,*D* scores
+bca,Lincoln-Hitler,tt3,0.0915404040404042,0.05194129256164741,0.1365932047750229,4.663386506521391e-4,*D* scores
+bca,Lincoln-Hitler,tt4,0.11340679522497699,0.06847021818148197,0.16281995629051044,5.79307650538985e-4,*D* scores
+bca,Personality - Agreeableness,tt1,0.09072978303747536,0.030900723208415526,0.15976331360946738,0.0010806413476721459,*D* scores
+bca,Personality - Agreeableness,tt2,0.046022353714661346,0.007232084155161189,0.09663045260082673,5.20100236929077e-4,*D* scores
+bca,Personality - Agreeableness,tt3,0.12360289283366221,0.022353714661406898,0.2426035502958579,0.003156887110644177,*D* scores
+bca,Personality - Agreeableness,tt4,0.12360289283366199,0.035502958579881505,0.220249835634451,0.002221171424758969,*D* scores
+bca,Personality - Conscientiousness,tt1,0.15581854043392518,0.06574621959237348,0.24390198448774328,0.0020655115424207545,*D* scores
+bca,Personality - Conscientiousness,tt2,0.010519395134779952,0,0.03024326101249164,5.952303966249068e-5,*D* scores
+bca,Personality - Conscientiousness,tt3,0.1124260355029586,0.026298487836949328,0.2044707429322815,0.002065893929987253,*D* scores
+bca,Personality - Conscientiousness,tt4,0.0808678500986193,0.021696252465483238,0.14990138067061143,0.0010696425251258172,*D* scores
+bca,Personality - Extraversion,tt1,0.05693296602387521,0.009182736455463858,0.11662075298438945,7.511796774566386e-4,*D* scores
+bca,Personality - Extraversion,tt2,0.0762167125803489,0.012855831037649316,0.15700176162154036,0.0013521741789811498,*D* scores
+bca,Personality - Extraversion,tt3,0.1267217630853994,0.04866850321395755,0.21209818035432274,0.0017381598403141921,*D* scores
+bca,Personality - Extraversion,tt4,0.023875114784205675,0.0018365472910928382,0.05876951331496805,2.1093832129033015e-4,*D* scores
+bca,Personality - Neuroticism,tt1,0.0947265625,0.0302734375,0.1748046875,0.0013594128895878343,*D* scores
+bca,Personality - Neuroticism,tt2,0.0625,0.013696368744279626,0.126953125,8.347493777051006e-4,*D* scores
+bca,Personality - Neuroticism,tt3,0.099609375,0.0322265625,0.173828125,0.0013048601170372637,*D* scores
+bca,Personality - Neuroticism,tt4,0.1083984375,0.033203125,0.1904296875,0.0016087171982745734,*D* scores
+bca,Personality - Openness,tt1,0.06887052341597788,0.012855831037649201,0.13590449954086337,9.85329994039846e-4,*D* scores
+bca,Personality - Openness,tt2,0.07713498622589543,0.011019283746556363,0.15426997245179075,0.0013354305377006957,*D* scores
+bca,Personality - Openness,tt3,0.037649219467401296,0,0.09090909090909094,5.37826869658304e-4,*D* scores
+bca,Personality - Openness,tt4,0.13774104683195598,0.037649219467401296,0.2405876951331496,0.0026801348985798575,*D* scores
+bca,Race (1),tt1,0.13234567901234584,0.046432139058836065,0.22370370370370374,0.0020450598469153158,*D* scores
+bca,Race (1),tt2,0.036049382716049294,0.002962962962963056,0.08492588563252192,4.371824690582105e-4,*D* scores
+bca,Race (1),tt3,0.06666666666666665,0.02123456790123468,0.11851851851851847,6.159000838001166e-4,*D* scores
+bca,Race (1),tt4,0.0503703703703704,0.013333333333333197,0.09628391032388019,4.477820584564155e-4,*D* scores
+bca,Race (2),tt1,0.15805785123966942,0.06406254214573495,0.2582644628099172,0.0024543410291061893,*D* scores
+bca,Race (2),tt2,0.07644628099173545,0.023760330578512456,0.13688016528925617,8.327322603203078e-4,*D* scores
+bca,Race (2),tt3,0.0697314049586778,0.025826446280991844,0.11880165289256217,5.625513486870178e-4,*D* scores
+bca,Race (2),tt4,0.07076446280991733,0.024806343798627374,0.1239539867798849,6.397240153021465e-4,*D* scores
+bca,Religion,tt1,0.08444444444444443,0.008888888888888835,0.17000000000000004,0.0016891913605956385,*D* scores
+bca,Religion,tt2,0.04777777777777792,0.007777777777777772,0.10333333333333339,5.942097171446061e-4,*D* scores
+bca,Religion,tt3,0.11999999999999977,0.025555555555555554,0.22888888888888892,0.0026905745291313813,*D* scores
+bca,Religion,tt4,0.08333333333333326,0.023333333333333428,0.1611111111111112,0.0012353391848046855,*D* scores
+bca,Rich-Poor,tt1,0.05484693877551028,0.024518140589569137,0.08942388299402741,2.7415369878916945e-4,*D* scores
+bca,Rich-Poor,tt2,0.07327097505668934,0.03203303310574595,0.11734338412781413,4.7362140719416974e-4,*D* scores
+bca,Rich-Poor,tt3,0.06675170068027214,0.029336734693877545,0.10798964263121562,4.0258485572413705e-4,*D* scores
+bca,Rich-Poor,tt4,0.0518707482993197,0.02168367346938771,0.08701458594187321,2.7775719260773906e-4,*D* scores
+bca,Sexuality (1),tt1,0.20857988165680463,0.06952662721893488,0.32840236686390545,0.004361245872600648,*D* scores
+bca,Sexuality (1),tt2,0.09763313609467428,0.002958579881656931,0.19822485207100593,0.0024813174884634613,*D* scores
+bca,Sexuality (1),tt3,0.26627218934911223,0.11838029821618705,0.3801775147928995,0.00446023678983458,*D* scores
+bca,Sexuality (1),tt4,0.17307692307692313,0.06213017751479277,0.2825443786982249,0.003161600640574923,*D* scores
+bca,Sexuality (2),tt1,0.36011080332409984,0.19390581717451527,0.45983379501385035,0.00460209869570738,*D* scores
+bca,Sexuality (2),tt2,0.3268698060941828,0.1634349030470913,0.4404432132963989,0.004993596675029718,*D* scores
+bca,Sexuality (2),tt3,0.38781163434903054,0.20221606648199442,0.4986149584487536,0.005717168833241525,*D* scores
+bca,Sexuality (2),tt4,0.24653739612188352,0.07756232686980602,0.3767313019390581,0.00582453116175466,*D* scores
+bca,Shapes & colors (1),tt1,0.024793388429752095,0,0.08264462809917361,4.444850162465325e-4,*D* scores
+bca,Shapes & colors (1),tt2,0.04132231404958664,0,0.1322314049586777,0.001137881641591122,*D* scores
+bca,Shapes & colors (1),tt3,0.11570247933884303,0,0.28099173553719015,0.00513824678780991,*D* scores
+bca,Shapes & colors (1),tt4,0.016528925619834434,0,0.0822300562951655,4.400368439130888e-4,*D* scores
+bca,Shapes & colors (2),tt1,0.17000000000000015,0,0.3600000000000001,0.008433985839233658,*D* scores
+bca,Shapes & colors (2),tt2,0.06000000000000005,0,0.18974918405857513,0.0023430831457527477,*D* scores
+bca,Shapes & colors (2),tt3,0,0,0,0,*D* scores
+bca,Shapes & colors (2),tt4,0.010000000000000009,0,0.040000000000000036,1.0412328196584776e-4,*D* scores
+bca,Shapes & colors (3),tt1,0.019999999999999907,0,0.08000000000000007,4.1649312786339103e-4,*D* scores
+bca,Shapes & colors (3),tt2,0.11999999999999988,0,0.31999999999999984,0.006663890045814238,*D* scores
+bca,Shapes & colors (3),tt3,0.16000000000000003,0.019999999999999907,0.31999999999999984,0.005856934610578924,*D* scores
+bca,Shapes & colors (3),tt4,0.11999999999999988,0,0.30000000000000004,0.005856934610578928,*D* scores
+bca,Shapes & colors (4),tt1,0.078125,0,0.21875,0.0031140385841836736,*D* scores
+bca,Shapes & colors (4),tt2,0.03125,0,0.125,0.0010168289254477302,*D* scores
+bca,Shapes & colors (4),tt3,0,0,0,0,*D* scores
+bca,Shapes & colors (4),tt4,0.15625,0,0.375,0.00915146032902957,*D* scores
+bca,Shapes & colors (5),tt1,0.06611570247933873,0.010330578512396604,0.1425619834710744,0.0011378816415911236,*D* scores
+bca,Shapes & colors (5),tt2,0.0475206611570248,0,0.12190082644628086,9.670327134713589e-4,*D* scores
+bca,Shapes & colors (5),tt3,0.02685950413223115,0,0.07438016528925606,3.6003286315968943e-4,*D* scores
+bca,Shapes & colors (5),tt4,0.006198347107437829,0,0.022727272727272707,3.3614179353643916e-5,*D* scores
+bca,Shapes & colors (6),tt1,0.035502958579881505,0,0.08875739644970415,5.12668902575096e-4,*D* scores
+bca,Shapes & colors (6),tt2,0.025147928994082913,0,0.06804733727810641,3.013353882913611e-4,*D* scores
+bca,Shapes & colors (6),tt3,0.019230769230769273,0,0.056213017751479244,2.0563719314401036e-4,*D* scores
+bca,Shapes & colors (6),tt4,0.062130177514792884,0.013313609467455634,0.12869822485207105,8.664104453519125e-4,*D* scores
+bca,Shapes & colors (7),tt1,0.015306122448979664,0,0.061224489795918435,2.4393730156513696e-4,*D* scores
+bca,Shapes & colors (7),tt2,0,0,0,0,*D* scores
+bca,Shapes & colors (7),tt3,0.015306122448979664,0,0.061224489795918435,2.4393730156513696e-4,*D* scores
+bca,Shapes & colors (7),tt4,0.1785714285714285,0,0.3520408163265307,0.008065177032997329,*D* scores
+bca,Stigma - ADHD,tt1,0.17637877211238295,0.0975611554615355,0.2520811654526536,0.0015538078852337068,*D* scores
+bca,Stigma - ADHD,tt2,0.0691987513007285,0.022118907802846702,0.12226194547498893,6.526335377319411e-4,*D* scores
+bca,Stigma - ADHD,tt3,0.06763787721123815,0.024973985431841816,0.1144575750275383,5.210923057405143e-4,*D* scores
+bca,Stigma - ADHD,tt4,0.11160249739854322,0.051768990634755374,0.17481789802289294,9.853338198546474e-4,*D* scores
+bca,Stigma - PTSD,tt1,0.12791495198902603,0.05658436213991769,0.20404663923182442,0.0014151084941905904,*D* scores
+bca,Stigma - PTSD,tt2,0.10116598079561034,0.04321847791294337,0.16392318244170112,9.481482777602244e-4,*D* scores
+bca,Stigma - PTSD,tt3,0.08676268861454028,0.015432098765431945,0.17317384033122685,0.0016192769309799323,*D* scores
+bca,Stigma - PTSD,tt4,0.09945130315500672,0.02503429355281195,0.18484224965706453,0.001661975663409694,*D* scores
+bca,Stigma - Schizophrenia,tt1,0.040123456790123635,0.009945130315500705,0.08092418326675488,3.278598733507487e-4,*D* scores
+bca,Stigma - Schizophrenia,tt2,0.10802469135802462,0.045961962137909214,0.17523145349995106,0.0010874766631742642,*D* scores
+bca,Stigma - Schizophrenia,tt3,0.13374485596707797,0.06002231879085835,0.21056241426611821,0.0014747969820973264,*D* scores
+bca,Stigma - Schizophrenia,tt4,0.09945130315500705,0.035322359396433356,0.16872427983539096,0.0011581159137339892,*D* scores
+bca,Valenced words,tt1,0.1358655953250547,0.03579254930606268,0.2505478451424398,0.0030013430009481626,*D* scores
+bca,Valenced words,tt2,0.13148283418553686,0.023374726077428742,0.24689554419284154,0.003251350747799319,*D* scores
+bca,Valenced words,tt3,0.07888970051132216,0.010226442658875068,0.16289262235208202,0.00151674838752854,*D* scores
+bca,Valenced words,tt4,0.13732651570489407,0.028487947406866332,0.2614864268852137,0.003532921923106378,*D* scores

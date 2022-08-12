@@ -103,6 +103,8 @@ data_map_ci_widths <- data_estimates_iat_D %>%
   do(point_estimate(.$ci_width, centrality = "MAP")) %>%
   ungroup()
 
+write_csv(data_map_ci_widths, "../data/results/data_map_ci_widths_iat_d.csv") 
+
 data_map_ci_widths %>%
   summarize(map_map = point_estimate(MAP, centrality = "MAP"),
             min_map = min(MAP),
@@ -117,7 +119,7 @@ data_map_ci_widths %>%
 
 ## MAP CI width
 
-By domain and trial type using basic bootstrapping, on the basis that it has the best performance for % of non-zero *D* scores (further below).
+By domain and trial type 
 
 ```{r fig.height=16, fig.width=16}
 
@@ -131,7 +133,7 @@ data_map_ci_widths %>%
 
 ## Plot by domain and trial type
 
-```{r fig.height=10, fig.width=8}
+```{r fig.height=14, fig.width=6}
 
 data_ci_width_map_D <- data_estimates_iat_D %>%
   group_by(domain, trial_type) %>%
@@ -146,15 +148,15 @@ data_ci_width_map_D <- data_estimates_iat_D %>%
          trial_type = fct_relevel(trial_type, "Trial type 1", "Trial type 2", "Trial type 3", "Trial type 4", "IAT")) %>%
   mutate(domain = fct_rev(domain))
 
-# # save to disk
-# write_csv(data_ci_width_map_D, "../data/results/data_ci_width_map_D.csv")
+# save to disk
+write_csv(data_ci_width_map_D, "../data/results/data_ci_width_map_iat_D.csv")
 
 # plot
 p_ci_widths <- 
   ggplot(data_ci_width_map_D, aes(MAP, domain)) + 
   geom_point(position = position_dodge(width = 0.8)) +
   mdthemes::md_theme_linedraw() +
-  facet_wrap(~ trial_type, ncol = 4, nrow = 1) +
+  #facet_wrap(~ trial_type, ncol = 4, nrow = 1) +
   labs(x = "Highest probability (MAP) 95% CI width",
        y = "") + 
   theme(legend.position = "top")
@@ -167,7 +169,7 @@ p_ci_widths
 
 ## Caterpillar plot
 
-```{r fig.height=16, fig.width=8}
+```{r fig.height=16, fig.width=16}
 
 p_cis_by_domain <- 
   data_estimates_iat_D %>%
@@ -224,16 +226,19 @@ data_diff_zero <-
   #filter(!(proportion_diff_zero == 0 & variance == 0)) %>%
   mutate(variance = ifelse(variance == 0, 0.0001, variance)) 
 
-data_diff_zero
+# data_diff_zero %>%
+#   round_df(2) %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
-# # save to disk
-# write_csv(data_diff_zero, "../data/results/data_diff_zero_irap_vs_iat.csv")
+# save to disk
+write_csv(data_diff_zero, "../data/results/data_diff_zero_irap_vs_iat.csv")
 
 ```
 
 ## Plot
 
-```{r fig.height=7, fig.width=8}
+```{r fig.height=14, fig.width=6}
 
 p_diff_zero <- 
   data_diff_zero %>%
@@ -409,7 +414,7 @@ if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
     rename(proportion_discriminable = estimate) |>
     mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
-           trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "iat"),
+           #trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "iat"),
            measure = "IAT") 
   
   # save to disk
@@ -421,7 +426,7 @@ if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
 
 ## Plot
 
-```{r fig.height=7, fig.width=8}
+```{r fig.height=14, fig.width=6}
 
 # combine
 data_discriminability_combined <- 
@@ -459,11 +464,9 @@ p_discriminability <-
   #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   mdthemes::md_theme_linedraw() +
-  facet_wrap(~ trial_type, ncol = 4) +
+  #facet_wrap(~ trial_type, ncol = 4) +
   labs(x =  "Proportion of participants<br/>whose scores differ from one another<br/>",
-       y = "",
-       color = "Scoring method",
-       shape = "Scoring method") + 
+       y = "") + 
   theme(legend.position = "top",
         panel.spacing = unit(1.5, "lines")) +
   coord_cartesian(xlim = c(0,1))
@@ -585,7 +588,7 @@ data_ci_width_proportions_combined <-
   mutate(measure = fct_relevel(measure, "IRAP", "IAT"),
          domain = as.factor(domain),
          trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "iat")) %>%
-  group_by(scoring_method, domain, trial_type) %>%
+  group_by(measure, domain, trial_type) %>%
   summarize(ci_width_proportion_mean = mean(ci_width_proportion),
             variance = plotrix::std.error(ci_width_proportion)^2) %>%
   ungroup() %>%
@@ -596,16 +599,19 @@ data_ci_width_proportions_combined <-
          ci_width_proportion_mean_logit = boot::logit(ci_width_proportion_mean_temp)) %>%
   select(-ci_width_proportion_mean_temp)
 
+write_csv(data_ci_width_proportions_combined, "../data/results/data_ci_width_proportions_irap_d_vs_iat_d.csv")
+
 ```
 
 ## Plot
 
-```{r fig.height=7, fig.width=8}
+```{r fig.height=14, fig.width=6}
 
 p_coverage <- 
   data_ci_width_proportions_combined %>%
   mutate(domain = fct_rev(factor(domain))) %>%
-  ggplot(aes(ci_width_proportion_mean, domain, color = scoring_method, shape = scoring_method)) +
+  filter(measure == "IAT") %>%
+  ggplot(aes(ci_width_proportion_mean, domain)) +
   geom_point(position = position_dodge(width = 0.75)) +
   scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   geom_linerangeh(aes(xmin = ci_width_proportion_mean - sqrt(variance)*1.96,
@@ -613,11 +619,9 @@ p_coverage <-
                   position = position_dodge(width = 0.75)) + 
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
-  facet_wrap(~ trial_type, ncol = 4) +
+  #facet_wrap(~ trial_type, ncol = 4) +
   labs(x = "Proportion of observed range covered<br/>by individual participants' 95% CIs",
-       y = "",
-       color = "Scoring method",
-       shape = "Scoring method") + 
+       y = "") + 
   theme(legend.position = "top",
         panel.spacing = unit(1.5, "lines")) +
   coord_cartesian(xlim = c(0,1))
@@ -632,7 +636,7 @@ p_coverage
 
 # fit model
 fit_ci_width_proportions <- 
-  lmer(ci_width_proportion_mean_logit ~ 1 + scoring_method + (1 | domain/trial_type), 
+  lmer(ci_width_proportion_mean_logit ~ 1 + measure + (measure | domain), 
        weights = 1/variance,
        data = data_ci_width_proportions_combined,
        # solution from https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer
@@ -642,7 +646,7 @@ fit_ci_width_proportions <-
 # extract marginal means
 results_emm_ci_width_proportions <-
   summary(emmeans(fit_ci_width_proportions, ~ measure)) %>%
-  dplyr::select(measure, estimate = emmean, se = SE, ci_lower = asymp.LCL, ci_upper = asymp.UCL)
+  dplyr::select(measure, estimate = emmean, se = SE, ci_lower = lower.CL, ci_upper = upper.CL)
 
 # extract re Tau
 results_re_tau_ci_width_proportions <-
@@ -734,7 +738,7 @@ ggsave(filename  = "plots/supplementary_figure_3S_ci_widths_iat_d.pdf",
 
 ## Supplementary Figure 4S
 
-```{r fig.height=7, fig.width=8}
+```{r fig.height=14, fig.width=6}
 
 p_diff_zero
 
@@ -752,7 +756,7 @@ ggsave(filename  = "plots/supplementary_figure_4S_proportion_excluding_zero_poin
 
 ## Supplementary Figure 5S
 
-```{r fig.height=7, fig.width=8}
+```{r fig.height=14, fig.width=6}
 
 p_discriminability
 
@@ -762,15 +766,15 @@ ggsave(filename  = "plots/supplementary_figure_5S_proportion_discriminable_iat.p
        # path      = NULL,
        # dpi       = 300,
        units     = "in",
-       width     = 8,
-       height    = 7,
+       width     = 6,
+       height    = 14,
        limitsize = TRUE)
 
 ```
 
 ## Supplementary Figure 6S
 
-```{r}
+```{r fig.height=14, fig.width=6}
 
 p_coverage
 
@@ -780,8 +784,8 @@ ggsave(filename  = "plots/supplementary_figure_6S_proportion_coverage_iat.pdf",
        # path      = NULL,
        # dpi       = 300,
        units     = "in",
-       width     = 8,
-       height    = 7,
+       width     = 6,
+       height    = 14,
        limitsize = TRUE)
 
 ```
