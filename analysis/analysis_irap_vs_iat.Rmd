@@ -60,26 +60,6 @@ dir.create("../data/results")
 #dir.create("models")
 
 # get data 
-data_trial_level <- read_csv("../data/raw/data_trial_level.csv") %>%
-  filter(timepoint == "baseline" & (age >= 18 | is.na(age)))
-
-# outliers
-data_outliers <- data_trial_level %>%
-  distinct(unique_id, .keep_all = TRUE) %>%
-  select(unique_id, domain, mean_rt) %>%
-  mutate(median_mean_rt = median(mean_rt, na.rm = TRUE),
-         mad_mean_rt = mad(mean_rt, na.rm = TRUE)) %>%
-  # exclude median +- 2MAD
-  mutate(rt_outlier = ifelse(mean_rt < median_mean_rt-mad_mean_rt*2 |
-                               mean_rt > median_mean_rt+mad_mean_rt*2, TRUE, FALSE)) %>%
-  filter(rt_outlier == FALSE) %>%
-  select(unique_id, rt_outlier) %>%
-  full_join(data_trial_level, by = "unique_id") %>%
-  mutate(rt_outlier = ifelse(is.na(rt_outlier), TRUE, rt_outlier))
-
-data_trimmed <- data_outliers %>%
-  filter(rt_outlier == FALSE)
-
 # data with confidence intervals
 data_estimates_D <- read_csv("../data/processed/data_estimates_D.csv") %>%
   filter(method == "bca")
@@ -87,6 +67,31 @@ data_estimates_D <- read_csv("../data/processed/data_estimates_D.csv") %>%
 data_estimates_iat_D <- read_csv("../data/processed/data_estimates_iat_D.csv") %>%
   mutate(trial_type = "iat",
          unique_id = as.factor(unique_id))
+
+data_demographics_iat <- read_rds("../data/processed/data_iat_processed_participant_level.rds") %>%
+  mutate(session_id = as.factor(session_id)) %>%
+  semi_join(data_estimates_iat_D, by = c("session_id" = "unique_id")) %>%
+  select(unique_id = session_id, age, sex)
+
+```
+
+# Sample descriptives
+
+```{r}
+
+data_demographics_iat %>%
+  summarize(min_age  = round_half_up(min(age, na.rm = TRUE), 2),
+            max_age  = round_half_up(max(age, na.rm = TRUE), 2),
+            mean_age = round_half_up(mean(age, na.rm = TRUE), 2),
+            sd_age   = round_half_up(sd(age, na.rm = TRUE), 2)) %>%
+  gather() %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+data_demographics_iat %>%
+  count(sex) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
 
 ```
 
