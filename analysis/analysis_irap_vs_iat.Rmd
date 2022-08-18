@@ -345,29 +345,45 @@ Note: Discriminability between a score and zero can be determined using the CI, 
 
 ```{r}
 
-# helper function to apply workflow to each resample
+# # discriminability using non-overlap of CIs
+# discriminability <- function(data, i) {
+#   data_with_indexes <- data[i,] # boot function requires data and index
+#   ci_lower <- data_with_indexes$ci_lower 
+#   ci_upper <- data_with_indexes$ci_upper
+#   n_ci_lower <- length(ci_lower)
+#   n_ci_upper <- length(ci_upper)
+#   r_ci_lower <- sum(rank(c(ci_lower, ci_upper))[1:n_ci_lower])
+#   A <- (r_ci_lower / n_ci_lower - (n_ci_lower + 1) / 2) / n_ci_upper
+#   return(A)
+# }
+
+# discriminatory using the significance of the difference score
+# the goal here is to assess mean_diff > 1.96 * sqrt(SE1^2 + SE2^2 for every possible comparison EXCLUDING self comparisons. This is tricky to do within a typical tidyverse workflow as it means doing mutates involving each row of a column and every other row of that column but not the same row.
+  # the below solution is to use expand.grid to find all combinations of a row with itself, and then use the modulus of the length of the row to filter out the self-pairings. Then do mutates on the rows to assess significant differences. It's enough to then summarize the proportion of significant results across all participants.
 discriminability <- function(data, i) {
-  
   data_with_indexes <- data[i,] # boot function requires data and index
   
-  estimate <- data_with_indexes$estimate
-  di_lower <- data_with_indexes$di_lower 
-  di_upper <- data_with_indexes$di_upper
+  grid_estimates <- expand.grid(data_with_indexes$estimate, data_with_indexes$estimate) |>
+    mutate(diff = Var1 - Var2,
+           row_number = row_number(),
+           modulus = row_number %% (nrow(data_with_indexes)+1)) |>
+    filter(modulus != 1) |>
+    select(diff)
   
-  n_estimate <- length(estimate)
-  n_di_lower <- length(di_lower)
-  n_di_upper <- length(di_upper)
+  grid_se <- expand.grid(data_with_indexes$se, data_with_indexes$se) |>
+    mutate(critical_value = 1.96 * sqrt(Var1^2 + Var2^2),
+           row_number = row_number(),
+           modulus = row_number %% (nrow(data_with_indexes)+1)) |>
+    filter(modulus != 1) |>
+    select(critical_value)
   
-  r_estimate <- sum(rank(c(estimate, di_lower))[1:n_estimate])
-  r_di_upper <- sum(rank(c(di_upper, estimate))[1:n_di_upper])
+  proportion_sig_diff <- 
+    bind_cols(grid_estimates, grid_se) |>
+    mutate(sig = abs(diff) > critical_value) |>
+    summarize(proportion_sig_diff = mean(sig)) |>
+    pull(proportion_sig_diff)
   
-  prob_estimate_inferior_to_di_lower <- 1 - (r_estimate / n_estimate - (n_estimate + 1) / 2) / n_di_lower
-  prob_estimate_superior_to_di_upper <- 1 - (r_di_upper / n_di_upper - (n_di_upper + 1) / 2) / n_estimate
-  
-  probability_estimates_outside_cis <- (prob_estimate_inferior_to_di_lower + prob_estimate_superior_to_di_upper)
-  
-  return(probability_estimates_outside_cis)
-  
+  return(proportion_sig_diff)
 }
 
 bootstrap_discriminability <- function(data){
@@ -378,7 +394,7 @@ bootstrap_discriminability <- function(data){
   fit <- 
     boot::boot(data      = data, 
                statistic = discriminability, 
-               R         = 5000,
+               R         = 2000,
                sim       = "ordinary", 
                stype     = "i",
                parallel  = "multicore", 
@@ -409,15 +425,13 @@ if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
   
   # bootstrap D scores 
   data_discriminability_iat_D <- data_estimates_iat_D |>
-    # expand CIs by sqrt(2) to form discriminability intervals
-    mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
-           di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
-    select(unique_id, domain, trial_type, estimate, di_upper, di_lower) |>
+    mutate(se = (ci_upper - ci_lower)/(1.96*2)) |>
+    select(unique_id, method, domain, trial_type, estimate, se) |>
     group_by(domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
     rename(proportion_discriminable = estimate) |>
-    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+    mutate(variance = (((ci_upper - ci_lower)/(1.96*2)))^2,
            domain = as.factor(domain),
            #trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4", "iat"),
            measure = "IAT") 

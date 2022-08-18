@@ -481,7 +481,7 @@ $\sqrt{SE_1^2 + SE_2^2} \le (SE_1 + SE_2)$
 
 This means that as $|x_1 - x_2|$ increases there will be a point at which there is a significant difference between the means, but where the confidence intervals still overlaps. I.e., non overlapping confidence intervals indicate differences, but partially overlapping intervals do not exclude that there being differences.
 
-As such, it is more appropriate to test for differences between each score and every other score (within the same domain and trial type) based on the CI of the difference scores rather than the non-overlap of intervals of the pair of scores.  
+As such, it is more appropriate and liberal to test for differences between each score and every other score (within the same domain and trial type) based on the CI of the difference scores rather than the non-overlap of intervals of the pair of scores.  
 
 ## Calculate discriminability
 
@@ -521,7 +521,7 @@ discriminability <- function(data, i) {
   
   proportion_sig_diff <- 
     bind_cols(grid_estimates, grid_se) |>
-    mutate(sig = diff > critical_value) |>
+    mutate(sig = abs(diff) > critical_value) |>
     summarize(proportion_sig_diff = mean(sig)) |>
     pull(proportion_sig_diff)
   
