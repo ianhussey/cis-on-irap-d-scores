@@ -426,7 +426,7 @@ if(file.exists("../data/results/data_discriminability_iat_D.csv")) {
   # bootstrap D scores 
   data_discriminability_iat_D <- data_estimates_iat_D |>
     mutate(se = (ci_upper - ci_lower)/(1.96*2)) |>
-    select(unique_id, method, domain, trial_type, estimate, se) |>
+    select(unique_id, domain, trial_type, estimate, se) |>
     group_by(domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
