@@ -257,7 +257,7 @@ p_diff_zero <-
   #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   mdthemes::md_theme_linedraw() +
-  labs(x = "Proportion of scores different from zero point",
+  labs(x = "Proportion of scores<br/>different from zero point",
        y = "") + 
   theme(legend.position = "top",
         panel.spacing = unit(1.5, "lines")) +
@@ -312,7 +312,7 @@ p_prop_nonzero <-
   #scale_shape_manual(labels = c("IRAP", "IAT"), values = c(15, 16)) +
   scale_x_discrete(labels = c("IRAP D scores", "IAT D scores")) +
   labs(x = "",
-       y = "Proportion of participants with non-zero scores<br/>") + 
+       y = "Proportion of scores<br/>different from zero point<br/>") + 
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
@@ -484,7 +484,7 @@ p_discriminability <-
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("IRAP", "IAT")) +
   mdthemes::md_theme_linedraw() +
   #facet_wrap(~ trial_type, ncol = 4) +
-  labs(x =  "Proportion of participants<br/>whose scores differ from one another<br/>",
+  labs(x =  "Proportion of scores<br/>differerent from other scores",
        y = "") + 
   theme(legend.position = "top",
         panel.spacing = unit(1.5, "lines")) +
@@ -537,7 +537,7 @@ p_prop_discriminable <-
   scale_x_discrete(labels = c("IRAP D scores", "IAT D scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
-       y = "Proportion of participants<br/>whose scores differ from one another<br/>") +
+       y = "Proportion of scores<br/>differerent from other scores<br/>") +
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
@@ -639,7 +639,7 @@ p_coverage <-
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   #facet_wrap(~ trial_type, ncol = 4) +
-  labs(x = "Proportion of observed range covered<br/>by individual participants' 95% CIs",
+  labs(x = "Proportion of observed range covered<br/>by individual scores' 95% CIs",
        y = "") + 
   theme(legend.position = "top",
         panel.spacing = unit(1.5, "lines")) +
@@ -694,7 +694,7 @@ p_ci_width_proportion_observed_range <-
   scale_x_discrete(labels = c("IRAP D scores", "IAT D scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
-       y = "Proportion of observed range covered<br/>by individual participants' 95% CIs") +
+       y = "Proportion of observed range covered<br/>by individual scores' 95% CIs") +
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 

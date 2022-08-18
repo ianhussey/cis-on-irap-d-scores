@@ -373,7 +373,7 @@ p_diff_zero <-
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
-  labs(x = "Proportion of scores different from zero point",
+  labs(x = "Proportion of scores<br/>different from zero point",
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
@@ -433,7 +433,7 @@ p_prop_nonzero <-
   #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
   labs(x = "",
-       y = "Proportion of participants with non-zero scores<br/>") + 
+       y = "Proportion of scores<br/>different from zero point<br/>") + 
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
@@ -666,7 +666,7 @@ p_discriminability <-
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
-  labs(x =  "Proportion of participants<br/>whose scores differ from one another<br/>",
+  labs(x = "Proportion of scores<br/>differerent from other scores",
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
@@ -725,7 +725,7 @@ p_prop_discriminable <-
   scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
-       y = "Proportion of participants<br/>whose scores differ from one another<br/>") +
+       y = "Proportion of scores<br/>differerent from other scores<br/>") +
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
@@ -813,6 +813,7 @@ data_ci_width_proportions_combined <-
   select(-ci_width_proportion_mean_temp)
 
 write_csv(data_ci_width_proportions_combined, "../data/results/data_ci_width_proportions_irap_d_vs_pi.csv")
+#data_ci_width_proportions_combined <- read_csv("../data/results/data_ci_width_proportions_irap_d_vs_pi.csv")
 
 ```
 
@@ -823,6 +824,10 @@ write_csv(data_ci_width_proportions_combined, "../data/results/data_ci_width_pro
 p_coverage <- 
   data_ci_width_proportions_combined %>%
   mutate(domain = fct_rev(factor(domain))) %>%
+  mutate(trial_type = case_when(trial_type == "tt1" ~ "Trial type 1",
+                                trial_type == "tt2" ~ "Trial type 2",	
+                                trial_type == "tt3" ~ "Trial type 3",	
+                                trial_type == "tt4" ~ "Trial type 4")) %>%
   ggplot(aes(ci_width_proportion_mean, domain, color = scoring_method, shape = scoring_method)) +
   geom_point(position = position_dodge(width = 0.75)) +
   scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
@@ -832,7 +837,7 @@ p_coverage <-
   scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
   mdthemes::md_theme_linedraw() +
   facet_wrap(~ trial_type, ncol = 4) +
-  labs(x = "Proportion of observed range covered<br/>by individual participants' 95% CIs",
+  labs(x = "Proportion of observed range covered<br/>by individual scores' 95% CIs",
        y = "",
        color = "Scoring method",
        shape = "Scoring method") + 
@@ -892,7 +897,7 @@ p_ci_width_proportion_observed_range <-
   scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
-       y = "Proportion of observed range covered<br/>by individual participants' 95% CIs") +
+       y = "Proportion of observed range covered<br/>by individual scores' 95% CIs") +
   theme(legend.position = "none") +
   coord_flip(ylim = c(0, 1))
 
