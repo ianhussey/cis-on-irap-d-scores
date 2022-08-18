@@ -460,38 +460,74 @@ summary(data_emms_diff_zero)$`pairwise differences of scoring_method` %>%
 
 Within domain and trial type.
 
-Note: Discriminability between a score and zero can be determined using the CI, because zero is a known value and only the score is measured with uncertainty. However, discriminability between two scores must take into account the uncertainty in the estimation of both scores. Weir (2005) argues that such an interval can be estimated by expanding the CIs by sqrt(2). Here I refer to these intervals as Discriminability Intervals (DIs).
+Many have argued that the zero point is arbitrary and not a useful reference point. Instead of asking "what proportion of *D*/PI scores are different from zero?", we could also ask "what proportion of *D*/PI scores are different from one another?"
+
+A common way to assess whether for differences between two estimates is to assess for non overlap between their confidence intervals. However, it has been repeatedly pointed out that this is less than ideal: there are situations where confidence intervals overlap slightly and yet the difference in means is significant. 
+
+Cornell Statistical Consulting Unit (2008) [Overlapping Confidence Intervals and Statistical
+Significance](https://cscu.cornell.edu/wp-content/uploads/73_ci.pdf) argue this clearly. From their whitepaper:
+
+The null hypothesis of zero mean difference is rejected when
+
+$|x_1 - x_2| > t \times \sqrt{SE_1^2 + SE_2^2}$
+
+The individual confidence intervals do not overlap when
+
+$|x_1 - x_2| > t \times (SE_1 + SE_2)$
+
+It can be shown that the following is always true:
+
+$\sqrt{SE_1^2 + SE_2^2} \le (SE_1 + SE_2)$
+
+This means that as $|x_1 - x_2|$ increases there will be a point at which there is a significant difference between the means, but where the confidence intervals still overlaps. I.e., non overlapping confidence intervals indicate differences, but partially overlapping intervals do not exclude that there being differences.
+
+As such, it is more appropriate to test for differences between each score and every other score (within the same domain and trial type) based on the CI of the difference scores rather than the non-overlap of intervals of the pair of scores.  
 
 ## Calculate discriminability
 
-Many have argued that the zero point is arbitrary and not a useful reference point. Instead of asking "what proportion of *D*/PI scores are different from zero?", we could also ask "what proportion of *D*/PI scores are different from one another?"
-
 ```{r}
 
-# helper function to apply workflow to each resample
+# # discriminability using non-overlap of CIs
+# discriminability <- function(data, i) {
+#   data_with_indexes <- data[i,] # boot function requires data and index
+#   ci_lower <- data_with_indexes$ci_lower 
+#   ci_upper <- data_with_indexes$ci_upper
+#   n_ci_lower <- length(ci_lower)
+#   n_ci_upper <- length(ci_upper)
+#   r_ci_lower <- sum(rank(c(ci_lower, ci_upper))[1:n_ci_lower])
+#   A <- (r_ci_lower / n_ci_lower - (n_ci_lower + 1) / 2) / n_ci_upper
+#   return(A)
+# }
+
+# discriminatory using the significance of the difference score
+# the goal here is to assess mean_diff > 1.96 * sqrt(SE1^2 + SE2^2 for every possible comparison EXCLUDING self comparisons. This is tricky to do within a typical tidyverse workflow as it means doing mutates involving each row of a column and every other row of that column but not the same row.
+  # the below solution is to use expand.grid to find all combinations of a row with itself, and then use the modulus of the length of the row to filter out the self-pairings. Then do mutates on the rows to assess significant differences. It's enough to then summarize the proportion of significant results across all participants.
 discriminability <- function(data, i) {
-  
   data_with_indexes <- data[i,] # boot function requires data and index
   
-  estimate <- data_with_indexes$estimate
-  di_lower <- data_with_indexes$di_lower 
-  di_upper <- data_with_indexes$di_upper
+  grid_estimates <- expand.grid(data_with_indexes$estimate, data_with_indexes$estimate) |>
+    mutate(diff = Var1 - Var2,
+           row_number = row_number(),
+           modulus = row_number %% (nrow(data_with_indexes)+1)) |>
+    filter(modulus != 1) |>
+    select(diff)
   
-  n_estimate <- length(estimate)
-  n_di_lower <- length(di_lower)
-  n_di_upper <- length(di_upper)
+  grid_se <- expand.grid(data_with_indexes$se, data_with_indexes$se) |>
+    mutate(critical_value = 1.96 * sqrt(Var1^2 + Var2^2),
+           row_number = row_number(),
+           modulus = row_number %% (nrow(data_with_indexes)+1)) |>
+    filter(modulus != 1) |>
+    select(critical_value)
   
-  r_estimate <- sum(rank(c(estimate, di_lower))[1:n_estimate])
-  r_di_upper <- sum(rank(c(di_upper, estimate))[1:n_di_upper])
+  proportion_sig_diff <- 
+    bind_cols(grid_estimates, grid_se) |>
+    mutate(sig = diff > critical_value) |>
+    summarize(proportion_sig_diff = mean(sig)) |>
+    pull(proportion_sig_diff)
   
-  prob_estimate_inferior_to_di_lower <- 1 - (r_estimate / n_estimate - (n_estimate + 1) / 2) / n_di_lower
-  prob_estimate_superior_to_di_upper <- 1 - (r_di_upper / n_di_upper - (n_di_upper + 1) / 2) / n_estimate
-  
-  probability_estimates_outside_cis <- (prob_estimate_inferior_to_di_lower + prob_estimate_superior_to_di_upper)
-  
-  return(probability_estimates_outside_cis)
-  
+  return(proportion_sig_diff)
 }
+
 
 bootstrap_discriminability <- function(data){
   
@@ -501,14 +537,14 @@ bootstrap_discriminability <- function(data){
   fit <- 
     boot::boot(data      = data, 
                statistic = discriminability, 
-               R         = 5000,
+               R         = 2000,
                sim       = "ordinary", 
                stype     = "i",
                parallel  = "multicore", 
                ncpus     = parallel::detectCores())
   
   results <- boot::boot.ci(fit, conf = 0.95, type = "perc") # bca bootstraps throw an error, so use next best
-  
+
   output <-
     tibble(
       estimate = fit$t0,
@@ -535,16 +571,14 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
   
   # bootstrap D scores 
   data_discriminability_D <- data_estimates_D |>
-    # expand CIs by sqrt(2) to form discriminability intervals
-    mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
-           di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
-    select(unique_id, method, domain, trial_type, estimate, di_upper, di_lower) |>
+    mutate(se = (ci_upper - ci_lower)/(1.96*2)) |>
+    select(unique_id, method, domain, trial_type, estimate, se) |>
     group_by(method, domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
     #filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
-    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+    mutate(variance = (((ci_upper - ci_lower)/(1.96*2)))^2,
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            scoring_method = "*D* scores") 
@@ -571,18 +605,16 @@ if(file.exists("../data/results/data_discriminability_PI.csv")) {
   
 } else {
   
-  # bootstrap D scores 
+  # bootstrap PI scores 
   data_discriminability_PI <- data_estimates_PI |>
-    # expand CIs by sqrt(2) to form discriminability intervals
-    mutate(di_lower = estimate - (estimate - ci_lower)*sqrt(2),
-           di_upper = estimate + (ci_upper - estimate)*sqrt(2)) |>
-    select(unique_id, method, domain, trial_type, estimate, di_upper, di_lower) |>
+    mutate(se = (ci_upper - ci_lower)/(1.96*2)) |>
+    select(unique_id, method, domain, trial_type, estimate, se) |>
     group_by(method, domain, trial_type) |>
     do(bootstrap_discriminability(data = .)) |>
     ungroup() |>
     #filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
-    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
+    mutate(variance = (((ci_upper - ci_lower)/(1.96*2)))^2,
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            scoring_method = "PI scores") 
