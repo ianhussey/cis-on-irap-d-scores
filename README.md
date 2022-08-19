@@ -1,4 +1,4 @@
-# "The IRAP is not suitable for individual use"
+# The IRAP is not suitable for individual use
 
 Code and data for manuscript "The IRAP is not suitable for individual use".
 
