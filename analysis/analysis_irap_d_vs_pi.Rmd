@@ -578,7 +578,7 @@ if(file.exists("../data/results/data_discriminability_D.csv")) {
     ungroup() |>
     #filter(method == "bca") |>
     rename(proportion_discriminable = estimate) |>
-    mutate(variance = (((ci_upper - ci_lower)/(1.96*2)))^2,
+    mutate(variance = ((ci_upper - ci_lower)/(1.96*2))^2,
            domain = as.factor(domain),
            trial_type = fct_relevel(trial_type, "tt1", "tt2", "tt3", "tt4"),
            scoring_method = "*D* scores") 
