@@ -439,7 +439,7 @@ data_discriminability_D <- read_csv("../data/results/data_discriminability_D.csv
 if(file.exists("../data/results/data_discriminability_D_sem.csv")) {
   
   data_discriminability_D_sem <- read_csv("../data/results/data_discriminability_D_sem.csv") %>%
-    filter(method == "bca")
+    filter(method == "SEM")
   
 } else {
   
@@ -462,7 +462,7 @@ if(file.exists("../data/results/data_discriminability_D_sem.csv")) {
   write_csv(data_discriminability_D_sem, "../data/results/data_discriminability_D_sem.csv")
   
   data_discriminability_D_sem <- data_discriminability_D_sem %>%
-    filter(method == "bca")
+    filter(method == "SEM")
   
 }
 
@@ -561,7 +561,7 @@ p_prop_discriminable <-
   scale_y_continuous(breaks = c(0, .25, .5, .75, 1), labels = c("0.00<br/>(Worse)", "0.25", "0.50", "0.75", "1.00<br/>(Better)")) +
   #scale_shape_manual(labels = c("*D* scores", "PI scores"), values = c(15, 16)) +
   #scale_color_viridis_d(begin = 0.3, end = 0.7, labels = c("*D* scores", "PI scores")) +
-  scale_x_discrete(labels = c("IRAP D scores", "IRAP PI scores")) +
+  scale_x_discrete(labels = c("IRAP D scores bootstrapped CIs", "IRAP D scores SEM CIs")) +
   mdthemes::md_theme_linedraw() +
   labs(x = "",
        y = "Proportion of scores<br/>differerent from other scores<br/>") +
