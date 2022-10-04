@@ -1,0 +1,2 @@
+data_D_scores_internal_consistency_permuted_estimates_trial_types.csv
+- IRAP data taken from github.com/ianhussey/irap-reliaiblity-meta-analysis; specifically from "data/effect sizes for meta-analyses". All raw data and data processing code there.
