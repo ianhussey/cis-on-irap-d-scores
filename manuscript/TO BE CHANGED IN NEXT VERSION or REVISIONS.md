@@ -1,3 +1,4 @@
 Add quote
 
 “Furthermore, it should also be recognized that the IRAP is being developed, at least at this stage, as a group-based measure. Perhaps when its potential in this regard has been determined, it may be useful to explore its value as an assessment tool for individual cases.” (Barnes-Holmes et al., 2008, The iMPliciT RelaTioNal assessMeNT PRoceduRe (iRaP) as a Res PoNse-TiMe aNd eVeNT-RelaTedPoTeNTials MeThodology FoR TesTiNg NaTuRal VeRBal RelaTioNs: a PReliMiNaRy sTudy, p. 512)
+
